@@ -1,5 +1,6 @@
-from camera import Camera, IPCamera, NonIPCamera, StreamCamera
-import error
+from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
+from .error import Error
+import requests
 
 class Client(object):
     """

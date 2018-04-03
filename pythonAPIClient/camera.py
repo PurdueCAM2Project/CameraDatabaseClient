@@ -15,7 +15,7 @@ class IPCamera(Camera):
     # TODO: define extra retrieval attributes and constructor of ip camera object
     # replace others with desired field names
     def __init__(self, others):
-        super(IPCamera, self).__init__()
+        super(IPCamera, self).__init__(others)
 
 class NonIPCamera(Camera):
     """
@@ -25,7 +25,7 @@ class NonIPCamera(Camera):
     # TODO: define extra retrieval attributes and constructor of non_ip camera object
     # replace others with desired field names
     def __init__(self,others):
-        super(NonIPCamera, self).__init__()
+        super(NonIPCamera, self).__init__(others)
 
 class StreamCamera(Camera):
     """
@@ -35,4 +35,4 @@ class StreamCamera(Camera):
     # TODO: define extra retrieval attributes and constructor of stream camera object
     # replace others with desired field names
     def __init__(self,others):
-        super(StreamCamera, self).__init__()
+        super(StreamCamera, self).__init__(others)
