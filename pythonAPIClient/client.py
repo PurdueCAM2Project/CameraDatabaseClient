@@ -1,4 +1,5 @@
 from camera import Camera, IPCamera, NonIPCamera, StreamCamera
+import error
 
 class Client(object):
     """
@@ -7,6 +8,11 @@ class Client(object):
     # TODO: corresponding to the auth route
     @staticmethod
     def request_token(id, secret):
+        return 'dummy'
+
+    # TODO: set authentication in header
+    @staticmethod
+    def header_builder(token):
         return 'dummy'
 
     def __init__(self, id, secret, token=None):
@@ -48,17 +54,19 @@ class Client(object):
         pass
 
     # TODO: update a camera in database
+    # replace others with desired field names
     def update_camera(self, camID, others):
-        pass
-
-    # TODO: get a camera
-    def camera_by_id(self, cameraID):
         pass
 
     """
     Function for user
     """
 
+    # TODO: get a camera
+    def camera_by_id(self, cameraID):
+        pass
+
     # TODO: search a camera
+    # replace others with desired field names
     def search_camera(self, others):
         pass
