@@ -1,4 +1,4 @@
-from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
+, from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 from .error import Error
 import requests
 
@@ -27,7 +27,7 @@ class Client(object):
     Functions for webUI
     """
     # TODO: return clientID and client secret
-    def register(self, owner):
+    def register(self, owner, permissionLevel='user'):
         pass
     
     # TODO: update client's owner
