@@ -1,4 +1,4 @@
-, from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
+from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 from .error import Error
 import requests
 
