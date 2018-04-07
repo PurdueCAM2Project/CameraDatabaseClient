@@ -9,10 +9,9 @@ class Client(object):
     # TODO: corresponding to the auth route
     @staticmethod
     def request_token(id, secret):
-        url = 'https://cam2-api.herokuapp.com/auth/'
-        data = {'clientID': id, 'clientSecret': secret}
-        response = requests.post(url, json=data)
-        print(response)
+        url = 'https://cam2-api.herokuapp.com/auth/?'
+        url += 'clientID='+id+'&clientSecret='+secret
+        response = requests.get(url)
         return response.json()['token']
 
     # TODO: set authentication in header
@@ -20,12 +19,10 @@ class Client(object):
     def header_builder(token):
         return 'dummy'
 
-    def __init__(self, id, secret, token=None):
+    def __init__(self, id, secret):
         self.id = id
         self.secret = secret
-        if token is None: 
-            self.token = Client.request_token(id, secret)
-        self.token = token
+        self.token = None
 
     """
     Functions for webUI
@@ -79,4 +76,4 @@ class Client(object):
 if __name__ == '__main__':
     clinetID = "dd53cbd9c5306b1baa103335c4b3e91d8b73386ba29124ea2b1d47a619c8c066877843cd8a7745ce31021a8d1548cf2a"
     clientSecret = "f7ad9184949b914f2c73da4f6c82f6e93660c23c644e0ca4c9ac8268a141e02f258728aeefe864a6d03f709163cefe9c"
-    km = Client(clinetID,clientSecret);
+    Client = Client(clinetID,clientSecret)
