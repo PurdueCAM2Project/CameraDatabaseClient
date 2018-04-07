@@ -17,7 +17,8 @@ class Client(object):
     # TODO: set authentication in header
     @staticmethod
     def header_builder(token):
-        return 'dummy'
+        head = {'Authorization': 'Bearer ' + token}
+        return head
 
     def __init__(self, id, secret):
         self.id = id
