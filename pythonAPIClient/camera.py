@@ -7,23 +7,23 @@ class Camera(object):
     def __init__(self, cameraID, type, source, lat, lng, country, state, city, resolution_width
                 , resolution_height, is_active_image, is_active_video, utc_offset, timezone_id
                 , timezone_name, reference_logo, reference_url):
-        self.cameraId=cameraID;
-        self.type=type;
-        self.source=source;
-        self.lat=lat;
-        self.lng=lng;
-        self.country=country;
-        self.state=state;
-        self.city=city;
-        self.resolution_width=resolution_width;
-        self.resolution_height=resolution_height;
-        self.is_active_image=is_active_image;
-        self.is_active_video=is_active_video;
-        self.utc_offset=utc_offset;
-        self.timezone_id=timezone_id;
-        self.timezone_name=timezone_name;
-        self.reference_logo=reference_logo;
-        self.reference_url=reference_url;
+        self.cameraID=cameraID
+        self.type=type
+        self.source=source
+        self.lat=lat
+        self.lng=lng
+        self.country=country
+        self.state=state
+        self.city=city
+        self.resolution_width=resolution_width
+        self.resolution_height=resolution_height
+        self.is_active_image=is_active_image
+        self.is_active_video=is_active_video
+        self.utc_offset=utc_offset
+        self.timezone_id=timezone_id
+        self.timezone_name=timezone_name
+        self.reference_logo=reference_logo
+        self.reference_url=reference_url
 
 class IPCamera(Camera):
     """
