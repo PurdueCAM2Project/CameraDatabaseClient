@@ -58,7 +58,7 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response
         response_dict = client.request_token()
         mock_get.assert_called_once_with(
-            'https://cam2-api.herokuapp.com/auth/?clientID=dummyID&clientSecret=dummySecret')
+            'https://cam2-api.herokuapp.com/auth/?clientID=correctID&clientSecret=dummySecret')
         self.assertEqual(1, mock_response.json.call_count)
         self.assertEqual(response_dict, '404-Bad client secret.', 'The response handling for incorrect secret is incorrect')
 
@@ -70,11 +70,11 @@ class TestClient(unittest.TestCase):
             "token":"correctToken"
         }
         mock_response.json.return_value = expected_dict
-        mock_response.status_code = 404
+        mock_response.status_code = 200
         mock_get.return_value = mock_response
         response_dict = client.request_token()
         mock_get.assert_called_once_with(
-            'https://cam2-api.herokuapp.com/auth/?clientID=dummyID&clientSecret=dummySecret')
+            'https://cam2-api.herokuapp.com/auth/?clientID=correctID&clientSecret=correctSecret')
         self.assertEqual(1, mock_response.json.call_count)
         self.assertEqual(response_dict, 'OK', 'The response handling for correct credentials is incorrect')
         self.assertEqual(client.token, 'correctToken', 'token not stored in the client object.')
