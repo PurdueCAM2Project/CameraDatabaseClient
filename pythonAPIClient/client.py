@@ -20,7 +20,7 @@ class Client(object):
 
     # TODO: set authentication in header
     def header_builder(self):
-        head = {'Authorization': 'Bearer ' + self.token}
+        head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
 
     def __init__(self, id, secret):
