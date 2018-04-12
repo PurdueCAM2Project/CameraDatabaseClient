@@ -3,25 +3,30 @@ from .error import Error
 import requests
 
 class Client(object):
+
     """
     Represent a CAM2 client application.
     """
     # TODO: corresponding to the auth route
-    @staticmethod
-    def request_token(id, secret):
-        return 'dummy'
+    def request_token(self):
+        url = 'https://cam2-api.herokuapp.com/auth/?'
+        url += 'clientID='+self.id+'&clientSecret='+self.secret
+        response = requests.get(url)
+        if(response.status_code == 200):
+            self.token = response.json()['token']
+            return "OK"
+        else:
+            return str(response.status_code) + "-" + response.json()['message']
 
     # TODO: set authentication in header
-    @staticmethod
-    def header_builder(token):
-        return 'dummy'
+    def header_builder(self):
+        head = {'Authorization': 'Bearer ' + str(self.token)}
+        return head
 
-    def __init__(self, id, secret, token=None):
+    def __init__(self, id, secret):
         self.id = id
         self.secret = secret
-        if token is None: 
-            self.token = Client.request_token(id, secret)
-        self.token = token
+        self.token = None
 
     """
     Functions for webUI
