@@ -9,8 +9,7 @@ class Client(object):
     """
     # TODO: corresponding to the auth route
     def request_token(self):
-        url = 'https://cam2-api.herokuapp.com/auth/?'
-        url += 'clientID='+self.id+'&clientSecret='+self.secret
+        url = self.base_URL +'auth/?clientID='+self.id+'&clientSecret='+self.secret
         response = requests.get(url)
         if(response.status_code == 200):
             self.token = response.json()['token']
@@ -24,6 +23,7 @@ class Client(object):
         return head
 
     def __init__(self, id, secret):
+        self.base_URL = 'https://cam2-api.herokuapp.com/'
         self.id = id
         self.secret = secret
         self.token = None
