@@ -19,7 +19,7 @@ class ResourceNotFoundError(Error):
 
 class AuthenticationError(Error):
     """
-    Corresponends to 401 AuthenticationError in API.
+    Corresponends to 404 AuthenticationError in API.
     """
     pass
 

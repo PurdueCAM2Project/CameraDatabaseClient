@@ -1,23 +1,22 @@
-from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
-from .error import Error
 import requests
+from error import Error, AuthenticationError, InternalError
+from camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
 class Client(object):
 
     """
     Represent a CAM2 client application.
     """
-    # TODO: corresponding to the auth route
     def request_token(self):
         url = self.base_URL +'auth/?clientID='+self.id+'&clientSecret='+self.secret
         response = requests.get(url)
         if(response.status_code == 200):
             self.token = response.json()['token']
-            return "OK"
+        elif(response.status_code == 404):
+            raise AuthenticationError()
         else:
-            return str(response.status_code) + "-" + response.json()['message']
+            raise InternalError()
 
-    # TODO: set authentication in header
     def header_builder(self):
         head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
