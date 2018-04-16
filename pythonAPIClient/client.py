@@ -1,6 +1,6 @@
 import requests
-from error import Error, AuthenticationError, InternalError
-from camera import Camera, IPCamera, NonIPCamera, StreamCamera
+from .error import Error, AuthenticationError, InternalError
+from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
 class Client(object):
 
