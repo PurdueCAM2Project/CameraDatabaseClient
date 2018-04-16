@@ -54,7 +54,7 @@ class TestClient(unittest.TestCase):
             "message": "Bad client secret"
         }
         mock_response.json.return_value = expected_dict
-        mock_response.status_code = 404
+        mock_response.status_code = 401
         mock_get.return_value = mock_response
         url = self.base_URL + 'auth/?clientID=correctID&clientSecret=dummySecret'
         with self.assertRaises(AuthenticationError):

@@ -12,7 +12,7 @@ class Client(object):
         response = requests.get(url)
         if(response.status_code == 200):
             self.token = response.json()['token']
-        elif(response.status_code == 404):
+        elif(response.status_code == 404 or response.status_code == 401):
             raise AuthenticationError(response.json()['message'])
         else:
             raise InternalError()
