@@ -13,7 +13,7 @@ class Client(object):
         if(response.status_code == 200):
             self.token = response.json()['token']
         elif(response.status_code == 404):
-            raise AuthenticationError()
+            raise AuthenticationError(response.json()['message'])
         else:
             raise InternalError()
 

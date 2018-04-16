@@ -21,6 +21,9 @@ class AuthenticationError(Error):
     """
     Corresponends to 404 AuthenticationError in API.
     """
+    def __init__(self, message):
+        self.message=message
+        print(self.message)
     pass
 
 class InternalError(Error):

@@ -33,26 +33,34 @@ class TestClient(unittest.TestCase):
     def test_get_token_incorrect_ID_Secret(self, mock_get,  mock_http_error_handler):
         client = Client('dummyID', 'dummySecret')
         mock_response = mock.Mock()
+        expected_dict = {
+            "message": "Cannot find client with that ClientID"
+        }
+        mock_response.json.return_value = expected_dict
         mock_response.status_code = 404
         mock_get.return_value = mock_response
         url = self.base_URL + 'auth/?clientID=dummyID&clientSecret=dummySecret'
         with self.assertRaises(AuthenticationError):
             client.request_token()
         mock_get.assert_called_once_with(url)
-        self.assertEqual(0, mock_response.json.call_count)
+        self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.error.AuthenticationError')
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_incorrect_Secret(self, mock_get,  mock_http_error_handler):
         client = Client('correctID', 'dummySecret')
         mock_response = mock.Mock()
+        expected_dict = {
+            "message": "Bad client secret"
+        }
+        mock_response.json.return_value = expected_dict
         mock_response.status_code = 404
         mock_get.return_value = mock_response
         url = self.base_URL + 'auth/?clientID=correctID&clientSecret=dummySecret'
         with self.assertRaises(AuthenticationError):
             client.request_token()
         mock_get.assert_called_once_with(url)
-        self.assertEqual(0, mock_response.json.call_count)
+        self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_all_correct(self, mock_get):
