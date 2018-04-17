@@ -1,5 +1,5 @@
 import requests
-from .error import Error, AuthenticationError, InternalError
+from .error import Error, AuthenticationError, InternalError, IncorrectCLientIdError, IncorrectCLientSecretError, ResourceNotFoundError
 from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
 class Client(object):
@@ -12,7 +12,9 @@ class Client(object):
         response = requests.get(url)
         if(response.status_code == 200):
             self.token = response.json()['token']
-        elif(response.status_code == 404 or response.status_code == 401):
+        elif(response.status_code == 404 ):
+            raise ResourceNotFoundError(response.json()['message'])
+        elif (response.status_code == 401):
             raise AuthenticationError(response.json()['message'])
         else:
             raise InternalError()
@@ -23,6 +25,10 @@ class Client(object):
 
     def __init__(self, id, secret):
         self.base_URL = 'https://cam2-api.herokuapp.com/'
+        if len(id) != 96:
+            raise IncorrectCLientIdError
+        if len(secret) != 96:
+            raise IncorrectCLientSecretError
         self.id = id
         self.secret = secret
         self.token = None
