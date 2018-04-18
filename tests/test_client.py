@@ -17,8 +17,7 @@ class TestClient(unittest.TestCase):
 
     def test_client_init_wrong_ClientId_Length(self):
         with self.assertRaises(IncorrectCLientIdError):
-            client = Client('dummyID', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-                                       'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+            client = Client('dummyID', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
 
     def test_client_init_wrong_Client_Secret_Length(self):
         with self.assertRaises(IncorrectCLientSecretError):
@@ -28,7 +27,7 @@ class TestClient(unittest.TestCase):
 
     def test_client_init(self):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         self.assertTrue(isinstance(client, Client))
         self.assertEqual(client.id, clientId, 'ID not stored in the client object.')
@@ -37,7 +36,7 @@ class TestClient(unittest.TestCase):
 
     def test_build_header(self):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         client.token = 'dummy'
         head_example = {'Authorization': 'Bearer ' + 'dummy'}
@@ -47,7 +46,7 @@ class TestClient(unittest.TestCase):
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_incorrect_ID_Secret(self, mock_get, mock_http_error_handler):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -66,7 +65,7 @@ class TestClient(unittest.TestCase):
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_incorrect_Secret(self, mock_get, mock_http_error_handler):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -84,7 +83,7 @@ class TestClient(unittest.TestCase):
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_all_correct(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -102,7 +101,7 @@ class TestClient(unittest.TestCase):
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_all_correct_Internal_error(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 500

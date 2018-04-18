@@ -27,7 +27,7 @@ class Client(object):
         self.base_URL = 'https://cam2-api.herokuapp.com/'
         if len(id) != 96:
             raise IncorrectCLientIdError
-        if len(secret) != 96:
+        if len(secret) != 71:
             raise IncorrectCLientSecretError
         self.id = id
         self.secret = secret
