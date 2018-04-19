@@ -1,27 +1,38 @@
-from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
-from .error import Error
 import requests
+from .error import Error, AuthenticationError, InternalError, IncorrectCLientIdError, IncorrectCLientSecretError, ResourceNotFoundError
+from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
 class Client(object):
+    # Static variable to store the base URL.
+    base_URL = 'https://cam2-api.herokuapp.com/'
+
     """
     Represent a CAM2 client application.
     """
-    # TODO: corresponding to the auth route
-    @staticmethod
-    def request_token(id, secret):
-        return 'dummy'
+    def request_token(self):
+        url = Client.base_URL +'auth/?clientID='+self.id+'&clientSecret='+self.secret
+        response = requests.get(url)
+        if(response.status_code == 200):
+            self.token = response.json()['token']
+        elif(response.status_code == 404 ):
+            raise ResourceNotFoundError(response.json()['message'])
+        elif (response.status_code == 401):
+            raise AuthenticationError(response.json()['message'])
+        else:
+            raise InternalError()
 
-    # TODO: set authentication in header
-    @staticmethod
-    def header_builder(token):
-        return 'dummy'
+    def header_builder(self):
+        head = {'Authorization': 'Bearer ' + str(self.token)}
+        return head
 
-    def __init__(self, id, secret, token=None):
+    def __init__(self, id, secret):
+        if len(id) != 96:
+            raise IncorrectCLientIdError
+        if len(secret) != 71:
+            raise IncorrectCLientSecretError
         self.id = id
         self.secret = secret
-        if token is None: 
-            self.token = Client.request_token(id, secret)
-        self.token = token
+        self.token = None
 
     """
     Functions for webUI

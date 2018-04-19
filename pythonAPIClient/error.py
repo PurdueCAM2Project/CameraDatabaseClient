@@ -15,12 +15,18 @@ class ResourceNotFoundError(Error):
     """
     Corresponends to 404 ResourceNotFoundError in API.
     """
+    def __init__(self, message):
+        self.message=message
+        print(self.message)
     pass
 
 class AuthenticationError(Error):
     """
     Corresponends to 401 AuthenticationError in API.
     """
+    def __init__(self, message):
+        self.message=message
+        print(self.message)
     pass
 
 class InternalError(Error):
@@ -38,6 +44,18 @@ class ResourceConflictError(Error):
     pass
 
 class AuthorizationError(Error):
+    """
+    Corresponends to 403 AuthorizationError in API.
+    """
+    pass
+
+class IncorrectCLientIdError(Error):
+    """
+    Corresponends to 403 AuthorizationError in API.
+    """
+    pass
+
+class IncorrectCLientSecretError(Error):
     """
     Corresponends to 403 AuthorizationError in API.
     """
