@@ -3,12 +3,14 @@ from .error import Error, AuthenticationError, InternalError, IncorrectCLientIdE
 from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
 class Client(object):
+    # Static variable to store the base URL.
+    base_URL = 'https://cam2-api.herokuapp.com/'
 
     """
     Represent a CAM2 client application.
     """
     def request_token(self):
-        url = self.base_URL +'auth/?clientID='+self.id+'&clientSecret='+self.secret
+        url = Client.base_URL +'auth/?clientID='+self.id+'&clientSecret='+self.secret
         response = requests.get(url)
         if(response.status_code == 200):
             self.token = response.json()['token']
@@ -24,7 +26,6 @@ class Client(object):
         return head
 
     def __init__(self, id, secret):
-        self.base_URL = 'https://cam2-api.herokuapp.com/'
         if len(id) != 96:
             raise IncorrectCLientIdError
         if len(secret) != 71:
