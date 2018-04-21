@@ -1,11 +1,10 @@
 import requests
-from .error import Error, AuthenticationError, InternalError, IncorrectCLientIdError, IncorrectCLientSecretError, ResourceNotFoundError
+from .error import Error, AuthenticationError, InternalError, InvalidClientIdError, InvalidClientSecretError, ResourceNotFoundError
 from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
 class Client(object):
     # Static variable to store the base URL.
     base_URL = 'https://cam2-api.herokuapp.com/'
-
     """
     Represent a CAM2 client application.
     """
@@ -26,10 +25,12 @@ class Client(object):
         return head
 
     def __init__(self, id, secret):
+        #clientId are of a fixed length of 96 characters.
         if len(id) != 96:
-            raise IncorrectCLientIdError
+            raise InvalidClientIdError
+        # clientSecret are of a fixed length of 71 characters.
         if len(secret) != 71:
-            raise IncorrectCLientSecretError
+            raise InvalidClientSecretError
         self.id = id
         self.secret = secret
         self.token = None
