@@ -6,7 +6,7 @@ from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from pythonAPIClient.camera import Camera, IPCamera, NonIPCamera, StreamCamera
 from pythonAPIClient.client import Client
-from pythonAPIClient.error import AuthenticationError, InternalError, IncorrectCLientIdError, IncorrectCLientSecretError , ResourceNotFoundError
+from pythonAPIClient.error import AuthenticationError, InternalError, InvalidClientIdError, InvalidClientSecretError , ResourceNotFoundError
 
 
 class TestClient(unittest.TestCase):
@@ -16,11 +16,11 @@ class TestClient(unittest.TestCase):
         pass
 
     def test_client_init_wrong_ClientId_Length(self):
-        with self.assertRaises(IncorrectCLientIdError):
+        with self.assertRaises(InvalidClientIdError):
             client = Client('dummyID', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
 
     def test_client_init_wrong_Client_Secret_Length(self):
-        with self.assertRaises(IncorrectCLientSecretError):
+        with self.assertRaises(InvalidClientSecretError):
             client = Client(
                 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
                 'dummySecret')
