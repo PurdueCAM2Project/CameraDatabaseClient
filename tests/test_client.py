@@ -6,7 +6,7 @@ from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from pythonAPIClient.camera import Camera, IPCamera, NonIPCamera, StreamCamera
 from pythonAPIClient.client import Client
-from pythonAPIClient.error import AuthenticationError, InternalError, InvalidClientIdError, InvalidClientSecretError , ResourceNotFoundError
+from pythonAPIClient.error import AuthenticationError, InternalError, InvalidClientIdError, InvalidClientSecretError , ResourceNotFoundError , FormatError
 
 
 class TestClient(unittest.TestCase):
@@ -112,11 +112,72 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url)
         self.assertEqual(0, mock_response.json.call_count)
 
-    def test_client_init(self):
-        clientId = 'dd53cbd9c5306b1baa103335c4b3e91d8b73386ba29124ea2b1d47a619c8c066877843cd8a7745ce31021a8d1548cf2a'
-        clientSecret = 'f7ad9184949b914f2c73da4f6c82f6e93660c23c644e0ca4c9ac8268a141e02f258728ae'
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_search_camera_no_token(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
-        client.search_camera(country='usa')
+        mock_response = mock.Mock()
+        expected_dict = {
+            "token": "correctToken"
+        }
+        mock_response.json.return_value = expected_dict
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+        url = self.base_URL + 'cameras/search?country=USA'
+        with self.assertRaises(KeyError):
+            client.search_camera(country='USA')
+        mock_get.assert_called_with(url,headers={'Authorization': 'Bearer correctToken'})
+        self.assertEqual(2, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_search_camera_all_correct_Expired_Token(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        client.token='ExpiredToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_get.return_value = mock_response
+        url = self.base_URL + 'cameras/search?country=USA'
+        with self.assertRaises(TypeError):
+            client.search_camera(country='USA')
+        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+'&clientSecret='+clientSecret)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_search_camera_all_correct_Internal_Error(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+        url = self.base_URL + 'cameras/search?country=USA'
+        with self.assertRaises(InternalError):
+            client.search_camera(country='USA')
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
+        self.assertEqual(0, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_search_camera_all_correct_Format_Error(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        expected_dict = {
+            "message": "Format Error Messages"
+        }
+        mock_response.json.return_value = expected_dict
+        mock_response.status_code = 422
+        mock_get.return_value = mock_response
+        url = self.base_URL + 'cameras/search?country=USA'
+        with self.assertRaises(FormatError):
+            client.search_camera(country='USA')
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
+        self.assertEqual(1, mock_response.json.call_count)
 
 if __name__ == '__main__':
     unittest.main()

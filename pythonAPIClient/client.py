@@ -117,19 +117,19 @@ class Client(object):
             url += 'offset=' + offset + '&'
         url = url[:-1]
         response = requests.get(url, headers=self.header_builder())
-        if response.status_code is 401 and response.json()['message'] is 'Token expired':
+        if response.status_code == 401:
             self.request_token()
             response = requests.get(url, headers=self.header_builder())
-        elif response.status_code is 422:
+        elif response.status_code == 422:
             raise FormatError(response.json()['message'])
-        elif response.status_code is 500:
+        elif response.status_code == 500:
             raise InternalError()
         camera_response_array = response.json()
         camera_processed = []
         for x in range(len(camera_response_array)):
             current_object = camera_response_array[x]
             if current_object['type'] == 'ip':
-                camera_processed[x] = IPCamera(current_object['cameraID'], current_object['type'],
+                camera_processed.append(IPCamera(current_object['cameraID'], current_object['type'],
                                                current_object['source'],
                                                current_object['latitude'], current_object['longitude'],
                                                current_object['country'],
@@ -144,22 +144,21 @@ class Client(object):
                                                current_object['retrieval']['brand'],
                                                current_object['retrieval']['model'],
                                                current_object['retrieval']['image_path'],
-                                               current_object['retrieval']['video_path'])
+                                               current_object['retrieval']['video_path']))
             elif current_object['type'] == 'non_ip':
-                camera_processed[x] = NonIPCamera(current_object['cameraID'], current_object['type'],
+                camera_processed.append(NonIPCamera(current_object['cameraID'], current_object['type'],
                                                   current_object['source'], current_object['latitude'],
                                                   current_object['longitude'], current_object['country'],
                                                   current_object['state'], current_object['city'],
                                                   current_object['resolution_width'],
                                                   current_object['resolution_height'],
                                                   current_object['is_active_image'], current_object['is_active_video'],
-                                                  None,
-                                                  current_object['timezone_id'],
+                                                  current_object['utc_offset'],current_object['timezone_id'],
                                                   current_object['timezone_name'], current_object['reference_logo'],
                                                   current_object['reference_url'],
-                                                  current_object['retrieval']['snapshot_url'])
+                                                  current_object['retrieval']['snapshot_url']))
             else:
-                camera_processed[x] = StreamCamera(current_object['cameraID'], current_object['type'],
+                camera_processed.append(StreamCamera(current_object['cameraID'], current_object['type'],
                                                    current_object['source'], current_object['latitude'],
                                                    current_object['longitude'], current_object['country'],
                                                    current_object['state'], current_object['city'],
@@ -170,6 +169,6 @@ class Client(object):
                                                    current_object['timezone_id'],
                                                    current_object['timezone_name'], current_object['reference_logo'],
                                                    current_object['reference_url'],
-                                                   current_object['retrieval']['m3u8_url'])
+                                                   current_object['retrieval']['m3u8_url']))
         return camera_processed
         pass
