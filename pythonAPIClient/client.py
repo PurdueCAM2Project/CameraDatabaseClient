@@ -83,16 +83,16 @@ class Client(object):
     def camera_by_id(self, cameraID):
         pass
 
-    def search_camera(self, lat=None, lng=None, radius=None, type=None, source=None,
+    def search_camera(self, latitude=None, longitude=None, radius=None, type=None, source=None,
                       country=None, state=None, city=None, resolution_width=None,
                       resolution_heigth=None, is_active_image=None, is_active_video=None, offset=None):
         if self.token is None:
             self.request_token()
         url = Client.base_URL + 'cameras/search?'
-        if lat is not None:
-            url += 'lat=' + lat + '&'
-        if lng is not None:
-            url += 'lng=' + lng + '&'
+        if latitude is not None:
+            url += 'lat=' + latitude + '&'
+        if longitude is not None:
+            url += 'lng=' + longitude + '&'
         if radius is not None:
             url += 'radius=' + radius + '&'
         if type is not None:
