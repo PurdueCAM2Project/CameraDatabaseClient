@@ -61,7 +61,7 @@ class Client(object):
         else:
             raise InternalError()
 
-    def _header_builder(self):
+    def header_builder(self):
         head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
 
