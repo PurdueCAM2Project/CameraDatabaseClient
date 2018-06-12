@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pythonAPIClient.camera &mdash; CAM2 Database API Client  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> CAM2 Database API Client
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../pythonAPIClient.html">pythonAPIClient package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">CAM2 Database API Client</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pythonAPIClient.camera</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pythonAPIClient.camera</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="Camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.Camera">[docs]</a><span></span><span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represent a single camera</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: define attributes and constructor of basic camera object</span>
+    <span class="c1"># replace others with desired field names</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cameraID</span><span class="p">,</span> <span class="n">camera_type</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">resolution_width</span>
+                <span class="p">,</span> <span class="n">resolution_height</span><span class="p">,</span> <span class="n">is_active_image</span><span class="p">,</span> <span class="n">is_active_video</span><span class="p">,</span> <span class="n">utc_offset</span><span class="p">,</span> <span class="n">timezone_id</span>
+                <span class="p">,</span> <span class="n">timezone_name</span><span class="p">,</span> <span class="n">reference_logo</span><span class="p">,</span> <span class="n">reference_url</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cameraID</span><span class="o">=</span><span class="n">cameraID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera_type</span><span class="o">=</span><span class="n">camera_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">=</span><span class="n">source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat</span><span class="o">=</span><span class="n">lat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lng</span><span class="o">=</span><span class="n">lng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">country</span><span class="o">=</span><span class="n">country</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">=</span><span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="o">=</span><span class="n">city</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution_width</span><span class="o">=</span><span class="n">resolution_width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution_height</span><span class="o">=</span><span class="n">resolution_height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_active_image</span><span class="o">=</span><span class="n">is_active_image</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_active_video</span><span class="o">=</span><span class="n">is_active_video</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">utc_offset</span><span class="o">=</span><span class="n">utc_offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timezone_id</span><span class="o">=</span><span class="n">timezone_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timezone_name</span><span class="o">=</span><span class="n">timezone_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_logo</span><span class="o">=</span><span class="n">reference_logo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_url</span><span class="o">=</span><span class="n">reference_url</span></div>
+
+<div class="viewcode-block" id="IPCamera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.IPCamera">[docs]</a><span class="k">class</span> <span class="nc">IPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represent a single ip_camera</span>
+<span class="sd">    This is a subclass of Camera</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: define extra retrieval attributes and constructor of ip camera object</span>
+    <span class="c1"># replace others with desired field names</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cameraID</span><span class="p">,</span> <span class="n">camera_type</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">resolution_width</span>
+                <span class="p">,</span> <span class="n">resolution_height</span><span class="p">,</span> <span class="n">is_active_image</span><span class="p">,</span> <span class="n">is_active_video</span><span class="p">,</span> <span class="n">utc_offset</span><span class="p">,</span> <span class="n">timezone_id</span>
+                <span class="p">,</span> <span class="n">timezone_name</span><span class="p">,</span> <span class="n">reference_logo</span><span class="p">,</span> <span class="n">reference_url</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span><span class="n">port</span><span class="p">,</span><span class="n">brand</span><span class="p">,</span><span class="n">model</span><span class="p">,</span><span class="n">image_path</span><span class="p">,</span><span class="n">video_path</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">brand</span> <span class="o">=</span> <span class="n">brand</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">video_path</span> <span class="o">=</span> <span class="n">video_path</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">IPCamera</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cameraID</span><span class="p">,</span> <span class="n">camera_type</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">resolution_width</span>
+                <span class="p">,</span> <span class="n">resolution_height</span><span class="p">,</span> <span class="n">is_active_image</span><span class="p">,</span> <span class="n">is_active_video</span><span class="p">,</span> <span class="n">utc_offset</span><span class="p">,</span> <span class="n">timezone_id</span>
+                <span class="p">,</span> <span class="n">timezone_name</span><span class="p">,</span> <span class="n">reference_logo</span><span class="p">,</span> <span class="n">reference_url</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NonIPCamera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.NonIPCamera">[docs]</a><span class="k">class</span> <span class="nc">NonIPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represent a non-IP camera.</span>
+<span class="sd">    This is a subclass of Camera</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: define extra retrieval attributes and constructor of non_ip camera object</span>
+    <span class="c1"># replace others with desired field names</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cameraID</span><span class="p">,</span> <span class="n">camera_type</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">resolution_width</span>
+                <span class="p">,</span> <span class="n">resolution_height</span><span class="p">,</span> <span class="n">is_active_image</span><span class="p">,</span> <span class="n">is_active_video</span><span class="p">,</span> <span class="n">utc_offset</span><span class="p">,</span> <span class="n">timezone_id</span>
+                <span class="p">,</span> <span class="n">timezone_name</span><span class="p">,</span> <span class="n">reference_logo</span><span class="p">,</span> <span class="n">reference_url</span><span class="p">,</span><span class="n">snapshot_url</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">snapshot_url</span><span class="o">=</span><span class="n">snapshot_url</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">NonIPCamera</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cameraID</span><span class="p">,</span> <span class="n">camera_type</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">resolution_width</span>
+                <span class="p">,</span> <span class="n">resolution_height</span><span class="p">,</span> <span class="n">is_active_image</span><span class="p">,</span> <span class="n">is_active_video</span><span class="p">,</span> <span class="n">utc_offset</span><span class="p">,</span> <span class="n">timezone_id</span>
+                <span class="p">,</span> <span class="n">timezone_name</span><span class="p">,</span> <span class="n">reference_logo</span><span class="p">,</span> <span class="n">reference_url</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StreamCamera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.StreamCamera">[docs]</a><span class="k">class</span> <span class="nc">StreamCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represent a Stream camera.</span>
+<span class="sd">    This is a subclass of Camera</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: define extra retrieval attributes and constructor of stream camera object</span>
+    <span class="c1"># replace others with desired field names</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cameraID</span><span class="p">,</span> <span class="n">camera_type</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">resolution_width</span>
+                <span class="p">,</span> <span class="n">resolution_height</span><span class="p">,</span> <span class="n">is_active_image</span><span class="p">,</span> <span class="n">is_active_video</span><span class="p">,</span> <span class="n">utc_offset</span><span class="p">,</span> <span class="n">timezone_id</span>
+                <span class="p">,</span> <span class="n">timezone_name</span><span class="p">,</span> <span class="n">reference_logo</span><span class="p">,</span> <span class="n">reference_url</span><span class="p">,</span><span class="n">m3u8_url</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">m3u8_url</span> <span class="o">=</span> <span class="n">m3u8_url</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">StreamCamera</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cameraID</span><span class="p">,</span> <span class="n">camera_type</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">resolution_width</span>
+                        <span class="p">,</span> <span class="n">resolution_height</span><span class="p">,</span> <span class="n">is_active_image</span><span class="p">,</span> <span class="n">is_active_video</span><span class="p">,</span> <span class="n">utc_offset</span><span class="p">,</span> <span class="n">timezone_id</span>
+                        <span class="p">,</span> <span class="n">timezone_name</span><span class="p">,</span> <span class="n">reference_logo</span><span class="p">,</span> <span class="n">reference_url</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Purdue CAM2.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
