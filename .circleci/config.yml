@@ -53,3 +53,8 @@ jobs:
       - store_artifacts:
           path: test-reports
           destination: test-reports
+
+      - run:
+          name: Generate Documentation
+          command: |
+            bash .circleci/generate_docs.sh
