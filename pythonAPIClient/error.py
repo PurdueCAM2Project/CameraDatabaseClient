@@ -111,7 +111,7 @@ class InvalidClientSecretError(Error):
     """
 
     def __init__(self):
-        self.message = 'The Length of ClientSecret should be 71'
+        self.message = 'The Length of ClientSecret should be 72'
 
     def __str__(self):
         return str(self.message)
