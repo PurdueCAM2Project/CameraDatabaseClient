@@ -3,16 +3,54 @@ from .error import Error, AuthenticationError, InternalError, InvalidClientIdErr
     ResourceNotFoundError, FormatError
 from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
-
 class Client(object):
-    # Static variable to store the base URL.
-    base_URL = 'https://cam2-api.herokuapp.com/'
-    """
-    Represent a CAM2 client application.
+
+    """Class representing a CAM2 client application.
+ 
+    [More detailed description of what client object do.]
+
+
+    Attributes
+    ----------
+    id : str
+        Id of the client application.
+    secret : str
+        Secret of the client application.
+    token : str
+        [User does not need to provide this attribute] Token for the client to access the CAM2 database. 
+        Each token expires in 5 minutes.
+ 
+    Note
+    ----
+ 
+        In order to access the package, you must make an account through the CAM2 project website, and register a new application. 
+        The website can be found here: https://www.cam2project.net/.
+        
     """
 
+    base_URL = 'https://cam2-api.herokuapp.com/'
+    """str: Static variable to store the base URL.
+
+    This is the URL of CAM2 Database API. User is able to send API calls directly to this URL.
+    """
+
+    
     def request_token(self):
-        url = Client.base_URL + 'auth/?clientID=' + self.id + '&clientSecret=' + self.secret
+
+        """A method to request an access token for the client application.
+
+        Raises
+        ------
+        ResourceNotFoundError
+            If no client app exists with the clientID of this client object.
+        AuthenticationError
+            If the client secret of this client object does not match the clientID.
+        InternalError
+            If there is an API internal error.
+        
+        """
+        
+        url = Client.base_URL +'auth/?clientID='+self.id+'&clientSecret='+self.secret
         response = requests.get(url)
         if (response.status_code == 200):
             self.token = response.json()['token']
@@ -23,16 +61,35 @@ class Client(object):
         else:
             raise InternalError()
 
-    def header_builder(self):
+    def _header_builder(self):
         head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
 
     def __init__(self, id, secret):
-        # clientId are of a fixed length of 96 characters.
+
+        """Client initialization method.
+ 
+        Parameters
+        ----------
+        id : str
+            Id of the client application.
+        secret : str
+            Secret of the client application.
+
+        Raises
+        ------
+        InvalidClientIdError
+            If the clientID is not in the correct format.
+            ClientID should have a fixed length of 96 characters.
+        InvalidClientSecretError
+            If the client secret is not in the correct format.
+            Client secret should have a length of at least 71 characters
+
+        """
+
         if len(id) != 96:
             raise InvalidClientIdError
-        # clientSecret are of a fixed length of 71 characters.
-        if len(secret) != 72:
+        if len(secret) != 71:
             raise InvalidClientSecretError
         self.id = id
         self.secret = secret
