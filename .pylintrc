@@ -161,7 +161,7 @@ evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / stateme
 output-format=colorized
 
 # Tells whether to display a full report or only the messages
-reports=yes
+reports=no
 
 # Activate the evaluation score.
 score=no
@@ -333,9 +333,7 @@ logging-modules=logging
 [MISCELLANEOUS]
 
 # List of note tags to take in consideration, separated by a comma.
-notes=FIXME,
-      XXX,
-      TODO
+notes=
 
 
 [SIMILARITIES]
@@ -494,7 +492,7 @@ max-locals=100
 max-parents=100
 
 # Maximum number of public methods for a class (see R0904).
-max-public-methods=10
+max-public-methods=100
 
 # Maximum number of return / yield for function / method body
 max-returns=100
