@@ -1,7 +1,14 @@
+"""
+Represents a CAM2 client application.
+"""
 import requests
 from .error import Error, AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError, FormatError
 from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
+
+"""
+Represent a CAM2 client application.
+"""
 
 
 class Client(object):
@@ -11,8 +18,12 @@ class Client(object):
     Represent a CAM2 client application.
     """
 
+    """
+    Represent a CAM2 client application.
+    """
     def request_token(self):
-        url = Client.base_URL + 'auth/?clientID=' + self.clientId + '&clientSecret=' + self.clientSecret
+        url = Client.base_URL + 'auth/?clientID=' + self.clientId + \
+              '&clientSecret=' + self.clientSecret
         response = requests.get(url)
         if response.status_code == 200:
             self.token = response.json()['token']
@@ -23,10 +34,16 @@ class Client(object):
         else:
             raise InternalError()
 
+    """
+    Represent a CAM2 client application.
+    """
     def header_builder(self):
         head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
 
+    """
+    Represent a CAM2 client application.
+    """
     def __init__(self, clientId, clientSecret):
         # clientId are of a fixed length of 96 characters.
         if len(clientId) != 96:
@@ -41,11 +58,13 @@ class Client(object):
     """
     Functions for webUI
     """
-
     # TODO: return clientID and client secret
     def register(self, owner, permissionLevel='user'):
         pass
 
+    """
+    Represent a CAM2 client application.
+    """
     # TODO: update client's owner
     def update_owner(self, clientID, owner):
         pass
