@@ -89,7 +89,7 @@ class Client(object):
 
         if len(id) != 96:
             raise InvalidClientIdError
-        if len(secret) != 71:
+        if len(secret) != 72:
             raise InvalidClientSecretError
         self.id = id
         self.secret = secret
