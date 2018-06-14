@@ -57,51 +57,65 @@ class Client(object):
 
     """
     Functions for webUI
-    """
     # TODO: return clientID and client secret
+    """
     def register(self, owner, permissionLevel='user'):
         pass
 
     """
     Represent a CAM2 client application.
-    """
     # TODO: update client's owner
+    """
     def update_owner(self, clientID, owner):
         pass
 
+    """
+    Represent a CAM2 client application.
     # TODO: update client's permissionLevel
+    """
     def update_permission(self, clientID, permissionLevel):
         pass
 
+    """
+    Represent a CAM2 client application.
     # TODO: get clientID by owner
+    """
     def client_ids_by_owner(self, owner):
         pass
 
+    """
+    Represent a CAM2 client application.
     # TODO: get api usage count by client
+    """
     def usage_by_client(self, clientID):
         pass
 
     """
     Function for admin
-    """
-
     # TODO: add a camera to database
+    """
     def add_camera(self, Camera):
         pass
 
+    """
+    Function for admin
     # TODO: update a camera in database
     # replace others with desired field names
+    """
     def update_camera(self, camID, others):
         pass
 
     """
     Function for user
-    """
-
     # TODO: get a camera
+    """
     def camera_by_id(self, cameraID):
         pass
 
+    """
+    Function for user
+    # TODO: fix the commenting 
+    """
     def search_camera(self, latitude=None, longitude=None, radius=None, type=None, source=None,
                       country=None, state=None, city=None, resolution_width=None,
                       resolution_heigth=None, is_active_image=None, is_active_video=None,
