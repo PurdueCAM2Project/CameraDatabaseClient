@@ -5,7 +5,7 @@ class Camera(object):
     # TODO: define attributes and constructor of basic camera object check
     # replace others with desired field names
     def __init__(self, cameraID, camera_type, source, lat, lng, country, state, city,
-                 resolution_width , resolution_height, is_active_image,
+                 resolution_width, resolution_height, is_active_image,
                  is_active_video, utc_offset, timezone_id,
                  timezone_name, reference_logo, reference_url):
         self.cameraID = cameraID
@@ -33,18 +33,20 @@ class IPCamera(Camera):
     """
     # TODO: define extra retrieval attributes and constructor of ip camera object
     # replace others with desired field names
-    def __init__(self, cameraID, camera_type, source, lat, lng, country, state, city, resolution_width,
-                 resolution_height, is_active_image, is_active_video, utc_offset, timezone_id,
-                 timezone_name, reference_logo, reference_url, ip, port, brand, model, image_path, video_path):
+    def __init__(self, cameraID, camera_type, source, lat, lng, country, state,
+                 city, resolution_width, resolution_height, is_active_image,
+                 is_active_video, utc_offset, timezone_id, timezone_name,
+                 reference_logo, reference_url, ip, port, brand, model, image_path, video_path):
                 self.ip = ip
                 self.port = port
                 self.brand = brand
                 self.model = model
                 self.image_path = image_path
                 self.video_path = video_path
-                super(IPCamera, self).__init__(cameraID, camera_type, source, lat, lng, country, state, city,
-                                               resolution_width, resolution_height, is_active_image,
-                                               is_active_video, utc_offset, timezone_id, timezone_name,
+                super(IPCamera, self).__init__(cameraID, camera_type, source, lat, lng,
+                                               country, state, city, resolution_width,
+                                               resolution_height, is_active_image, is_active_video,
+                                               utc_offset, timezone_id, timezone_name,
                                                reference_logo, reference_url)
 
 
