@@ -9,14 +9,9 @@ from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 """
 Represent a CAM2 client application.
 """
-
-
 class Client(object):
     # Static variable to store the base URL.
     base_URL = 'https://cam2-api.herokuapp.com/'
-    """
-    Represent a CAM2 client application.
-    """
 
     """
     Represent a CAM2 client application.
