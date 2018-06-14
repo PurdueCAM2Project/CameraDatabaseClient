@@ -2,12 +2,12 @@
 Represents a CAM2 client application.
 """
 import requests
-from .error import Error, AuthenticationError, InternalError, InvalidClientIdError, \
+from .error import AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError, FormatError
-from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
+from .camera import IPCamera, NonIPCamera, StreamCamera
 
 """
-Represent a CAM2 client application.
+Represent a CAM2 client application.122323
 """
 
 
@@ -16,7 +16,7 @@ class Client(object):
     base_URL = 'https://cam2-api.herokuapp.com/'
 
     """
-    Represent a CAM2 client application.
+    Represent a CAM2 client application.2323232
     """
 
     def request_token(self):
@@ -33,7 +33,7 @@ class Client(object):
             raise InternalError()
 
     """
-    Represent a CAM2 client application.
+    Represent a CAM2 client application.323232323
     """
 
     def header_builder(self):
@@ -41,7 +41,7 @@ class Client(object):
         return head
 
     """
-    Represent a CAM2 client application.
+    Represent a CAM2 client application.424242323
     """
 
     def __init__(self, clientId, clientSecret):
@@ -234,4 +234,3 @@ class Client(object):
                                                      current_object['reference_url'],
                                                      current_object['retrieval']['m3u8_url']))
         return camera_processed
-        pass
