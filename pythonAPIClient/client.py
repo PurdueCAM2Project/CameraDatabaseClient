@@ -6,10 +6,6 @@ from .error import AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError, FormatError
 from .camera import IPCamera, NonIPCamera, StreamCamera
 
-"""
-Represent a CAM2 client application.122323
-"""
-
 
 class Client(object):
     # Static variable to store the base URL.
