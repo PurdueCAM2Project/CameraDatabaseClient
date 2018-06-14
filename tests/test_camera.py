@@ -1,3 +1,6 @@
+"""
+This class holds the code to test camera objects.
+"""
 import unittest
 import sys
 from os import path
