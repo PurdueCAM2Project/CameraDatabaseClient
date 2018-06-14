@@ -12,7 +12,7 @@ class Client(object):
     """
 
     def request_token(self):
-        url = Client.base_URL + 'auth/?clientID=' + self.id + '&clientSecret=' + self.secret
+        url = Client.base_URL + 'auth/?clientID=' + self.clientId + '&clientSecret=' + self.secret
         response = requests.get(url)
         if response.status_code == 200:
             self.token = response.json()['token']
@@ -27,15 +27,15 @@ class Client(object):
         head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
 
-    def __init__(self, id, secret):
+    def __init__(self, clientId, clientSecret):
         # clientId are of a fixed length of 96 characters.
-        if len(id) != 96:
+        if len(clientId) != 96:
             raise InvalidClientIdError
         # clientSecret are of a fixed length of 71 characters.
-        if len(secret) != 72:
+        if len(clientSecret) != 72:
             raise InvalidClientSecretError
-        self.id = id
-        self.secret = secret
+        self.clientId = clientId
+        self.clientSecret = clientSecret
         self.token = None
 
     """
@@ -130,45 +130,65 @@ class Client(object):
         for x in range(len(camera_response_array)):
             current_object = camera_response_array[x]
             if current_object['type'] == 'ip':
-                camera_processed.append(IPCamera(current_object['cameraID'], current_object['type'],
+                camera_processed.append(IPCamera(current_object['cameraID'],
+                                                 current_object['type'],
                                                  current_object['source'],
-                                                 current_object['latitude'], current_object['longitude'],
+                                                 current_object['latitude'],
+                                                 current_object['longitude'],
                                                  current_object['country'],
-                                                 current_object['state'], current_object['city'],
+                                                 current_object['state'],
+                                                 current_object['city'],
                                                  current_object['resolution_width'],
-                                                 current_object['resolution_height'], current_object['is_active_image'],
-                                                 current_object['is_active_video'], current_object['utc_offset'],
+                                                 current_object['resolution_height'],
+                                                 current_object['is_active_image'],
+                                                 current_object['is_active_video'],
+                                                 current_object['utc_offset'],
                                                  current_object['timezone_id'],
-                                                 current_object['timezone_name'], current_object['reference_logo'],
+                                                 current_object['timezone_name'],
+                                                 current_object['reference_logo'],
                                                  current_object['reference_url'],
-                                                 current_object['retrieval']['ip'], current_object['retrieval']['port'],
+                                                 current_object['retrieval']['ip'],
+                                                 current_object['retrieval']['port'],
                                                  current_object['retrieval']['brand'],
                                                  current_object['retrieval']['model'],
                                                  current_object['retrieval']['image_path'],
                                                  current_object['retrieval']['video_path']))
             elif current_object['type'] == 'non_ip':
-                camera_processed.append(NonIPCamera(current_object['cameraID'], current_object['type'],
-                                                    current_object['source'], current_object['latitude'],
-                                                    current_object['longitude'], current_object['country'],
-                                                    current_object['state'], current_object['city'],
+                camera_processed.append(NonIPCamera(current_object['cameraID'],
+                                                    current_object['type'],
+                                                    current_object['source'],
+                                                    current_object['latitude'],
+                                                    current_object['longitude'],
+                                                    current_object['country'],
+                                                    current_object['state'],
+                                                    current_object['city'],
                                                     current_object['resolution_width'],
                                                     current_object['resolution_height'],
-                                                    current_object['is_active_image'], current_object['is_active_video'],
-                                                    current_object['utc_offset'],current_object['timezone_id'],
-                                                    current_object['timezone_name'], current_object['reference_logo'],
+                                                    current_object['is_active_image'],
+                                                    current_object['is_active_video'],
+                                                    current_object['utc_offset'],
+                                                    current_object['timezone_id'],
+                                                    current_object['timezone_name'],
+                                                    current_object['reference_logo'],
                                                     current_object['reference_url'],
                                                     current_object['retrieval']['snapshot_url']))
             else:
-                camera_processed.append(StreamCamera(current_object['cameraID'], current_object['type'],
-                                                     current_object['source'], current_object['latitude'],
-                                                     current_object['longitude'], current_object['country'],
-                                                     current_object['state'], current_object['city'],
+                camera_processed.append(StreamCamera(current_object['cameraID'],
+                                                     current_object['type'],
+                                                     current_object['source'],
+                                                     current_object['latitude'],
+                                                     current_object['longitude'],
+                                                     current_object['country'],
+                                                     current_object['state'],
+                                                     current_object['city'],
                                                      current_object['resolution_width'],
                                                      current_object['resolution_height'],
-                                                     current_object['is_active_image'], current_object['is_active_video'],
+                                                     current_object['is_active_image'],
+                                                     current_object['is_active_video'],
                                                      current_object['utc_offset'],
                                                      current_object['timezone_id'],
-                                                     current_object['timezone_name'], current_object['reference_logo'],
+                                                     current_object['timezone_name'],
+                                                     current_object['reference_logo'],
                                                      current_object['reference_url'],
                                                      current_object['retrieval']['m3u8_url']))
         return camera_processed
