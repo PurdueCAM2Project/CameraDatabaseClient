@@ -16,7 +16,7 @@ class FormatError(Error):
     """
 
     def __init__(self, message):
-
+        Error.__init__(self, None, None)
         self.message = message
 
     def __str__(self):
