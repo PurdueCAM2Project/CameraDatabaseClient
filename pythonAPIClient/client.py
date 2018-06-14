@@ -67,27 +67,14 @@ class Client(object):
     def add_camera(self, Camera):
         pass
 
-    """
-    Function for admin
     # TODO: update a camera in database
     # replace others with desired field names
-    """
-
     def update_camera(self, camID, others):
         pass
 
-    """
-    Function for user
     # TODO: get a camera
-    """
-
     def camera_by_id(self, cameraID):
         pass
-
-    """
-    Function for user
-    # TODO: fix the commenting 
-    """
 
     def search_camera(self, latitude=None, longitude=None, radius=None, type=None, source=None,
                       country=None, state=None, city=None, resolution_width=None,
