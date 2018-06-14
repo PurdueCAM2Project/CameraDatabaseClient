@@ -9,6 +9,8 @@ from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 """
 Represent a CAM2 client application.
 """
+
+
 class Client(object):
     # Static variable to store the base URL.
     base_URL = 'https://cam2-api.herokuapp.com/'
@@ -16,6 +18,7 @@ class Client(object):
     """
     Represent a CAM2 client application.
     """
+
     def request_token(self):
         url = Client.base_URL + 'auth/?clientID=' + self.clientId + \
               '&clientSecret=' + self.clientSecret
@@ -32,6 +35,7 @@ class Client(object):
     """
     Represent a CAM2 client application.
     """
+
     def header_builder(self):
         head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
@@ -39,6 +43,7 @@ class Client(object):
     """
     Represent a CAM2 client application.
     """
+
     def __init__(self, clientId, clientSecret):
         # clientId are of a fixed length of 96 characters.
         if len(clientId) != 96:
@@ -54,6 +59,7 @@ class Client(object):
     Functions for webUI
     # TODO: return clientID and client secret
     """
+
     def register(self, owner, permissionLevel='user'):
         pass
 
@@ -61,6 +67,7 @@ class Client(object):
     Represent a CAM2 client application.
     # TODO: update client's owner
     """
+
     def update_owner(self, clientID, owner):
         pass
 
@@ -68,6 +75,7 @@ class Client(object):
     Represent a CAM2 client application.
     # TODO: update client's permissionLevel
     """
+
     def update_permission(self, clientID, permissionLevel):
         pass
 
@@ -75,6 +83,7 @@ class Client(object):
     Represent a CAM2 client application.
     # TODO: get clientID by owner
     """
+
     def client_ids_by_owner(self, owner):
         pass
 
@@ -82,6 +91,7 @@ class Client(object):
     Represent a CAM2 client application.
     # TODO: get api usage count by client
     """
+
     def usage_by_client(self, clientID):
         pass
 
@@ -89,6 +99,7 @@ class Client(object):
     Function for admin
     # TODO: add a camera to database
     """
+
     def add_camera(self, Camera):
         pass
 
@@ -97,6 +108,7 @@ class Client(object):
     # TODO: update a camera in database
     # replace others with desired field names
     """
+
     def update_camera(self, camID, others):
         pass
 
@@ -104,6 +116,7 @@ class Client(object):
     Function for user
     # TODO: get a camera
     """
+
     def camera_by_id(self, cameraID):
         pass
 
@@ -111,6 +124,7 @@ class Client(object):
     Function for user
     # TODO: fix the commenting 
     """
+
     def search_camera(self, latitude=None, longitude=None, radius=None, type=None, source=None,
                       country=None, state=None, city=None, resolution_width=None,
                       resolution_heigth=None, is_active_image=None, is_active_video=None,
