@@ -104,10 +104,12 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
+        response_dict = client.request_token()
         mock_get.assert_called_once_with(
             self.base_URL + 'auth/?clientID='+clientId+'&clientSecret='+clientSecret)
         self.assertEqual(1, mock_response.json.call_count)
         self.assertEqual(client.token, 'correctToken', 'token not stored in the client object.')
+        return response_dict
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_all_correct_Internal_error(self, mock_get):
