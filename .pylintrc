@@ -452,8 +452,7 @@ redefining-builtins-modules=six.moves,past.builtins,future.builtins,io
 [CLASSES]
 
 # List of method names used to declare (i.e. assign) instance attributes.
-defining-attr-methods=__init__,
-                      __new__,
+defining-attr-methods=__new__,
                       setUp
 
 # List of member names, which should be excluded from the protected access
@@ -462,8 +461,7 @@ exclude-protected=_asdict,
                   _fields,
                   _replace,
                   _source,
-                  _make,
-                  __init__
+                  _make
 
 # List of valid names for the first argument in a class method.
 valid-classmethod-first-arg=cls
