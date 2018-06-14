@@ -7,7 +7,7 @@ class Error(Exception):
     """
     Represent a generic error.
     """
-
+    pass
 
 class FormatError(Error):
     """

@@ -1,6 +1,6 @@
 import requests
-from .error import Error, AuthenticationError, InternalError, InvalidClientIdError, InvalidClientSecretError, \
-    ResourceNotFoundError, FormatError
+from .error import Error, AuthenticationError, InternalError, InvalidClientIdError, \
+    InvalidClientSecretError, ResourceNotFoundError, FormatError
 from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
 
@@ -14,11 +14,11 @@ class Client(object):
     def request_token(self):
         url = Client.base_URL + 'auth/?clientID=' + self.id + '&clientSecret=' + self.secret
         response = requests.get(url)
-        if (response.status_code == 200):
+        if response.status_code == 200:
             self.token = response.json()['token']
-        elif (response.status_code == 404):
+        elif response.status_code == 404:
             raise ResourceNotFoundError(response.json()['message'])
-        elif (response.status_code == 401):
+        elif response.status_code == 401:
             raise AuthenticationError(response.json()['message'])
         else:
             raise InternalError()
