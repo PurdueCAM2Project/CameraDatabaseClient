@@ -5,7 +5,7 @@ from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
 
 class Client(object):
-    # Static variable to store the base URL.
+    # Static variable to store the base URL. Ready for linting
     base_URL = 'https://cam2-api.herokuapp.com/'
     """
     Represent a CAM2 client application.
