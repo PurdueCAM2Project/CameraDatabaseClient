@@ -182,7 +182,7 @@ never-returning-functions=optparse.Values,sys.exit
 [BASIC]
 
 # Naming style matching correct argument names
-argument-naming-style=snake_case
+argument-naming-style=camel_case
 
 # Regular expression matching correct argument names. Overrides argument-
 # naming-style
