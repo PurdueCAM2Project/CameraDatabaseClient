@@ -57,13 +57,16 @@ class NonIPCamera(Camera):
     """
     # TODO: define extra retrieval attributes and constructor of non_ip camera object
     # replace others with desired field names
-    def __init__(self, cameraID, camera_type, source, lat, lng, country, state, city, resolution_width,
-                 resolution_height, is_active_image, is_active_video, utc_offset, timezone_id,
-                 timezone_name, reference_logo, reference_url,snapshot_url):
+    def __init__(self, cameraID, camera_type, source, lat, lng, country, state, city,
+                 resolution_width, resolution_height, is_active_image, is_active_video,
+                 utc_offset, timezone_id, timezone_name, reference_logo,
+                 reference_url, snapshot_url):
                 self.snapshot_url = snapshot_url
-                super(NonIPCamera, self).__init__(cameraID, camera_type, source, lat, lng, country, state,
-                                                  city, resolution_width, resolution_height, is_active_image,
-                                                  is_active_video, utc_offset, timezone_id, timezone_name,
+                super(NonIPCamera, self).__init__(cameraID, camera_type, source, lat, lng,
+                                                  country, state, city, resolution_width,
+                                                  resolution_height, is_active_image,
+                                                  is_active_video, utc_offset,
+                                                  timezone_id, timezone_name,
                                                   reference_logo, reference_url)
 
 
@@ -74,11 +77,14 @@ class StreamCamera(Camera):
     """
     # TODO: define extra retrieval attributes and constructor of stream camera object
     # replace others with desired field names
-    def __init__(self, cameraID, camera_type, source, lat, lng, country, state, city, resolution_width
-                , resolution_height, is_active_image, is_active_video, utc_offset, timezone_id
-                , timezone_name, reference_logo, reference_url,m3u8_url):
+    def __init__(self, cameraID, camera_type, source, lat, lng, country, state, city,
+                 resolution_width, resolution_height, is_active_image, is_active_video,
+                 utc_offset, timezone_id, timezone_name, reference_logo, reference_url,
+                 m3u8_url):
                 self.m3u8_url = m3u8_url
-                super(StreamCamera, self).__init__(cameraID, camera_type, source, lat, lng, country, state,
-                                                   city, resolution_width, resolution_height, is_active_image,
-                                                   is_active_video, utc_offset, timezone_id, timezone_name,
+                super(StreamCamera, self).__init__(cameraID, camera_type, source, lat, lng,
+                                                   country, state, city, resolution_width,
+                                                   resolution_height, is_active_image,
+                                                   is_active_video, utc_offset,
+                                                   timezone_id, timezone_name,
                                                    reference_logo, reference_url)

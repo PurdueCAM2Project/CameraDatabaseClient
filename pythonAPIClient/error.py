@@ -1,3 +1,6 @@
+"""
+This file defines all the custom errors.
+"""
 class Error(Exception):
     """
     Represent a generic error.
