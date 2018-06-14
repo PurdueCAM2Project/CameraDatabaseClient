@@ -76,7 +76,7 @@ class Client(object):
     def camera_by_id(self, cameraID):
         pass
 
-    def search_camera(self, latitude=None, longitude=None, radius=None, type=None, source=None,
+    def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None, source=None,
                       country=None, state=None, city=None, resolution_width=None,
                       resolution_heigth=None, is_active_image=None, is_active_video=None,
                       offset=None):
@@ -89,8 +89,8 @@ class Client(object):
             url += 'lng=' + longitude + '&'
         if radius is not None:
             url += 'radius=' + radius + '&'
-        if type is not None:
-            url += 'type=' + type + '&'
+        if camera_type is not None:
+            url += 'type=' + camera_type + '&'
         if source is not None:
             url += 'source=' + source + '&'
         if country is not None:
