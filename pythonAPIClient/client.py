@@ -28,17 +28,9 @@ class Client(object):
         else:
             raise InternalError()
 
-    """
-    Represent a CAM2 client application.323232323
-    """
-
     def header_builder(self):
         head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
-
-    """
-    Represent a CAM2 client application.424242323
-    """
 
     def __init__(self, clientId, clientSecret):
         # clientId are of a fixed length of 96 characters.
