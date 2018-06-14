@@ -2,7 +2,7 @@ class Camera(object):
     """
     Represent a single camera
     """
-    # TODO: define attributes and constructor of basic camera object
+    # TODO: define attributes and constructor of basic camera object check
     # replace others with desired field names
     def __init__(self, cameraID, camera_type, source, lat, lng, country, state, city, resolution_width
                 , resolution_height, is_active_image, is_active_video, utc_offset, timezone_id
