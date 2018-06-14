@@ -29,6 +29,7 @@ class ResourceNotFoundError(Error):
     """
 
     def __init__(self, message):
+        Error.__init__(self, None, None)
         self.message = message
 
     def __str__(self):
@@ -41,6 +42,7 @@ class AuthenticationError(Error):
     """
 
     def __init__(self, message):
+        Error.__init__(self, None, None)
         self.message = message
 
     def __str__(self):
@@ -53,6 +55,7 @@ class InternalError(Error):
     """
 
     def __init__(self):
+        Error.__init__(self, None, None)
         self.message = 'InternalError'
 
     def __str__(self):
@@ -67,6 +70,7 @@ class ResourceConflictError(Error):
     """
 
     def __init__(self, message):
+        Error.__init__(self, None, None)
         self.message = message
 
     def __str__(self):
@@ -79,6 +83,7 @@ class AuthorizationError(Error):
     """
 
     def __init__(self, message):
+        Error.__init__(self, None, None)
         self.message = message
 
     def __str__(self):
@@ -91,6 +96,7 @@ class InvalidClientIdError(Error):
     """
 
     def __init__(self):
+        Error.__init__(self, None, None)
         self.message = 'The Length of ClientID should be 96'
 
     def __str__(self):
@@ -103,6 +109,7 @@ class InvalidClientSecretError(Error):
     """
 
     def __init__(self):
+        Error.__init__(self, None, None)
         self.message = 'The Length of ClientSecret should be 72'
 
     def __str__(self):
