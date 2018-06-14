@@ -9,13 +9,13 @@ class Error(Exception):
     """
     pass
 
+
 class FormatError(Error):
     """
     Corresponends to 422 RequestFormatError in API.
     """
 
     def __init__(self, message):
-
         self.message = message
 
     def __str__(self):
