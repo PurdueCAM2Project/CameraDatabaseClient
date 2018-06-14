@@ -1,9 +1,12 @@
+"""
+This class holds the code to make camera objects.
+"""
+
+
 class Camera(object):
     """
     Represent a single camera
     """
-    # TODO: define attributes and constructor of basic camera object check
-    # replace others with desired field names
     def __init__(self, cameraID, camera_type, source, lat, lng, country, state, city,
                  resolution_width, resolution_height, is_active_image,
                  is_active_video, utc_offset, timezone_id,
@@ -26,13 +29,12 @@ class Camera(object):
         self.reference_logo = reference_logo
         self.reference_url = reference_url
 
+
 class IPCamera(Camera):
     """
     Represent a single ip_camera
     This is a subclass of Camera
     """
-    # TODO: define extra retrieval attributes and constructor of ip camera object
-    # replace others with desired field names
     def __init__(self, cameraID, camera_type, source, lat, lng, country, state,
                  city, resolution_width, resolution_height, is_active_image,
                  is_active_video, utc_offset, timezone_id, timezone_name,
@@ -55,8 +57,6 @@ class NonIPCamera(Camera):
     Represent a non-IP camera.
     This is a subclass of Camera
     """
-    # TODO: define extra retrieval attributes and constructor of non_ip camera object
-    # replace others with desired field names
     def __init__(self, cameraID, camera_type, source, lat, lng, country, state, city,
                  resolution_width, resolution_height, is_active_image, is_active_video,
                  utc_offset, timezone_id, timezone_name, reference_logo,
@@ -75,8 +75,6 @@ class StreamCamera(Camera):
     Represent a Stream camera.
     This is a subclass of Camera
     """
-    # TODO: define extra retrieval attributes and constructor of stream camera object
-    # replace others with desired field names
     def __init__(self, cameraID, camera_type, source, lat, lng, country, state, city,
                  resolution_width, resolution_height, is_active_image, is_active_video,
                  utc_offset, timezone_id, timezone_name, reference_logo, reference_url,
