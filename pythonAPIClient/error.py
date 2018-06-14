@@ -1,11 +1,12 @@
 """
 This file defines all the custom errors.
 """
+
+
 class Error(Exception):
     """
     Represent a generic error.
     """
-    pass
 
 
 class FormatError(Error):
@@ -14,12 +15,11 @@ class FormatError(Error):
     """
 
     def __init__(self, message):
+
         self.message = message
 
     def __str__(self):
         return str(self.message)
-
-    pass
 
 
 class ResourceNotFoundError(Error):
@@ -33,8 +33,6 @@ class ResourceNotFoundError(Error):
     def __str__(self):
         return str(self.message)
 
-    pass
-
 
 class AuthenticationError(Error):
     """
@@ -47,8 +45,6 @@ class AuthenticationError(Error):
     def __str__(self):
         return str(self.message)
 
-    pass
-
 
 class InternalError(Error):
     """
@@ -60,8 +56,6 @@ class InternalError(Error):
 
     def __str__(self):
         return str(self.message)
-
-    pass
 
 
 class ResourceConflictError(Error):
@@ -77,8 +71,6 @@ class ResourceConflictError(Error):
     def __str__(self):
         return str(self.message)
 
-    pass
-
 
 class AuthorizationError(Error):
     """
@@ -90,8 +82,6 @@ class AuthorizationError(Error):
 
     def __str__(self):
         return str(self.message)
-
-    pass
 
 
 class InvalidClientIdError(Error):
@@ -105,8 +95,6 @@ class InvalidClientIdError(Error):
     def __str__(self):
         return str(self.message)
 
-    pass
-
 
 class InvalidClientSecretError(Error):
     """
@@ -118,5 +106,3 @@ class InvalidClientSecretError(Error):
 
     def __str__(self):
         return str(self.message)
-
-    pass
