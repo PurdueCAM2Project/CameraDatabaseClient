@@ -1,6 +1,3 @@
-"""
-fix me
-"""
 import unittest
 import sys
 from os import path
@@ -20,6 +17,7 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(InvalidClientIdError):
             client = Client('dummyID', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
                                        'bbbbbbbbbbbbbbbbbbbbbbb')
+            return client
 
     def test_client_init_wrong_Client_Secret_Length(self):
         with self.assertRaises(InvalidClientSecretError):
@@ -27,6 +25,7 @@ class TestClient(unittest.TestCase):
                 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
                 'aaaaaaaaaaaaaaaaaaaaaa',
                 'dummySecret')
+            return client
 
     def test_client_init(self):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
@@ -52,7 +51,7 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.error.AuthenticationError')
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_get_token_incorrect_ID_Secret(self, mock_get):
+    def test_get_token_incorrect_ID_Secret(self, mock_get, mock_http_error_handler):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
@@ -69,10 +68,11 @@ class TestClient(unittest.TestCase):
             client.request_token()
         mock_get.assert_called_once_with(url)
         self.assertEqual(1, mock_response.json.call_count)
+        return mock_http_error_handler
 
     @mock.patch('pythonAPIClient.error.AuthenticationError')
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_get_token_incorrect_Secret(self, mock_get):
+    def test_get_token_incorrect_Secret(self, mock_get, mock_http_error_handler):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
@@ -89,6 +89,7 @@ class TestClient(unittest.TestCase):
             client.request_token()
         mock_get.assert_called_once_with(url)
         self.assertEqual(1, mock_response.json.call_count)
+        return mock_http_error_handler
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_all_correct(self, mock_get):
