@@ -12,7 +12,7 @@ class Client(object):
     """
 
     def request_token(self):
-        url = Client.base_URL + 'auth/?clientID=' + self.clientId + '&clientSecret=' + self.secret
+        url = Client.base_URL + 'auth/?clientID=' + self.clientId + '&clientSecret=' + self.clientSecret
         response = requests.get(url)
         if response.status_code == 200:
             self.token = response.json()['token']
