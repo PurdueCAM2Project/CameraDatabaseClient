@@ -76,8 +76,8 @@ class Client(object):
     def camera_by_id(self, cameraID):
         pass
 
-    def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None, source=None,
-                      country=None, state=None, city=None, resolution_width=None,
+    def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None,
+                      source=None, country=None, state=None, city=None, resolution_width=None,
                       resolution_heigth=None, is_active_image=None, is_active_video=None,
                       offset=None):
         if self.token is None:
