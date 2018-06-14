@@ -1,3 +1,6 @@
+"""
+fix me
+"""
 import unittest
 import sys
 from os import path
@@ -49,7 +52,7 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.error.AuthenticationError')
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_get_token_incorrect_ID_Secret(self, mock_get, mock_http_error_handler):
+    def test_get_token_incorrect_ID_Secret(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
@@ -69,7 +72,7 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.error.AuthenticationError')
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_get_token_incorrect_Secret(self, mock_get, mock_http_error_handler):
+    def test_get_token_incorrect_Secret(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
@@ -100,7 +103,6 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        response_dict = client.request_token()
         mock_get.assert_called_once_with(
             self.base_URL + 'auth/?clientID='+clientId+'&clientSecret='+clientSecret)
         self.assertEqual(1, mock_response.json.call_count)
@@ -146,11 +148,10 @@ class TestClient(unittest.TestCase):
                    'aaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
-        client.token ='ExpiredToken'
+        client.token = 'ExpiredToken'
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/search?country=USA'
         with self.assertRaises(TypeError):
             client.search_camera(country='USA')
         mock_get.assert_called_with(self.base_URL + 'auth/?clientID=' + clientId +

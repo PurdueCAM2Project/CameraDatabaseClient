@@ -157,7 +157,7 @@ class Client(object):
             raise InternalError()
         camera_response_array = response.json()
         camera_processed = []
-        for x in range(len(camera_response_array)):
+        for x in enumerate(camera_response_array):
             current_object = camera_response_array[x]
             if current_object['type'] == 'ip':
                 camera_processed.append(IPCamera(current_object['cameraID'],
