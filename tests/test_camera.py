@@ -40,18 +40,24 @@ class TestCamera(unittest.TestCase):
 
         self.assertTrue(isinstance(cam, Camera))
 
-        self.assertTrue(isinstance(ip_cam_test1, IPCamera) and issubclass(ip_cam_test1.__class__, cam.__class__))
-        self.assertTrue(isinstance(ip_cam_test2, IPCamera) and issubclass(ip_cam_test2.__class__, cam.__class__))
+        self.assertTrue(isinstance(ip_cam_test1, IPCamera) and issubclass(ip_cam_test1.__class__,
+                                                                          cam.__class__))
+        self.assertTrue(isinstance(ip_cam_test2, IPCamera) and issubclass(ip_cam_test2.__class__,
+                                                                          cam.__class__))
 
         self.assertTrue(
-            isinstance(non_ip_cam_test1, NonIPCamera) and issubclass(non_ip_cam_test1.__class__, cam.__class__))
+            isinstance(non_ip_cam_test1, NonIPCamera) and issubclass(non_ip_cam_test1.__class__,
+                                                                     cam.__class__))
         self.assertTrue(
-            isinstance(non_ip_cam_test2, NonIPCamera) and issubclass(non_ip_cam_test2.__class__, cam.__class__))
+            isinstance(non_ip_cam_test2, NonIPCamera) and issubclass(non_ip_cam_test2.__class__,
+                                                                     cam.__class__))
 
         self.assertTrue(
-            isinstance(stream_cam_test1, StreamCamera) and issubclass(stream_cam_test1.__class__, cam.__class__))
+            isinstance(stream_cam_test1, StreamCamera) and issubclass(stream_cam_test1.__class__,
+                                                                      cam.__class__))
         self.assertTrue(
-            isinstance(stream_cam_test2, StreamCamera) and issubclass(stream_cam_test2.__class__, cam.__class__))
+            isinstance(stream_cam_test2, StreamCamera) and issubclass(stream_cam_test2.__class__,
+                                                                      cam.__class__))
 
 
 if __name__ == '__main__':
