@@ -27,9 +27,6 @@ else
     git checkout --orphan gh-pages
 fi
 
-# Install sphinx
-pip install sphinx
-pip install sphinx_rtd_theme
 # create new site
 mkdir pythonAPIClient
 cp -a ../pythonAPIClient/* ./pythonAPIClient/
