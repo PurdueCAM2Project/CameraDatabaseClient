@@ -71,7 +71,11 @@ class Client(object):
         url = Client.base_URL + 'apps/by-owner?owner=' + owner
         response = requests.get(url)
         if response.status_code == 200:
-            return response.json()['clientID']
+            clientObject = response.json()
+            clientIDs = []
+            for ct in clientObject:
+                clientIDs.append(ct['clientID'])
+            return clientIDs
         elif response.status_code == 404:
             raise ResourceNotFoundError(response.json()['message'])
         elif response.status_code == 401:
