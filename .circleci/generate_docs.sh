@@ -35,8 +35,6 @@ pip install --user sphinx_rtd_theme
 mkdir pythonAPIClient
 cp -a ../pythonAPIClient/* ./pythonAPIClient/
 make html
-mv build/html/* .
-rm -rf build
 rm -rf pythonAPIClient/*
 
 
