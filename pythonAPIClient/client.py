@@ -44,7 +44,19 @@ class Client(object):
 
     # TODO: return clientID and client secret
     def register(self, owner, permissionLevel='user'):
-        pass
+        url = Client.base_URL + 'apps/register/?owner=' + owner + '&permissionLevel=' + permissionLevel
+        headers = self.header_builder()
+        response = requests.post(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()['clientID'], response.json()['clientSecret']
+        elif response.status_code == 404:
+            raise ResourceNotFoundError(response.json()['message'])
+        elif response.status_code == 422:
+            raise FormatError(response.json()['message'])
+        elif response.status_code == 401:
+            raise AuthenticationError(response.json()['message'])
+        else:
+            raise InternalError()
 
     # TODO: update client's owner
     def update_owner(self, clientID, owner):
