@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Adopted from https://github.com/eldarlabs/ghpages-deploy-script
 # ideas used from https://gist.github.com/motemen/8595451
 
@@ -28,8 +28,8 @@ else
 fi
 
 # Install sphinx
-pip install --user sphinx
-pip install --user sphinx_rtd_theme
+pip install sphinx
+pip install sphinx_rtd_theme
 # create new site
 mkdir pythonAPIClient
 cp -a ../pythonAPIClient/* ./pythonAPIClient/
