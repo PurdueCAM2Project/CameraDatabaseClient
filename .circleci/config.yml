@@ -50,7 +50,7 @@ jobs:
           destination: test-reports
       - add_ssh_keys:
           fingerprints:
-          - "ae:f0:fd:46:31:14:1a:e2:8b:c5:15:0d:13:aa:14:ff"
+            - "ae:f0:fd:46:31:14:1a:e2:8b:c5:15:0d:13:aa:14:ff"
       - run:
           name: Generate Documentation
           command: |
