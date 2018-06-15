@@ -17,14 +17,16 @@ class Client(object):
     secret : str
         Secret of the client application.
     token : str
-        [User does not need to provide this attribute] Token for the client to access the CAM2 database. 
+        Token for the client to access the CAM2 database. 
         Each token expires in 5 minutes.
+        
+        [User does not need to provide this attribute] 
  
     Note
     ----
  
-        In order to access the package, you must make an account through the CAM2 project website, and register a new application. 
-        The website can be found here: https://www.cam2project.net/.
+        In order to access the package, register a new application by contacting the CAM2 team
+        at https://www.cam2project.net/.
         
     """
 
@@ -99,8 +101,27 @@ class Client(object):
     Functions for webUI
     """
 
-    # TODO: return clientID and client secret
+
     def register(self, owner, permissionLevel='user'):
+        """Client initialization method.
+ 
+        Parameters
+        ----------
+        owner : str
+            Username of the owner of the client application.
+        permissionLevel : :obj:`str`, optional
+            Permission level of the owner of the client application. Default permission level is 'user'.
+
+        Raises
+        ------
+
+        Returns
+        -------
+        str
+            Client id of the newly registered client application.
+        str
+            Client secret of the newly registered client application.
+        """
         pass
 
     # TODO: update client's owner
