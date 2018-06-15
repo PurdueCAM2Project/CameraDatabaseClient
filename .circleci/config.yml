@@ -50,6 +50,12 @@ jobs:
             . venv/bin/activate
             python -m unittest discover
 
+      - run:
+          name: run linter
+          command: |
+            . venv/bin/activate
+            pylint -j 0 pythonAPIClient tests
+
       - store_artifacts:
           path: test-reports
           destination: test-reports
