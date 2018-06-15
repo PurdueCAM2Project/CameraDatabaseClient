@@ -68,7 +68,16 @@ class Client(object):
 
     # TODO: get clientID by owner
     def client_ids_by_owner(self, owner):
-        pass
+        url = Client.base_URL + 'apps/by-owner?owner=' + owner
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.json()['clientID']
+        elif response.status_code == 404:
+            raise ResourceNotFoundError(response.json()['message'])
+        elif response.status_code == 401:
+            raise AuthenticationError(response.json()['message'])
+        else:
+            raise InternalError()
 
     # TODO: get api usage count by client
     def usage_by_client(self, clientID):

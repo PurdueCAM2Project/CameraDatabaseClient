@@ -293,5 +293,68 @@ class TestClient(unittest.TestCase):
         mock_post.assert_called_once_with(url, headers=header)
         self.assertEqual(0, mock_response.json.call_count)
 
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_clientID_by_owner(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            'clientID': 'test_clientID'
+        }
+        mock_get.return_value = mock_response
+        url = Client.base_URL + 'apps/by-owner?owner=test'
+        self.assertEqual(client.client_ids_by_owner("test"), 'test_clientID')
+        mock_get.assert_called_once_with(url)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_clientID_by_owner_no_token(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Failed to authenticate token'
+        }
+        mock_get.return_value = mock_response
+        url = Client.base_URL + 'apps/by-owner?owner=testowner'
+        with self.assertRaises(AuthenticationError):
+            client.client_ids_by_owner('testowner')
+        mock_get.assert_called_once_with(url)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_clientID_by_owner_incorrect_clientID(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 404
+        mock_response.json.return_value = {
+            'message': 'No app exists with given clientID'
+        }
+        mock_get.return_value = mock_response
+        url = Client.base_URL + 'apps/by-owner?owner=testowner'
+        with self.assertRaises(ResourceNotFoundError):
+            client.client_ids_by_owner('testowner')
+        mock_get.assert_called_once_with(url)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_clientID_by_owner_internal_error(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+        url = Client.base_URL + 'apps/by-owner?owner=testowner'
+        with self.assertRaises(InternalError):
+            client.client_ids_by_owner('testowner')
+        mock_get.assert_called_once_with(url)
+        self.assertEqual(0, mock_response.json.call_count)
+
 if __name__ == '__main__':
     unittest.main()
