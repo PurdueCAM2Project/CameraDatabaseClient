@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Adopted from https://github.com/eldarlabs/ghpages-deploy-script
 # ideas used from https://gist.github.com/motemen/8595451
 
