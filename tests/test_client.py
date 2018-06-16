@@ -135,7 +135,7 @@ class TestClient(unittest.TestCase):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
-        client.token='ExpiredToken'
+        client.token = 'ExpiredToken'
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_get.return_value = mock_response
@@ -221,11 +221,32 @@ class TestClient(unittest.TestCase):
         # validate result
         url = Client.base_URL + 'apps/register/?owner=testowner&permissionLevel=user'
         header = {'Authorization': 'Bearer None'}
-
-        with self.assertRaises(AuthenticationError):
+        with self.assertRaises(ResourceNotFoundError):
             client.register('testowner')
         mock_post.assert_called_once_with(url, headers=header)
-        self.assertEqual(1, mock_response.json.call_count)
+        self.assertEqual(0, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_register_expired_token(self, mock_get, mock_post):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        client.token = 'ExpiredToken'
+        # set request.post's result
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        mock_post.return_value = mock_response
+        with self.assertRaises(InternalError):
+            client.register('testowner')
+        url = Client.base_URL + 'apps/register/?owner=testowner&permissionLevel=user'
+        header = {'Authorization': 'Bearer ExpiredToken'}
+        mock_post.assert_called_once_with(url, headers=header)
+        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+'&clientSecret='+clientSecret)
+        self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_no_owner(self, mock_post):
@@ -300,12 +321,15 @@ class TestClient(unittest.TestCase):
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {
-            'clientID': 'test_clientID'
-        }
+        clientObject = [
+            {'clientID': 'test_clientID1'},
+            {'clientID': 'test_clientID2'}]
+        mock_response.json.return_value = clientObject
+
         mock_get.return_value = mock_response
         url = Client.base_URL + 'apps/by-owner?owner=test'
-        self.assertEqual(client.client_ids_by_owner("test"), 'test_clientID')
+        expected_clientID_array = ['test_clientID1', 'test_clientID2']
+        self.assertEqual(client.client_ids_by_owner("test"), expected_clientID_array)
         mock_get.assert_called_once_with(url)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -319,10 +343,25 @@ class TestClient(unittest.TestCase):
             'message': 'Failed to authenticate token'
         }
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/by-owner?owner=testowner'
         with self.assertRaises(AuthenticationError):
             client.client_ids_by_owner('testowner')
-        mock_get.assert_called_once_with(url)
+        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+'&clientSecret='+clientSecret)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_clientID_by_owner_expired_token(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Token expired'
+        }
+        mock_get.return_value = mock_response
+        with self.assertRaises(AuthenticationError):
+            client.client_ids_by_owner('testowner')
+        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+'&clientSecret='+clientSecret)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
