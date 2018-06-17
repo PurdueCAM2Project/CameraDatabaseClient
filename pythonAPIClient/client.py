@@ -1,7 +1,6 @@
 import requests
 from .error import Error, AuthenticationError, InternalError, InvalidClientIdError, \
-    InvalidClientSecretError, \
-    ResourceNotFoundError, FormatError
+    InvalidClientSecretError, ResourceNotFoundError, FormatError
 from .camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
 
@@ -76,8 +75,8 @@ class Client(object):
         if response.status_code == 404:
             raise ResourceNotFoundError(response.json()['message'])
         elif response.status_code == 401:
-                self.request_token()
-                response = requests.get(url)
+            self.request_token()
+            response = requests.get(url)
         elif response.status_code == 500:
             raise InternalError()
         clientObject = response.json()
