@@ -269,7 +269,8 @@ class TestClient(unittest.TestCase):
         url = Client.base_URL + 'apps/register/?owner=testowner&permissionLevel=user'
         header = {'Authorization': 'Bearer ExpiredToken'}
         mock_post.assert_called_once_with(url, headers=header)
-        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+'&clientSecret='+clientSecret)
+        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
+                                    '&clientSecret='+clientSecret)
         self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
@@ -374,7 +375,8 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response
         with self.assertRaises(AuthenticationError):
             client.client_ids_by_owner('testowner')
-        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+'&clientSecret='+clientSecret)
+        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
+                                    '&clientSecret='+clientSecret)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -391,7 +393,8 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response
         with self.assertRaises(AuthenticationError):
             client.client_ids_by_owner('testowner')
-        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+'&clientSecret='+clientSecret)
+        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
+                                    '&clientSecret='+clientSecret)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
