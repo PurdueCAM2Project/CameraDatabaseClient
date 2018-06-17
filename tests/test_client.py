@@ -202,7 +202,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register(self, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         # provide token for building header
@@ -229,7 +230,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_incorrect_token(self, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         # manipulate request.post's result
@@ -250,7 +252,8 @@ class TestClient(unittest.TestCase):
     @mock.patch('pythonAPIClient.client.requests.post')
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_register_expired_token(self, mock_get, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         client.token = 'ExpiredToken'
@@ -271,7 +274,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_no_owner(self, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         # provide token for building header
@@ -294,7 +298,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_incorrect_clientID(self, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         # provide token for building header
@@ -317,7 +322,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_internal_error(self, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         # provide token for building header
@@ -337,7 +343,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
@@ -355,7 +362,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_no_token(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
@@ -371,7 +379,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_expired_token(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
@@ -387,7 +396,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_incorrect_clientID(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
@@ -404,7 +414,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_internal_error(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()

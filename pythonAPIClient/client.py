@@ -45,7 +45,8 @@ class Client(object):
 
     # TODO: return clientID and client secret
     def register(self, owner, permissionLevel='user'):
-        url = Client.base_URL + 'apps/register/?owner=' + owner + '&permissionLevel=' + permissionLevel
+        url = Client.base_URL + 'apps/register/?owner=' + owner + \
+              '&permissionLevel=' + permissionLevel
         header = self.header_builder()
         response = requests.post(url, headers=header)
         if response.status_code == 404:
