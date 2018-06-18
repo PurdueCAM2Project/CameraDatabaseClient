@@ -102,9 +102,7 @@ class Client(object):
         self.clientSecret = clientSecret
         self.token = None
 
-    """
-    Functions for webUI
-    """
+    # Functions for webUI
 
     def register(self, owner, permissionLevel='user'):
         """Client initialization method.
