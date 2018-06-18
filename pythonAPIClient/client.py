@@ -81,7 +81,7 @@ class Client(object):
         Returns
         -------
         array of str
-            Client id owned by the user.
+            Client's ID owned by the user.
 
         """
         url = Client.base_URL + 'apps/by-owner?owner=' + owner
@@ -100,10 +100,38 @@ class Client(object):
         return clientIDs
 
     # TODO: get api usage count by client
-    def usage_by_client(self, clientID):
-        pass
+    def usage_by_client(self, clientID, owner):
+        """
+        Parameters from path
+        ----------
+        clientID : str
+            Client's ID of the application.
 
-    # TODO: add a camera to database
+        Parameters from query
+        ----------
+        owner : str
+            Username of the owner of the client application.
+
+        Returns
+        -------
+        Object of api usage count
+            An object that contains the number of requests made by the client.
+
+        """
+        url = Client.base_URL+"apps/"+clientID+"/usage?owner="+owner
+        response = requests.get(url)
+        if response.status_code == 403:
+            return AuthenticationError(response.json()['message'])
+        elif response.status_code == 401:
+            self.request_token()
+            response = requests.get(url)
+        elif response.status_code == 500:
+            raise InternalError()
+        elif response.status_code == 404:
+            raise ResourceNotFoundError(response.json()['message'])
+        return response.json()['api_usage']
+
+# TODO: add a camera to database
     def add_camera(self, Camera):
         pass
 

@@ -430,5 +430,22 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url)
         self.assertEqual(0, mock_response.json.call_count)
 
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_usage_by_clientID(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            'api_usage': '7'
+        }
+        mock_get.return_value = mock_response
+        url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        self.assertEqual(client.usage_by_client('1', 'testowner'), '7')
+        mock_get.assert_called_once_with(url)
+
+
 if __name__ == '__main__':
     unittest.main()
