@@ -548,7 +548,7 @@ class TestClient(unittest.TestCase):
         mock_put.assert_called_once_with(url, data)
 
     @mock.patch('pythonAPIClient.client.requests.put')
-    def test_update_owner_expired_token(self, mock_put):
+    def test_update_owner_invalid_clientid(self, mock_put):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
