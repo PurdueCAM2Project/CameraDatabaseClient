@@ -9,7 +9,7 @@ from .camera import IPCamera, NonIPCamera, StreamCamera
 class Client(object):
 
     """Class representing a CAM2 client application.
- 
+
     [More detailed description of what client object do.]
 
 
@@ -20,17 +20,17 @@ class Client(object):
     secret : str
         Secret of the client application.
     token : str
-        Token for the client to access the CAM2 database. 
+        Token for the client to access the CAM2 database.
         Each token expires in 5 minutes.
-        
-        [User does not need to provide this attribute] 
- 
+
+        [User does not need to provide this attribute]
+
     Note
     ----
- 
+
         In order to access the package, register a new application by contacting the CAM2 team
         at https://www.cam2project.net/.
-        
+
     """
 
     base_URL = 'https://cam2-api.herokuapp.com/'
@@ -40,7 +40,6 @@ class Client(object):
 
     """
 
-    
     def request_token(self):
 
         """A method to request an access token for the client application.
@@ -53,9 +52,9 @@ class Client(object):
             If the client secret of this client object does not match the clientID.
         InternalError
             If there is an API internal error.
-        
+
         """
-        
+
         url = Client.base_URL + 'auth/?clientID=' + self.clientId + \
               '&clientSecret=' + self.clientSecret
 
@@ -76,7 +75,7 @@ class Client(object):
     def __init__(self, clientId, clientSecret):
 
         """Client initialization method.
- 
+
         Parameters
         ----------
         clientId : str
@@ -109,13 +108,14 @@ class Client(object):
 
     def register(self, owner, permissionLevel='user'):
         """Client initialization method.
- 
+
         Parameters
         ----------
         owner : str
             Username of the owner of the client application.
         permissionLevel : :obj:`str`, optional
-            Permission level of the owner of the client application. Default permission level is 'user'.
+            Permission level of the owner of the client application.
+            Default permission level is 'user'.
 
         Raises
         ------
