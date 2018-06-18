@@ -11,25 +11,25 @@ class Camera(object):
     ----------
     cameraID : str
         Id of the camera.
-    legacy_cameraID : :obj:`int`, optional
+    legacy_cameraID : int, optional
         Id of the camera in previous CAM2 camera database.
     camera_type: str
         Type of the camera.
-    source : :obj:`str`, optional
-    country : :obj:`str`, optional
-    state : :obj:`str`, optional
-    city : :obj:`str`, optional
-    longitude : :obj:`float`, optional
-    latitude : :obj:`float`, optional
-    is_active_image : :obj:`bool`, optional
-    is_active_video : :obj:`bool`, optional
-    resolution_width : :obj:`int`, optional
-    resolution_height : :obj:`int`, optional
-    utc_offset : :obj:`int`, optional
-    timezone_id : :obj:`str`, optional
-    timezone_name : :obj:`str`, optional
-    reference_logo : :obj:`str`, optional
-    reference_url : :obj:`str`, optional
+    source : str, optional
+    country : str, optional
+    state : str, optional
+    city : str, optional
+    longitude : float, optional
+    latitude : float, optional
+    is_active_image : bool, optional
+    is_active_video : bool, optional
+    resolution_width : int, optional
+    resolution_height : int, optional
+    utc_offset : int, optional
+    timezone_id : str, optional
+    timezone_name : str, optional
+    reference_logo : str, optional
+    reference_url : str, optional
 
     """
 
@@ -78,10 +78,10 @@ class IPCamera(Camera):
     ----------
     ip : str
     port : str
-    brand : :obj:`str`, optional
-    model : :obj:`str`, optional
-    image_path : :obj:`str`, optional
-    video_path : :obj:`str`, optional
+    brand : str, optional
+    model : str, optional
+    image_path : str, optional
+    video_path : str, optional
 
     """
 

@@ -111,14 +111,14 @@ class Client(object):
         ----------
         owner : str
             Username of the owner of the client application.
-        permissionLevel : :obj:`str`, optional
+        permissionLevel : str, optional
             Permission level of the owner of the client application.
             Default permission level is 'user'.
 
         Raises
         ------
 
-        Returns
+        Yeilds
         -------
         str
             Client id of the newly registered client application.
