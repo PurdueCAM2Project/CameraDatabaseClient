@@ -143,7 +143,7 @@ class TestClient(unittest.TestCase):
         mock_response.status_code = 200
         mock_get.return_value = mock_response
         url = self.base_URL + 'cameras/search?country=USA'
-        with self.assertRaises(KeyError):
+        with self.assertRaises(TypeError):
             client.search_camera(country='USA')
         mock_get.assert_called_with(url, headers={'Authorization': 'Bearer correctToken'})
         self.assertEqual(2, mock_response.json.call_count)
