@@ -93,7 +93,7 @@ class NonIPCamera(Camera):
     Attributes
     ----------
     snapshot_url : str
-    
+
     """
 
 class StreamCamera(Camera):
@@ -104,5 +104,5 @@ class StreamCamera(Camera):
     Attributes
     ----------
     m3u8_url : str
-    
+
     """

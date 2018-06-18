@@ -144,7 +144,7 @@ class Client(object):
         pass
 
     # TODO: add a camera to database
-    def add_camera(self, Camera):
+    def add_camera(self, camera):
         pass
 
     # TODO: update a camera in database
