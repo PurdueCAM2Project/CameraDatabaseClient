@@ -17,7 +17,7 @@ class Client(object):
     ----------
     clientId : str
         Id of the client application.
-    secret : str
+    clientSecret : str
         Secret of the client application.
     token : str
         Token for the client to access the CAM2 database.
