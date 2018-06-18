@@ -33,7 +33,7 @@ class TestClient(unittest.TestCase):
     def test_client_init(self):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' \
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' \
                        'bbbbbbb'
         client = Client(clientId, clientSecret)
         self.assertTrue(isinstance(client, Client))
@@ -45,7 +45,7 @@ class TestClient(unittest.TestCase):
     def test_build_header(self):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' \
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' \
                        'bbbb'
         client = Client(clientId, clientSecret)
         client.token = 'dummy'
@@ -57,7 +57,7 @@ class TestClient(unittest.TestCase):
     def test_get_token_incorrect_ID_Secret(self, mock_get, mock_http_error_handler):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -78,7 +78,7 @@ class TestClient(unittest.TestCase):
     def test_get_token_incorrect_Secret(self, mock_get, mock_http_error_handler):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -98,7 +98,7 @@ class TestClient(unittest.TestCase):
     def test_get_token_all_correct(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -118,7 +118,7 @@ class TestClient(unittest.TestCase):
     def test_get_token_all_correct_Internal_error(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 500
@@ -133,7 +133,7 @@ class TestClient(unittest.TestCase):
     def test_search_camera_no_token(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -152,7 +152,7 @@ class TestClient(unittest.TestCase):
     def test_search_camera_all_correct_Expired_Token(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         client.token = 'ExpiredToken'
         mock_response = mock.Mock()
@@ -168,7 +168,7 @@ class TestClient(unittest.TestCase):
     def test_search_camera_all_correct_Internal_Error(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         client.token = 'CorrectToken'
         mock_response = mock.Mock()
@@ -184,7 +184,7 @@ class TestClient(unittest.TestCase):
     def test_search_camera_all_correct_Format_Error(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
         client = Client(clientId, clientSecret)
         client.token = 'CorrectToken'
         mock_response = mock.Mock()

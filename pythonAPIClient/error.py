@@ -11,8 +11,19 @@ class Error(Exception):
 
 
 class FormatError(Error):
-    """
-    Corresponends to 422 RequestFormatError in API.
+    """Class representing format error.
+
+    Detailed error message of the error can be shown by printing the error object.
+
+    Attributes
+    ----------
+    message : str
+        Detailed error message
+
+    Note
+    ----
+        This corresponends to 422 RequestFormatError in CAM2 Database API.
+
     """
 
     def __init__(self, message):
