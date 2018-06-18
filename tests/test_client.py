@@ -498,7 +498,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_get_usage_by_client_res_notfound(self, mock_get):
+    def test_get_usage_by_client_id_not_found(self, mock_get):
         clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
                    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
@@ -565,6 +565,24 @@ class TestClient(unittest.TestCase):
             client.update_owner('1', 'testowner')
         mock_put.assert_called_once_with(url, data)
         self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_permissionLevel(self, mock_put):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            'message': 'OK'
+        }
+        mock_put.return_value = mock_response
+        url = Client.base_URL + 'apps/1'
+        data = {'permissionLevel': 'user'}
+        self.assertEqual(client.update_permission('1', 'user'), 'OK')
+        mock_put.assert_called_once_with(url, data)
+
 
 if __name__ == '__main__':
     unittest.main()
