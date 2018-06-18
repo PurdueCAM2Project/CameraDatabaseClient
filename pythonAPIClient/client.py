@@ -118,7 +118,7 @@ class Client(object):
         Raises
         ------
 
-        Yeilds
+        Returns
         -------
         str
             Client id of the newly registered client application.
