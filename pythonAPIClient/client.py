@@ -15,7 +15,7 @@ class Client(object):
 
     Attributes
     ----------
-    id : str
+    clientId : str
         Id of the client application.
     secret : str
         Secret of the client application.
@@ -73,15 +73,15 @@ class Client(object):
         head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
 
-    def __init__(self, id, secret):
+    def __init__(self, clientId, clientSecret):
 
         """Client initialization method.
  
         Parameters
         ----------
-        id : str
+        clientId : str
             Id of the client application.
-        secret : str
+        clientSecret : str
             Secret of the client application.
 
         Raises
@@ -95,9 +95,9 @@ class Client(object):
 
         """
 
-        if len(id) != 96:
+        if len(clientId) != 96:
             raise InvalidClientIdError
-        if len(secret) != 71:
+        if len(clientSecret) != 71:
             raise InvalidClientSecretError
         self.clientId = clientId
         self.clientSecret = clientSecret
