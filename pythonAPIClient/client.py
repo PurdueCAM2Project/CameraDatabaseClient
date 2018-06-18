@@ -72,6 +72,18 @@ class Client(object):
 
     # TODO: get clientID by owner
     def client_ids_by_owner(self, owner):
+        """
+        Parameters
+        ----------
+        owner : str
+            Username of the owner of the client application.
+
+        Returns
+        -------
+        array of str
+            Client id owned by the user.
+
+        """
         url = Client.base_URL + 'apps/by-owner?owner=' + owner
         response = requests.get(url)
         if response.status_code == 404:
