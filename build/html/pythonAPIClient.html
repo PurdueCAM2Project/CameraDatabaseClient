@@ -153,6 +153,7 @@
 <h1>pythonAPIClient package<a class="headerlink" href="#pythonapiclient-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-pythonAPIClient.camera">
 <span id="pythonapiclient-camera-module"></span><h2>pythonAPIClient.camera module<a class="headerlink" href="#module-pythonAPIClient.camera" title="Permalink to this headline">¶</a></h2>
+<p>This class holds the code to make camera objects.</p>
 <dl class="class">
 <dt id="pythonAPIClient.camera.Camera">
 <em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">Camera</code><span class="sig-paren">(</span><em>cameraID</em>, <em>camera_type</em>, <em>source</em>, <em>lat</em>, <em>lng</em>, <em>country</em>, <em>state</em>, <em>city</em>, <em>resolution_width</em>, <em>resolution_height</em>, <em>is_active_image</em>, <em>is_active_video</em>, <em>utc_offset</em>, <em>timezone_id</em>, <em>timezone_name</em>, <em>reference_logo</em>, <em>reference_url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.Camera" title="Permalink to this definition">¶</a></dt>
@@ -187,15 +188,16 @@ This is a subclass of Camera</p>
 </div>
 <div class="section" id="module-pythonAPIClient.client">
 <span id="pythonapiclient-client-module"></span><h2>pythonAPIClient.client module<a class="headerlink" href="#module-pythonAPIClient.client" title="Permalink to this headline">¶</a></h2>
+<p>Represents a CAM2 client application.</p>
 <dl class="class">
 <dt id="pythonAPIClient.client.Client">
-<em class="property">class </em><code class="descclassname">pythonAPIClient.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>id</em>, <em>secret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pythonAPIClient.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>clientId</em>, <em>clientSecret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class representing a CAM2 client application.</p>
 <p>[More detailed description of what client object do.]</p>
 <dl class="attribute">
-<dt id="pythonAPIClient.client.Client.id">
-<code class="descname">id</code><a class="headerlink" href="#pythonAPIClient.client.Client.id" title="Permalink to this definition">¶</a></dt>
+<dt id="pythonAPIClient.client.Client.clientId">
+<code class="descname">clientId</code><a class="headerlink" href="#pythonAPIClient.client.Client.clientId" title="Permalink to this definition">¶</a></dt>
 <dd><p><em>str</em> – Id of the client application.</p>
 </dd></dl>
 
@@ -208,14 +210,15 @@ This is a subclass of Camera</p>
 <dl class="attribute">
 <dt id="pythonAPIClient.client.Client.token">
 <code class="descname">token</code><a class="headerlink" href="#pythonAPIClient.client.Client.token" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – [User does not need to provide this attribute] Token for the client to access the CAM2 database.
+<dd><p><em>str</em> – Token for the client to access the CAM2 database.
 Each token expires in 5 minutes.</p>
+<p>[User does not need to provide this attribute]</p>
 </dd></dl>
 
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In order to access the package, you must make an account through the CAM2 project website, and register a new application.
-The website can be found here: <a class="reference external" href="https://www.cam2project.net/">https://www.cam2project.net/</a>.</p>
+<p class="last">In order to access the package, register a new application by contacting the CAM2 team
+at <a class="reference external" href="https://www.cam2project.net/">https://www.cam2project.net/</a>.</p>
 </div>
 <p>Client initialization method.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -223,8 +226,8 @@ The website can be found here: <a class="reference external" href="https://www.c
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>id</strong> (<em>str</em>) – Id of the client application.</li>
-<li><strong>secret</strong> (<em>str</em>) – Secret of the client application.</li>
+<li><strong>clientId</strong> (<em>str</em>) – Id of the client application.</li>
+<li><strong>clientSecret</strong> (<em>str</em>) – Secret of the client application.</li>
 </ul>
 </td>
 </tr>
@@ -272,7 +275,28 @@ Client secret should have a length of at least 71 characters</li>
 <dl class="method">
 <dt id="pythonAPIClient.client.Client.register">
 <code class="descname">register</code><span class="sig-paren">(</span><em>owner</em>, <em>permissionLevel='user'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.register" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Client initialization method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>owner</strong> (<em>str</em>) – Username of the owner of the client application.</li>
+<li><strong>permissionLevel</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>, optional) – Permission level of the owner of the client application.
+Default permission level is ‘user’.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>str</em> – Client id of the newly registered client application.</li>
+<li><em>str</em> – Client secret of the newly registered client application.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="pythonAPIClient.client.Client.update_owner">
@@ -311,7 +335,7 @@ Client secret should have a length of at least 71 characters</li>
 
 <dl class="method">
 <dt id="pythonAPIClient.client.Client.search_camera">
-<code class="descname">search_camera</code><span class="sig-paren">(</span><em>latitude=None</em>, <em>longitude=None</em>, <em>radius=None</em>, <em>type=None</em>, <em>source=None</em>, <em>country=None</em>, <em>state=None</em>, <em>city=None</em>, <em>resolution_width=None</em>, <em>resolution_heigth=None</em>, <em>is_active_image=None</em>, <em>is_active_video=None</em>, <em>offset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.search_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.search_camera" title="Permalink to this definition">¶</a></dt>
+<code class="descname">search_camera</code><span class="sig-paren">(</span><em>latitude=None</em>, <em>longitude=None</em>, <em>radius=None</em>, <em>camera_type=None</em>, <em>source=None</em>, <em>country=None</em>, <em>state=None</em>, <em>city=None</em>, <em>resolution_width=None</em>, <em>resolution_heigth=None</em>, <em>is_active_image=None</em>, <em>is_active_video=None</em>, <em>offset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.search_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.search_camera" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -319,6 +343,7 @@ Client secret should have a length of at least 71 characters</li>
 </div>
 <div class="section" id="module-pythonAPIClient.error">
 <span id="pythonapiclient-error-module"></span><h2>pythonAPIClient.error module<a class="headerlink" href="#module-pythonAPIClient.error" title="Permalink to this headline">¶</a></h2>
+<p>This file defines all the custom errors.</p>
 <dl class="exception">
 <dt id="pythonAPIClient.error.Error">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">Error</code><a class="reference internal" href="_modules/pythonAPIClient/error.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.Error" title="Permalink to this definition">¶</a></dt>
@@ -330,7 +355,18 @@ Client secret should have a length of at least 71 characters</li>
 <dt id="pythonAPIClient.error.FormatError">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">FormatError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/error.html#FormatError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.FormatError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
-<p>Corresponends to 422 RequestFormatError in API.</p>
+<p>Class representing format error.</p>
+<p>Detailed error message of the error can be shown by printing the error object.</p>
+<dl class="attribute">
+<dt id="pythonAPIClient.error.FormatError.message">
+<code class="descname">message</code><a class="headerlink" href="#pythonAPIClient.error.FormatError.message" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Detailed error message</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This corresponends to 422 RequestFormatError in CAM2 Database API.</p>
+</div>
 </dd></dl>
 
 <dl class="exception">
