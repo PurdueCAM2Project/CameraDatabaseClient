@@ -7,7 +7,7 @@ from os import path
 import mock
 from pythonAPIClient.client import Client
 from pythonAPIClient.error import AuthenticationError, InternalError, InvalidClientIdError,\
-     InvalidClientSecretError, ResourceNotFoundError, FormatError
+     InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 
@@ -445,6 +445,75 @@ class TestClient(unittest.TestCase):
         url = Client.base_URL + 'apps/1/usage?owner=testowner'
         self.assertEqual(client.usage_by_client('1', 'testowner'), '7')
         mock_get.assert_called_once_with(url)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_usage_by_client_expired_token(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Token expired'
+        }
+        mock_get.return_value = mock_response
+        with self.assertRaises(AuthenticationError):
+            client.usage_by_client('1', 'testowner')
+        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
+                                    '&clientSecret='+clientSecret)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_usage_by_client_authorization(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 403
+        mock_response.json.return_value = {
+            'message': 'Forbidden to view API usage of this client'
+        }
+        mock_get.return_value = mock_response
+        with self.assertRaises(AuthorizationError):
+            client.usage_by_client('1', 'testowner')
+        url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        mock_get.assert_called_once_with(url)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_usage_by_client_internal_error(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+        url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        with self.assertRaises(InternalError):
+            client.usage_by_client('1', 'testowner')
+        mock_get.assert_called_once_with(url)
+        self.assertEqual(0, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_usage_by_client_res_notfound(self, mock_get):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 404
+        mock_response.json.return_value = {
+            'message': 'No app exists with given clientID'
+        }
+        mock_get.return_value = mock_response
+        url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        with self.assertRaises(ResourceNotFoundError):
+            client.usage_by_client('1', 'testowner')
+        mock_get.assert_called_once_with(url)
+        self.assertEqual(1, mock_response.json.call_count)
 
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ Represents a CAM2 client application.
 """
 import requests
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
-    InvalidClientSecretError, ResourceNotFoundError, FormatError
+    InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
 from .camera import IPCamera, NonIPCamera, StreamCamera
 
 
@@ -121,7 +121,7 @@ class Client(object):
         url = Client.base_URL+"apps/"+clientID+"/usage?owner="+owner
         response = requests.get(url)
         if response.status_code == 403:
-            return AuthenticationError(response.json()['message'])
+            raise AuthorizationError(response.json()['message'])
         elif response.status_code == 401:
             self.request_token()
             response = requests.get(url)
