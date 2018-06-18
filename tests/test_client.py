@@ -17,35 +17,19 @@ class TestClient(unittest.TestCase):
 
     def test_client_init_wrong_ClientId_Length(self):
         with self.assertRaises(InvalidClientIdError):
-            client = Client('dummyID', '01234567890123456789' \
-                                        '01234567890123456789' \
-                                        '01234567890123456789' \
-                                        '0123456789' + '0')
+            client = Client('dummyID', '0' * 71)
             return client
 
     def test_client_init_wrong_Client_Secret_Length(self):
 
         # client secret shorter than 71
         with self.assertRaises(InvalidClientSecretError):
-            client = Client(
-                '01234567890123456789' \
-                '01234567890123456789' \
-                '01234567890123456789' \
-                '01234567890123456789' \
-                '0123456789' + '012345',
-                'dummySecret')
+            client = Client('0' * 96, 'dummySecret')
             return client
 
     def test_client_init(self):
-        clientId = '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '0123456789' + '012345'
-        clientSecret = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         self.assertTrue(isinstance(client, Client))
         self.assertEqual(client.clientId, clientId, 'ID not stored in the client object.')
@@ -54,10 +38,7 @@ class TestClient(unittest.TestCase):
         self.assertIs(client.token, None, 'Token not set to default')
 
         #client secret longer than 71
-        clientSecret2 = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0123'
+        clientSecret2 = '0' * 80
         client2 = Client(clientId, clientSecret2)
         self.assertTrue(isinstance(client2, Client))
         self.assertEqual(client2.clientId, clientId, 'ID not stored in the client object.')
@@ -66,15 +47,8 @@ class TestClient(unittest.TestCase):
         self.assertIs(client2.token, None, 'Token not set to default')
 
     def test_build_header(self):
-        clientId = '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '0123456789' + '012345'
-        clientSecret = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'dummy'
         head_example = {'Authorization': 'Bearer ' + 'dummy'}
@@ -83,15 +57,8 @@ class TestClient(unittest.TestCase):
     @mock.patch('pythonAPIClient.error.AuthenticationError')
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_incorrect_ID_Secret(self, mock_get, mock_http_error_handler):
-        clientId = '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '0123456789' + '012345'
-        clientSecret = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -110,15 +77,8 @@ class TestClient(unittest.TestCase):
     @mock.patch('pythonAPIClient.error.AuthenticationError')
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_incorrect_Secret(self, mock_get, mock_http_error_handler):
-        clientId = '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '0123456789' + '012345'
-        clientSecret = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -136,15 +96,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_all_correct(self, mock_get):
-        clientId = '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '0123456789' + '012345'
-        clientSecret = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -162,15 +115,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_all_correct_Internal_error(self, mock_get):
-        clientId = '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '0123456789' + '012345'
-        clientSecret = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 500
@@ -183,15 +129,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_no_token(self, mock_get):
-        clientId = '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '0123456789' + '012345'
-        clientSecret = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -208,15 +147,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_all_correct_Expired_Token(self, mock_get):
-        clientId = '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '0123456789' + '012345'
-        clientSecret = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'ExpiredToken'
         mock_response = mock.Mock()
@@ -230,15 +162,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_all_correct_Internal_Error(self, mock_get):
-        clientId = '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '0123456789' + '012345'
-        clientSecret = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'CorrectToken'
         mock_response = mock.Mock()
@@ -252,15 +177,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_all_correct_Format_Error(self, mock_get):
-        clientId = '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '01234567890123456789' \
-                    '0123456789' + '012345'
-        clientSecret = '01234567890123456789' \
-                        '01234567890123456789' \
-                        '01234567890123456789' \
-                        '0123456789' + '0'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'CorrectToken'
         mock_response = mock.Mock()
