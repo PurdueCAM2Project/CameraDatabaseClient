@@ -27,7 +27,7 @@ class Camera(object):
     resolution_height : :obj:`int`, optional
     utc_offset : :obj:`int`, optional
     timezone_id : :obj:`str`, optional
-    timezont_name : :obj:`str`, optional
+    timezone_name : :obj:`str`, optional
     reference_logo : :obj:`str`, optional
     reference_url : :obj:`str`, optional
 
