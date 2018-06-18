@@ -64,7 +64,35 @@ class Client(object):
 
     # TODO: update client's owner
     def update_owner(self, clientID, owner):
-        pass
+        """
+        Parameters from path
+        ----------
+        clientID : str
+            Client Id of the application.
+
+        Parameters from query
+        ----------
+        owner : str
+            (Optional) Username of owner.
+
+        Returns
+        -------
+        str
+            Success message.
+
+        """
+        url = Client.base_URL + 'apps/' + clientID
+        data = {'owner': owner}
+        response = requests.put(url, data)
+        if response.status_code == 401:
+            self.request_token()
+            response = requests.put(url, data)
+        elif response.status_code == 500:
+            raise InternalError()
+        elif response.status_code == 404:
+            raise ResourceNotFoundError(response.json()['message'])
+        return response.json()['message']
+
 
     # TODO: update client's permissionLevel
     def update_permission(self, clientID, permissionLevel):

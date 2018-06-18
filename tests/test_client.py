@@ -515,6 +515,56 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url)
         self.assertEqual(1, mock_response.json.call_count)
 
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_owner(self, mock_put):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            'message': 'OK'
+        }
+        mock_put.return_value = mock_response
+        url = Client.base_URL + 'apps/1'
+        data = {'owner': 'testowner'}
+        self.assertEqual(client.update_owner('1', 'testowner'), 'OK')
+        mock_put.assert_called_once_with(url, data)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_owner_expired_token(self, mock_put):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_put.return_value = mock_response
+        url = Client.base_URL + 'apps/1'
+        data = {'owner': 'testowner'}
+        with self.assertRaises(ResourceNotFoundError):
+            client.update_owner('1', 'testowner')
+        mock_put.assert_called_once_with(url, data)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_owner_expired_token(self, mock_put):
+        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 404
+        mock_response.json.return_value = {
+            'message': 'No app exists with given client id.'
+        }
+        mock_put.return_value = mock_response
+        url = Client.base_URL + 'apps/1'
+        data = {'owner': 'testowner'}
+        with self.assertRaises(ResourceNotFoundError):
+            client.update_owner('1', 'testowner')
+        mock_put.assert_called_once_with(url, data)
+        self.assertEqual(1, mock_response.json.call_count)
 
 if __name__ == '__main__':
     unittest.main()
