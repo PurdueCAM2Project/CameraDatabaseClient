@@ -33,8 +33,8 @@ class TestClient(unittest.TestCase):
         client = Client(clientId, clientSecret)
         self.assertTrue(isinstance(client, Client))
         self.assertEqual(client.clientId, clientId, 'ID not stored in the client object.')
-        self.assertEqual(client.clientSecret, clientSecret, 'Secret not stored in the client '
-                                                            'object.')
+        self.assertEqual(client.clientSecret, clientSecret,
+                         'Secret not stored in the client object.')
         self.assertIs(client.token, None, 'Token not set to default')
 
         #client secret longer than 71
@@ -42,8 +42,8 @@ class TestClient(unittest.TestCase):
         client2 = Client(clientId, clientSecret2)
         self.assertTrue(isinstance(client2, Client))
         self.assertEqual(client2.clientId, clientId, 'ID not stored in the client object.')
-        self.assertEqual(client2.clientSecret, clientSecret2, 'Secret not stored in the client '
-                                                            'object.')
+        self.assertEqual(client2.clientSecret, clientSecret2,
+                         'Secret not stored in the client object.')
         self.assertIs(client2.token, None, 'Token not set to default')
 
     def test_build_header(self):
