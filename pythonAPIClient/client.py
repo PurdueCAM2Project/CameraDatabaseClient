@@ -2,7 +2,6 @@
 Represents a CAM2 client application.
 """
 import requests
-import json
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError, FormatError
 from .camera import Camera
@@ -186,12 +185,12 @@ class Client(object):
         ------
         FormatError
             If type of argument value is not expected for the given field.
- 
+
             Or radius cannot is less than 0.
 
             Or incorrect latitude range. (it should be between +90 and -90)
 
-            Or incorrect longitude range. (it should be between +180 and -180) 
+            Or incorrect longitude range. (it should be between +180 and -180)
 
         AuthenticationError
             If the client secret of this client object does not match the clientID.
@@ -206,7 +205,7 @@ class Client(object):
         local_params['type'] = local_params.pop('camera_type', None)
 
         # filter out those parameters with value None, change true/false
-        search_params = {k: v for k, v in local_params.iteritems() if v is not None}
+        search_params = {k: v for k, v in local_params.items() if v is not None}
 
         url = Client.base_URL + 'cameras/search'
 
