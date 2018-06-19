@@ -159,14 +159,12 @@
 
 <span class="sd">    Detailed error message of the error can be shown by printing the error object.</span>
 
+<span class="sd">    This corresponends to 422 RequestFormatError in CAM2 Database API.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    message : str</span>
 <span class="sd">        Detailed error message</span>
-
-<span class="sd">    Note</span>
-<span class="sd">    ----</span>
-<span class="sd">        This corresponends to 422 RequestFormatError in CAM2 Database API.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -259,13 +257,27 @@
 
 
 <div class="viewcode-block" id="InvalidClientSecretError"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.error.InvalidClientSecretError">[docs]</a><span class="k">class</span> <span class="nc">InvalidClientSecretError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Corresponends to 403 AuthorizationError in API.</span>
+
+    <span class="sd">&quot;&quot;&quot;Class representing invalid clientSecret format error.</span>
+
+<span class="sd">    A valid client secret should have a length of at least 71 characters.</span>
+
+<span class="sd">    This corresponends to 422 RequestFormatError in CAM2 Database API.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str</span>
+<span class="sd">        Detailed error message</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">       Not throwing this error does not mean the client secret is correct.</span>
+<span class="sd">       The actual authentication happens when you call client functions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">Error</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The Length of ClientSecret should be 72&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Length of ClientSecret should be at least 71.&#39;</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>

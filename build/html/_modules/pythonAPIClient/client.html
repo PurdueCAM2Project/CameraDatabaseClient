@@ -234,13 +234,13 @@
 <span class="sd">            ClientID should have a fixed length of 96 characters.</span>
 <span class="sd">        InvalidClientSecretError</span>
 <span class="sd">            If the client secret is not in the correct format.</span>
-<span class="sd">            Client secret should have a length of at least 71 characters</span>
+<span class="sd">            Client secret should have a length of at least 71 characters.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">clientId</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">96</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidClientIdError</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">clientSecret</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">71</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">clientSecret</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">71</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidClientSecretError</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clientId</span> <span class="o">=</span> <span class="n">clientId</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clientSecret</span> <span class="o">=</span> <span class="n">clientSecret</span>

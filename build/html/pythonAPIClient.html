@@ -235,7 +235,7 @@ at <a class="reference external" href="https://www.cam2project.net/">https://www
 <li><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidClientIdError</span></code> – If the clientID is not in the correct format.
 ClientID should have a fixed length of 96 characters.</li>
 <li><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidClientSecretError</span></code> – If the client secret is not in the correct format.
-Client secret should have a length of at least 71 characters</li>
+Client secret should have a length of at least 71 characters.</li>
 </ul>
 </td>
 </tr>
@@ -357,16 +357,13 @@ Default permission level is ‘user’.</li>
 <dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
 <p>Class representing format error.</p>
 <p>Detailed error message of the error can be shown by printing the error object.</p>
+<p>This corresponends to 422 RequestFormatError in CAM2 Database API.</p>
 <dl class="attribute">
 <dt id="pythonAPIClient.error.FormatError.message">
 <code class="descname">message</code><a class="headerlink" href="#pythonAPIClient.error.FormatError.message" title="Permalink to this definition">¶</a></dt>
 <dd><p><em>str</em> – Detailed error message</p>
 </dd></dl>
 
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This corresponends to 422 RequestFormatError in CAM2 Database API.</p>
-</div>
 </dd></dl>
 
 <dl class="exception">
@@ -417,7 +414,20 @@ signaling ‘legacyCameraIDAlreadyExist’</p>
 <dt id="pythonAPIClient.error.InvalidClientSecretError">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">InvalidClientSecretError</code><a class="reference internal" href="_modules/pythonAPIClient/error.html#InvalidClientSecretError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.InvalidClientSecretError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
-<p>Corresponends to 403 AuthorizationError in API.</p>
+<p>Class representing invalid clientSecret format error.</p>
+<p>A valid client secret should have a length of at least 71 characters.</p>
+<p>This corresponends to 422 RequestFormatError in CAM2 Database API.</p>
+<dl class="attribute">
+<dt id="pythonAPIClient.error.InvalidClientSecretError.message">
+<code class="descname">message</code><a class="headerlink" href="#pythonAPIClient.error.InvalidClientSecretError.message" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Detailed error message</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not throwing this error does not mean the client secret is correct.
+The actual authentication happens when you call client functions.</p>
+</div>
 </dd></dl>
 
 </div>
