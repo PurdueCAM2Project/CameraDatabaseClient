@@ -4,7 +4,7 @@ Represents a CAM2 client application.
 import requests
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError, FormatError
-from .camera import IPCamera, NonIPCamera, StreamCamera
+from .camera import Camera
 
 class Client(object):
 
@@ -90,13 +90,13 @@ class Client(object):
             ClientID should have a fixed length of 96 characters.
         InvalidClientSecretError
             If the client secret is not in the correct format.
-            Client secret should have a length of at least 71 characters
+            Client secret should have a length of at least 71 characters.
 
         """
 
         if len(clientId) != 96:
             raise InvalidClientIdError
-        if len(clientSecret) != 71:
+        if len(clientSecret) < 71:
             raise InvalidClientSecretError
         self.clientId = clientId
         self.clientSecret = clientSecret
@@ -111,7 +111,7 @@ class Client(object):
         ----------
         owner : str
             Username of the owner of the client application.
-        permissionLevel : :obj:`str`, optional
+        permissionLevel : str, optional
             Permission level of the owner of the client application.
             Default permission level is 'user'.
 
@@ -144,7 +144,7 @@ class Client(object):
         pass
 
     # TODO: add a camera to database
-    def add_camera(self, Camera):
+    def add_camera(self, camera):
         pass
 
     # TODO: update a camera in database
@@ -198,70 +198,10 @@ class Client(object):
             raise FormatError(response.json()['message'])
         elif response.status_code == 500:
             raise InternalError()
+        elif response.status_code != 200:
+            raise InternalError()
         camera_response_array = response.json()
         camera_processed = []
-        for x in enumerate(camera_response_array):
-            current_object = camera_response_array[x]
-            if current_object['type'] == 'ip':
-                camera_processed.append(IPCamera(current_object['cameraID'],
-                                                 current_object['type'],
-                                                 current_object['source'],
-                                                 current_object['latitude'],
-                                                 current_object['longitude'],
-                                                 current_object['country'],
-                                                 current_object['state'],
-                                                 current_object['city'],
-                                                 current_object['resolution_width'],
-                                                 current_object['resolution_height'],
-                                                 current_object['is_active_image'],
-                                                 current_object['is_active_video'],
-                                                 current_object['utc_offset'],
-                                                 current_object['timezone_id'],
-                                                 current_object['timezone_name'],
-                                                 current_object['reference_logo'],
-                                                 current_object['reference_url'],
-                                                 current_object['retrieval']['ip'],
-                                                 current_object['retrieval']['port'],
-                                                 current_object['retrieval']['brand'],
-                                                 current_object['retrieval']['model'],
-                                                 current_object['retrieval']['image_path'],
-                                                 current_object['retrieval']['video_path']))
-            elif current_object['type'] == 'non_ip':
-                camera_processed.append(NonIPCamera(current_object['cameraID'],
-                                                    current_object['type'],
-                                                    current_object['source'],
-                                                    current_object['latitude'],
-                                                    current_object['longitude'],
-                                                    current_object['country'],
-                                                    current_object['state'],
-                                                    current_object['city'],
-                                                    current_object['resolution_width'],
-                                                    current_object['resolution_height'],
-                                                    current_object['is_active_image'],
-                                                    current_object['is_active_video'],
-                                                    current_object['utc_offset'],
-                                                    current_object['timezone_id'],
-                                                    current_object['timezone_name'],
-                                                    current_object['reference_logo'],
-                                                    current_object['reference_url'],
-                                                    current_object['retrieval']['snapshot_url']))
-            else:
-                camera_processed.append(StreamCamera(current_object['cameraID'],
-                                                     current_object['type'],
-                                                     current_object['source'],
-                                                     current_object['latitude'],
-                                                     current_object['longitude'],
-                                                     current_object['country'],
-                                                     current_object['state'],
-                                                     current_object['city'],
-                                                     current_object['resolution_width'],
-                                                     current_object['resolution_height'],
-                                                     current_object['is_active_image'],
-                                                     current_object['is_active_video'],
-                                                     current_object['utc_offset'],
-                                                     current_object['timezone_id'],
-                                                     current_object['timezone_name'],
-                                                     current_object['reference_logo'],
-                                                     current_object['reference_url'],
-                                                     current_object['retrieval']['m3u8_url']))
+        for current_object in camera_response_array:
+            camera_processed.append(Camera.process_json(**current_object))
         return camera_processed
