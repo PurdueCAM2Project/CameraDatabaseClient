@@ -202,9 +202,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register(self, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         # provide token for building header
         client.token = "correctToken"
@@ -219,20 +218,19 @@ class TestClient(unittest.TestCase):
         # validate result
         expected_clientID = 'test_clientID'
         expected_clientSecret = 'test_clientSecret'
-        url = Client.base_URL + 'apps/register/?owner=testowner&permissionLevel=user'
+        url = Client.base_URL + 'apps/register'
         header = {'Authorization': 'Bearer correctToken'}
-
+        data = {'owner': 'testowner', 'permissionLevel': 'user'}
         clientID, clientSecret = client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header)
+        mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(clientID, expected_clientID)
         self.assertEqual(clientSecret, expected_clientSecret)
         self.assertEqual(2, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_incorrect_token(self, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         # manipulate request.post's result
         mock_response = mock.Mock()
@@ -242,19 +240,19 @@ class TestClient(unittest.TestCase):
         }
         mock_post.return_value = mock_response
         # validate result
-        url = Client.base_URL + 'apps/register/?owner=testowner&permissionLevel=user'
+        url = Client.base_URL + 'apps/register'
+        data = {'owner': 'testowner', 'permissionLevel': 'user'}
         header = {'Authorization': 'Bearer None'}
-        with self.assertRaises(ResourceNotFoundError):
+        with self.assertRaises(AuthenticationError):
             client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header)
-        self.assertEqual(0, mock_response.json.call_count)
+        mock_post.assert_called_once_with(url, headers=header, data=data)
+        self.assertEqual(2, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_register_expired_token(self, mock_get, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'ExpiredToken'
         # set request.post's result
@@ -266,18 +264,18 @@ class TestClient(unittest.TestCase):
         mock_post.return_value = mock_response
         with self.assertRaises(InternalError):
             client.register('testowner')
-        url = Client.base_URL + 'apps/register/?owner=testowner&permissionLevel=user'
+        url = Client.base_URL + 'apps/register'
+        data = {'owner': 'testowner', 'permissionLevel': 'user'}
         header = {'Authorization': 'Bearer ExpiredToken'}
-        mock_post.assert_called_once_with(url, headers=header)
+        mock_post.assert_called_once_with(url, headers=header, data=data)
         mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
                                     '&clientSecret='+clientSecret)
-        self.assertEqual(0, mock_response.json.call_count)
+        self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_no_owner(self, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         # provide token for building header
         client.token = "correctToken"
@@ -289,19 +287,18 @@ class TestClient(unittest.TestCase):
         }
         mock_post.return_value = mock_response
         # validate result
-        url = Client.base_URL + 'apps/register/?owner=testowner&permissionLevel=user'
+        url = Client.base_URL + 'apps/register'
+        data = {'owner': 'testowner', 'permissionLevel': 'user'}
         header = {'Authorization': 'Bearer correctToken'}
-
         with self.assertRaises(FormatError):
             client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header)
+        mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_incorrect_clientID(self, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         # provide token for building header
         client.token = "correctToken"
@@ -313,19 +310,19 @@ class TestClient(unittest.TestCase):
         }
         mock_post.return_value = mock_response
         # validate result
-        url = Client.base_URL + 'apps/register/?owner=testowner&permissionLevel=user'
+        url = Client.base_URL + 'apps/register'
+        data = {'owner': 'testowner', 'permissionLevel': 'user'}
         header = {'Authorization': 'Bearer correctToken'}
 
         with self.assertRaises(ResourceNotFoundError):
             client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header)
+        mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_internal_error(self, mock_post):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         # provide token for building header
         client.token = "correctToken"
@@ -334,19 +331,19 @@ class TestClient(unittest.TestCase):
         mock_response.status_code = 500
         mock_post.return_value = mock_response
         # validate result
-        url = Client.base_URL + 'apps/register/?owner=testowner&permissionLevel=user'
+        url = Client.base_URL + 'apps/register'
+        data = {'owner': 'testowner', 'permissionLevel': 'user'}
         header = {'Authorization': 'Bearer correctToken'}
 
         with self.assertRaises(InternalError):
             client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header)
+        mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 200
@@ -356,16 +353,16 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = clientObject
 
         mock_get.return_value = mock_response
+        headers = {'Authorization': 'Bearer None'}
         url = Client.base_URL + 'apps/by-owner?owner=test'
         expected_clientID_array = ['test_clientID1', 'test_clientID2']
         self.assertEqual(client.client_ids_by_owner("test"), expected_clientID_array)
-        mock_get.assert_called_once_with(url)
+        mock_get.assert_called_once_with(url, headers=headers)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_no_token(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -373,17 +370,17 @@ class TestClient(unittest.TestCase):
             'message': 'Failed to authenticate token'
         }
         mock_get.return_value = mock_response
+        url = self.base_URL+'apps/by-owner?owner=testowner'
+        headers = {'Authorization': 'Bearer None'}
         with self.assertRaises(AuthenticationError):
             client.client_ids_by_owner('testowner')
-        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
-                                    '&clientSecret='+clientSecret)
-        self.assertEqual(1, mock_response.json.call_count)
+        mock_get.assert_called_with(url, headers=headers)
+        self.assertEqual(2, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_expired_token(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -395,13 +392,12 @@ class TestClient(unittest.TestCase):
             client.client_ids_by_owner('testowner')
         mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
                                     '&clientSecret='+clientSecret)
-        self.assertEqual(1, mock_response.json.call_count)
+        self.assertEqual(2, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_incorrect_clientID(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 404
@@ -410,31 +406,31 @@ class TestClient(unittest.TestCase):
         }
         mock_get.return_value = mock_response
         url = Client.base_URL + 'apps/by-owner?owner=testowner'
+        headers = {'Authorization': 'Bearer None'}
         with self.assertRaises(ResourceNotFoundError):
             client.client_ids_by_owner('testowner')
-        mock_get.assert_called_once_with(url)
+        mock_get.assert_called_once_with(url, headers=headers)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_internal_error(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
         url = Client.base_URL + 'apps/by-owner?owner=testowner'
+        headers = {'Authorization': 'Bearer None'}
         with self.assertRaises(InternalError):
             client.client_ids_by_owner('testowner')
-        mock_get.assert_called_once_with(url)
+        mock_get.assert_called_once_with(url, headers=headers)
         self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_usage_by_clientID(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 200
@@ -443,14 +439,14 @@ class TestClient(unittest.TestCase):
         }
         mock_get.return_value = mock_response
         url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        headers = {'Authorization': 'Bearer None'}
         self.assertEqual(client.usage_by_client('1', 'testowner'), '7')
-        mock_get.assert_called_once_with(url)
+        mock_get.assert_called_once_with(url, headers=headers)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_usage_by_client_expired_token(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -462,13 +458,12 @@ class TestClient(unittest.TestCase):
             client.usage_by_client('1', 'testowner')
         mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
                                     '&clientSecret='+clientSecret)
-        self.assertEqual(1, mock_response.json.call_count)
+        self.assertEqual(2, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_usage_by_client_authorization(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 403
@@ -479,29 +474,29 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(AuthorizationError):
             client.usage_by_client('1', 'testowner')
         url = Client.base_URL + 'apps/1/usage?owner=testowner'
-        mock_get.assert_called_once_with(url)
+        headers = {'Authorization': 'Bearer None'}
+        mock_get.assert_called_once_with(url, headers=headers)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_usage_by_client_internal_error(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
         url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        headers = {'Authorization': 'Bearer None'}
         with self.assertRaises(InternalError):
             client.usage_by_client('1', 'testowner')
-        mock_get.assert_called_once_with(url)
+        mock_get.assert_called_once_with(url, headers=headers)
         self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_usage_by_client_id_not_found(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 404
@@ -510,16 +505,16 @@ class TestClient(unittest.TestCase):
         }
         mock_get.return_value = mock_response
         url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        headers = {'Authorization': 'Bearer None'}
         with self.assertRaises(ResourceNotFoundError):
             client.usage_by_client('1', 'testowner')
-        mock_get.assert_called_once_with(url)
+        mock_get.assert_called_once_with(url, headers=headers)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.put')
     def test_update_owner(self, mock_put):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 200
@@ -528,30 +523,30 @@ class TestClient(unittest.TestCase):
         }
         mock_put.return_value = mock_response
         url = Client.base_URL + 'apps/1'
+        headers = {'Authorization': 'Bearer None'}
         data = {'owner': 'testowner'}
         self.assertEqual(client.update_owner('1', 'testowner'), 'OK')
-        mock_put.assert_called_once_with(url, data)
+        mock_put.assert_called_once_with(url, headers=headers, data=data)
 
     @mock.patch('pythonAPIClient.client.requests.put')
     def test_update_owner_expired_token(self, mock_put):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_put.return_value = mock_response
         url = Client.base_URL + 'apps/1'
+        headers = {'Authorization': 'Bearer None'}
         data = {'owner': 'testowner'}
         with self.assertRaises(ResourceNotFoundError):
             client.update_owner('1', 'testowner')
-        mock_put.assert_called_once_with(url, data)
+        mock_put.assert_called_once_with(url, headers=headers, data=data)
 
     @mock.patch('pythonAPIClient.client.requests.put')
     def test_update_owner_invalid_clientid(self, mock_put):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 404
@@ -560,17 +555,17 @@ class TestClient(unittest.TestCase):
         }
         mock_put.return_value = mock_response
         url = Client.base_URL + 'apps/1'
+        headers = {'Authorization': 'Bearer None'}
         data = {'owner': 'testowner'}
         with self.assertRaises(ResourceNotFoundError):
             client.update_owner('1', 'testowner')
-        mock_put.assert_called_once_with(url, data)
+        mock_put.assert_called_once_with(url, headers=headers, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.put')
     def test_update_permissionLevel(self, mock_put):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 200
@@ -578,10 +573,11 @@ class TestClient(unittest.TestCase):
             'message': 'OK'
         }
         mock_put.return_value = mock_response
+        headers = {'Authorization': 'Bearer None'}
         url = Client.base_URL + 'apps/1'
         data = {'permissionLevel': 'user'}
         self.assertEqual(client.update_permission('1', 'user'), 'OK')
-        mock_put.assert_called_once_with(url, data)
+        mock_put.assert_called_once_with(url, headers=headers, data=data)
 
 
 if __name__ == '__main__':

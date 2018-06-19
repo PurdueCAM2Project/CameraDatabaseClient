@@ -37,7 +37,7 @@ class Client(object):
         if len(clientId) != 96:
             raise InvalidClientIdError
         # clientSecret are of a fixed length of 71 characters.
-        if len(clientSecret) != 72:
+        if len(clientSecret) < 71:
             raise InvalidClientSecretError
         self.clientId = clientId
         self.clientSecret = clientSecret
@@ -45,18 +45,22 @@ class Client(object):
 
     # TODO: return clientID and client secret
     def register(self, owner, permissionLevel='user'):
-        url = Client.base_URL + 'apps/register/?owner=' + owner + \
-              '&permissionLevel=' + permissionLevel
+        url = Client.base_URL + 'apps/register'
         header = self.header_builder()
-        response = requests.post(url, headers=header)
+        data = {'owner': owner, 'permissionLevel': permissionLevel}
+        response = requests.post(url, headers=header, data=data)
         if response.status_code == 404:
             raise ResourceNotFoundError(response.json()['message'])
         elif response.status_code == 422:
             raise FormatError(response.json()['message'])
         elif response.status_code == 401:
-            self.request_token()
-            header = self.header_builder()
-            response = requests.post(url, headers=header)
+            if response.json()['message'] == 'Token expired':
+                self.request_token()
+                header = self.header_builder()
+                data = {'owner': owner, 'permissionLevel': permissionLevel}
+                response = requests.post(url, headers=header, data=data)
+            else:
+                raise AuthenticationError(response.json()['message'])
         elif response.status_code == 500:
             raise InternalError()
         return response.json()['clientID'], response.json()['clientSecret']
@@ -65,14 +69,12 @@ class Client(object):
     # TODO: update client's owner
     def update_owner(self, clientID, owner):
         """
-        Parameters from path
+        Parameters
         ----------
         clientID : str
             Client Id of the application.
 
-        Parameters from query
-        ----------
-        owner : str
+        owner : str, optional
             (Optional) Username of owner.
 
         Returns
@@ -82,8 +84,9 @@ class Client(object):
 
         """
         url = Client.base_URL + 'apps/' + clientID
+        header = self.header_builder()
         data = {'owner': owner}
-        response = requests.put(url, data)
+        response = requests.put(url, headers=header, data=data)
         if response.status_code == 401:
             self.request_token()
             response = requests.put(url, data)
@@ -97,15 +100,13 @@ class Client(object):
     # TODO: update client's permissionLevel
     def update_permission(self, clientID, permissionLevel):
         """
-        Parameters from path
+        Parameters
         ----------
         clientID : str
             Client Id of the application.
 
-        Parameters from query
-        ----------
-        permissionLevel : str
-            (Optional) Permission level of client.
+        permissionLevel : str, optional
+            Permission level of client.
 
         Returns
         -------
@@ -114,8 +115,9 @@ class Client(object):
 
         """
         url = Client.base_URL + 'apps/' + clientID
+        header = self.header_builder()
         data = {'permissionLevel': permissionLevel}
-        response = requests.put(url, data)
+        response = requests.put(url, headers=header, data=data)
         if response.status_code == 401:
             self.request_token()
             response = requests.put(url, data)
@@ -136,17 +138,20 @@ class Client(object):
 
         Returns
         -------
-        array of str
-            Client's ID owned by the user.
+            A list of client's ID owned by the user.
 
         """
         url = Client.base_URL + 'apps/by-owner?owner=' + owner
-        response = requests.get(url)
+        header = self.header_builder()
+        response = requests.get(url, headers=header)
         if response.status_code == 404:
             raise ResourceNotFoundError(response.json()['message'])
         elif response.status_code == 401:
-            self.request_token()
-            response = requests.get(url)
+            if response.json()['message'] == 'Token expired':
+                self.request_token()
+                response = requests.get(url)
+            else:
+                raise AuthenticationError(response.json()['message'])
         elif response.status_code == 500:
             raise InternalError()
         clientObject = response.json()
@@ -158,29 +163,31 @@ class Client(object):
     # TODO: get api usage count by client
     def usage_by_client(self, clientID, owner):
         """
-        Parameters from path
+        Parameters
         ----------
         clientID : str
             Client's ID of the application.
 
-        Parameters from query
-        ----------
         owner : str
             Username of the owner of the client application.
 
         Returns
         -------
-        Object of api usage count
-            An object that contains the number of requests made by the client.
+        int
+            The number of requests made by the client.
 
         """
         url = Client.base_URL+"apps/"+clientID+"/usage?owner="+owner
-        response = requests.get(url)
+        header = self.header_builder()
+        response = requests.get(url, headers=header)
         if response.status_code == 403:
             raise AuthorizationError(response.json()['message'])
         elif response.status_code == 401:
-            self.request_token()
-            response = requests.get(url)
+            if response.json()['message'] == 'Token expired':
+                self.request_token()
+                response = requests.get(url)
+            else:
+                raise AuthenticationError(response.json()['message'])
         elif response.status_code == 500:
             raise InternalError()
         elif response.status_code == 404:
