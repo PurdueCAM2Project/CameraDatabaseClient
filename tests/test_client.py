@@ -10,7 +10,6 @@ from pythonAPIClient.error import AuthenticationError, InternalError, InvalidCli
      InvalidClientSecretError, ResourceNotFoundError, FormatError
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-
 class TestClient(unittest.TestCase):
 
     def setUp(self):
@@ -18,35 +17,38 @@ class TestClient(unittest.TestCase):
 
     def test_client_init_wrong_ClientId_Length(self):
         with self.assertRaises(InvalidClientIdError):
-            client = Client('dummyID', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
-                                       'bbbbbbbbbbbbbbbbbbbbbbb')
+            client = Client('dummyID', '0' * 71)
             return client
 
     def test_client_init_wrong_Client_Secret_Length(self):
+
+        # client secret shorter than 71
         with self.assertRaises(InvalidClientSecretError):
-            client = Client(
-                'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-                'aaaaaaaaaaaaaaaaaaaaaa',
-                'dummySecret')
+            client = Client('0' * 96, 'dummySecret')
             return client
 
     def test_client_init(self):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' \
-                       'bbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         self.assertTrue(isinstance(client, Client))
         self.assertEqual(client.clientId, clientId, 'ID not stored in the client object.')
-        self.assertEqual(client.clientSecret, clientSecret, 'Secret not stored in the client '
-                                                            'object.')
+        self.assertEqual(client.clientSecret, clientSecret,
+                         'Secret not stored in the client object.')
         self.assertIs(client.token, None, 'Token not set to default')
 
+        #client secret longer than 71
+        clientSecret2 = '0' * 80
+        client2 = Client(clientId, clientSecret2)
+        self.assertTrue(isinstance(client2, Client))
+        self.assertEqual(client2.clientId, clientId, 'ID not stored in the client object.')
+        self.assertEqual(client2.clientSecret, clientSecret2,
+                         'Secret not stored in the client object.')
+        self.assertIs(client2.token, None, 'Token not set to default')
+
     def test_build_header(self):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' \
-                       'bbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'dummy'
         head_example = {'Authorization': 'Bearer ' + 'dummy'}
@@ -55,9 +57,8 @@ class TestClient(unittest.TestCase):
     @mock.patch('pythonAPIClient.error.AuthenticationError')
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_incorrect_ID_Secret(self, mock_get, mock_http_error_handler):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -76,9 +77,8 @@ class TestClient(unittest.TestCase):
     @mock.patch('pythonAPIClient.error.AuthenticationError')
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_incorrect_Secret(self, mock_get, mock_http_error_handler):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -96,9 +96,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_all_correct(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -116,9 +115,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_all_correct_Internal_error(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 500
@@ -131,9 +129,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_no_token(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
@@ -150,9 +147,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_all_correct_Expired_Token(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'ExpiredToken'
         mock_response = mock.Mock()
@@ -166,9 +162,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_all_correct_Internal_Error(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'CorrectToken'
         mock_response = mock.Mock()
@@ -182,9 +177,8 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_all_correct_Format_Error(self, mock_get):
-        clientId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
-                   'aaaaaaaaaaaaaaaaaaaaaaaaaa'
-        clientSecret = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+        clientId = '0' * 96
+        clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'CorrectToken'
         mock_response = mock.Mock()

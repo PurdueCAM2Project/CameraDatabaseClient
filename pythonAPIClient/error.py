@@ -15,14 +15,12 @@ class FormatError(Error):
 
     Detailed error message of the error can be shown by printing the error object.
 
+    This corresponends to 422 RequestFormatError in CAM2 Database API.
+
     Attributes
     ----------
     message : str
         Detailed error message
-
-    Note
-    ----
-        This corresponends to 422 RequestFormatError in CAM2 Database API.
 
     """
 
@@ -115,13 +113,27 @@ class InvalidClientIdError(Error):
 
 
 class InvalidClientSecretError(Error):
-    """
-    Corresponends to 403 AuthorizationError in API.
+
+    """Class representing invalid clientSecret format error.
+
+    A valid client secret should have a length of at least 71 characters.
+
+    This corresponends to 422 RequestFormatError in CAM2 Database API.
+
+    Attributes
+    ----------
+    message : str
+        Detailed error message
+
+    Note
+    ----
+       Not throwing this error does not mean the client secret is correct.
+       The actual authentication happens when you call client functions.
     """
 
     def __init__(self):
         Error.__init__(self, None, None)
-        self.message = 'The Length of ClientSecret should be 72'
+        self.message = 'Length of ClientSecret should be at least 71.'
 
     def __str__(self):
         return str(self.message)

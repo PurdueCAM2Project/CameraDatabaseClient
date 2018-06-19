@@ -90,13 +90,13 @@ class Client(object):
             ClientID should have a fixed length of 96 characters.
         InvalidClientSecretError
             If the client secret is not in the correct format.
-            Client secret should have a length of at least 71 characters
+            Client secret should have a length of at least 71 characters.
 
         """
 
         if len(clientId) != 96:
             raise InvalidClientIdError
-        if len(clientSecret) != 71:
+        if len(clientSecret) < 71:
             raise InvalidClientSecretError
         self.clientId = clientId
         self.clientSecret = clientSecret
