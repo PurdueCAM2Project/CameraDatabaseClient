@@ -1,3 +1,8 @@
+"""
+This file defines all the custom errors.
+"""
+
+
 class Error(Exception):
     """
     Represent a generic error.
@@ -6,17 +11,27 @@ class Error(Exception):
 
 
 class FormatError(Error):
-    """
-    Corresponends to 422 RequestFormatError in API.
+    """Class representing format error.
+
+    Detailed error message of the error can be shown by printing the error object.
+
+    Attributes
+    ----------
+    message : str
+        Detailed error message
+
+    Note
+    ----
+        This corresponends to 422 RequestFormatError in CAM2 Database API.
+
     """
 
     def __init__(self, message):
+        Error.__init__(self, None, None)
         self.message = message
 
     def __str__(self):
         return str(self.message)
-
-    pass
 
 
 class ResourceNotFoundError(Error):
@@ -25,12 +40,11 @@ class ResourceNotFoundError(Error):
     """
 
     def __init__(self, message):
+        Error.__init__(self, None, None)
         self.message = message
 
     def __str__(self):
         return str(self.message)
-
-    pass
 
 
 class AuthenticationError(Error):
@@ -39,12 +53,11 @@ class AuthenticationError(Error):
     """
 
     def __init__(self, message):
+        Error.__init__(self, None, None)
         self.message = message
 
     def __str__(self):
         return str(self.message)
-
-    pass
 
 
 class InternalError(Error):
@@ -53,12 +66,11 @@ class InternalError(Error):
     """
 
     def __init__(self):
+        Error.__init__(self, None, None)
         self.message = 'InternalError'
 
     def __str__(self):
         return str(self.message)
-
-    pass
 
 
 class ResourceConflictError(Error):
@@ -69,12 +81,11 @@ class ResourceConflictError(Error):
     """
 
     def __init__(self, message):
+        Error.__init__(self, None, None)
         self.message = message
 
     def __str__(self):
         return str(self.message)
-
-    pass
 
 
 class AuthorizationError(Error):
@@ -83,12 +94,11 @@ class AuthorizationError(Error):
     """
 
     def __init__(self, message):
+        Error.__init__(self, None, None)
         self.message = message
 
     def __str__(self):
         return str(self.message)
-
-    pass
 
 
 class InvalidClientIdError(Error):
@@ -97,12 +107,11 @@ class InvalidClientIdError(Error):
     """
 
     def __init__(self):
+        Error.__init__(self, None, None)
         self.message = 'The Length of ClientID should be 96'
 
     def __str__(self):
         return str(self.message)
-
-    pass
 
 
 class InvalidClientSecretError(Error):
@@ -111,9 +120,8 @@ class InvalidClientSecretError(Error):
     """
 
     def __init__(self):
+        Error.__init__(self, None, None)
         self.message = 'The Length of ClientSecret should be 72'
 
     def __str__(self):
         return str(self.message)
-
-    pass
