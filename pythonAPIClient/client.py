@@ -206,7 +206,7 @@ class Client(object):
         local_params['type'] = local_params.pop('camera_type', None)
 
         # filter out those parameters with value None, change true/false
-        search_params = {k: v for k, v in local_params.iteritems() if v is not None}
+        search_params = {k: v for k, v in local_params.items() if v is not None}
 
         url = Client.base_URL + 'cameras/search'
 
