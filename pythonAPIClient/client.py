@@ -3,7 +3,7 @@ Represents a CAM2 client application.
 """
 import requests
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
-    InvalidClientSecretError, ResourceNotFoundError, FormatError
+    InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
 from .camera import Camera
 
 class Client(object):
