@@ -14,54 +14,60 @@ class TestCamera(unittest.TestCase):
         pass
 
     def test_cam_init(self):
-        cam = Camera(1, "ip", "test_source", 10, 50, "test_country", "test_state", "test_city", 1,
-                     1, 0, 0, "", "",
-                     "", "null", "test_url")
-
-        ip_cam_test1 = IPCamera(1, "ip", "test_source", 10, 50, "test_country", "test_state",
-                                "test_city", 1, 1, 0, 0, "null", "null", "null", "null",
-                                "test_url", "ip", "test_ip_port", "test_brand", "test_model",
-                                "test_image_path", "test_video_path")
-        ip_cam_test2 = IPCamera(1, "ip", "test_source", 10, 50, "test_country", "test_state",
-                                "test_city", 1, 1, 0, 0, "null", "null", "null", "null",
-                                "test_url", "ip", "test_ip_port", "test_brand", "test_model",
-                                "test_image_path", None)
-
-        non_ip_cam_test1 = NonIPCamera(1, "nonip", "test_source", 10, 50, "test_country",
-                                       "test_state", "test_city", 1, 1, 0, 0, "null",
-                                       "null", "null", "null", "test_url", "test_snapshot_url")
-        non_ip_cam_test2 = NonIPCamera(1, "nonip", "test_source", 10, 50, "test_country",
-                                       "test_state", "test_city", 1, 1, 0, 0, "null", "null",
-                                       "null", "null", "test_url", None)
-
-        stream_cam_test1 = StreamCamera(1, "stream", "test_source", 10, 50, "test_country",
-                                        "test_state", "test_city", 1, 1, 0, 0, "null", "null",
-                                        "null", "null", "test_url", "test_m3u8_url")
-        stream_cam_test2 = StreamCamera(1, "stream", "test_source", 10, 50, "test_country",
-                                        "test_state", "test_city", 1, 1, 0, 0, "null", "null",
-                                        "null", "null", "test_url", None)
-
+        cam_attr = {
+            'cameraID': 'test',
+            'legacy_cameraID': 1,
+            'camera_type': 'ip',
+            'source': None,
+            'country': 'USA',
+            'state': 'IN',
+            'city': None,
+            'longitude': 50,
+            'latitude': 50.0,
+            'is_active_image': True,
+            'is_active_video': False,
+            'resolution_width': 1900,
+            'resolution_height': 1000,
+            'utc_offset': 8,
+            'timezone_id': 0,
+            'timezone_name': 'UTC',
+            'reference_logo': None,
+            'reference_url': None
+        }
+        cam = Camera(**cam_attr)
         self.assertTrue(isinstance(cam, Camera))
 
-        self.assertTrue(isinstance(ip_cam_test1, IPCamera) and issubclass(ip_cam_test1.__class__,
-                                                                          cam.__class__))
-        self.assertTrue(isinstance(ip_cam_test2, IPCamera) and issubclass(ip_cam_test2.__class__,
-                                                                          cam.__class__))
+        non_ip_attr = {'snapshot_url': 'test_url'}
+        cam_attr.update(non_ip_attr)
+        non_ip_cam_test = NonIPCamera(**cam_attr)
+        self.assertTrue(isinstance(non_ip_cam_test, NonIPCamera))
+        self.assertTrue(issubclass(non_ip_cam_test.__class__, cam.__class__))
+        self.assertEqual(non_ip_cam_test.__dict__, cam_attr)
 
-        self.assertTrue(
-            isinstance(non_ip_cam_test1, NonIPCamera) and issubclass(non_ip_cam_test1.__class__,
-                                                                     cam.__class__))
-        self.assertTrue(
-            isinstance(non_ip_cam_test2, NonIPCamera) and issubclass(non_ip_cam_test2.__class__,
-                                                                     cam.__class__))
+        cam_attr.pop('snapshot_url')
 
-        self.assertTrue(
-            isinstance(stream_cam_test1, StreamCamera) and issubclass(stream_cam_test1.__class__,
-                                                                      cam.__class__))
-        self.assertTrue(
-            isinstance(stream_cam_test2, StreamCamera) and issubclass(stream_cam_test2.__class__,
-                                                                      cam.__class__))
+        stream_attr = {'m3u8_url': 'test_url'}
+        cam_attr.update(stream_attr)
+        stream_cam_test = StreamCamera(**cam_attr)
+        self.assertTrue(isinstance(stream_cam_test, StreamCamera))
+        self.assertTrue(issubclass(stream_cam_test.__class__, cam.__class__))
+        self.assertEqual(stream_cam_test.__dict__, cam_attr)
 
+        cam_attr.pop('m3u8_url')
+
+        ip_attr = {
+            'ip': '127.0.0.1',
+            'port': 80,
+            'brand': 'test_brand',
+            'model': 'test_model',
+            'image_path': 'test_image',
+            'video_path': None
+        }
+        cam_attr.update(ip_attr)
+        ip_cam_test = IPCamera(**cam_attr)
+        self.assertTrue(isinstance(ip_cam_test, IPCamera))
+        self.assertTrue(issubclass(ip_cam_test.__class__, cam.__class__))
+        self.assertEqual(ip_cam_test.__dict__, cam_attr)
 
 if __name__ == '__main__':
     unittest.main()
