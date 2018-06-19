@@ -148,7 +148,7 @@
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">.error</span> <span class="k">import</span> <span class="n">AuthenticationError</span><span class="p">,</span> <span class="n">InternalError</span><span class="p">,</span> <span class="n">InvalidClientIdError</span><span class="p">,</span> \
     <span class="n">InvalidClientSecretError</span><span class="p">,</span> <span class="n">ResourceNotFoundError</span><span class="p">,</span> <span class="n">FormatError</span>
-<span class="kn">from</span> <span class="nn">.camera</span> <span class="k">import</span> <span class="n">IPCamera</span><span class="p">,</span> <span class="n">NonIPCamera</span><span class="p">,</span> <span class="n">StreamCamera</span>
+<span class="kn">from</span> <span class="nn">.camera</span> <span class="k">import</span> <span class="n">Camera</span>
 
 <div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
@@ -255,7 +255,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        owner : str</span>
 <span class="sd">            Username of the owner of the client application.</span>
-<span class="sd">        permissionLevel : :obj:`str`, optional</span>
+<span class="sd">        permissionLevel : str, optional</span>
 <span class="sd">            Permission level of the owner of the client application.</span>
 <span class="sd">            Default permission level is &#39;user&#39;.</span>
 
@@ -288,7 +288,7 @@
         <span class="k">pass</span></div>
 
     <span class="c1"># TODO: add a camera to database</span>
-<div class="viewcode-block" id="Client.add_camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.add_camera">[docs]</a>    <span class="k">def</span> <span class="nf">add_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Camera</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.add_camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.add_camera">[docs]</a>    <span class="k">def</span> <span class="nf">add_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camera</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
     <span class="c1"># TODO: update a camera in database</span>
@@ -342,72 +342,12 @@
             <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
         <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">500</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
         <span class="n">camera_response_array</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="n">camera_processed</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">camera_response_array</span><span class="p">):</span>
-            <span class="n">current_object</span> <span class="o">=</span> <span class="n">camera_response_array</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ip&#39;</span><span class="p">:</span>
-                <span class="n">camera_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">IPCamera</span><span class="p">(</span><span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;cameraID&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;resolution_width&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;resolution_height&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;is_active_image&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;is_active_video&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;utc_offset&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;timezone_id&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;timezone_name&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;reference_logo&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;reference_url&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">][</span><span class="s1">&#39;ip&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">][</span><span class="s1">&#39;port&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">][</span><span class="s1">&#39;brand&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">][</span><span class="s1">&#39;model&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">][</span><span class="s1">&#39;image_path&#39;</span><span class="p">],</span>
-                                                 <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">][</span><span class="s1">&#39;video_path&#39;</span><span class="p">]))</span>
-            <span class="k">elif</span> <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;non_ip&#39;</span><span class="p">:</span>
-                <span class="n">camera_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NonIPCamera</span><span class="p">(</span><span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;cameraID&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;resolution_width&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;resolution_height&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;is_active_image&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;is_active_video&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;utc_offset&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;timezone_id&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;timezone_name&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;reference_logo&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;reference_url&#39;</span><span class="p">],</span>
-                                                    <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">][</span><span class="s1">&#39;snapshot_url&#39;</span><span class="p">]))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">camera_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">StreamCamera</span><span class="p">(</span><span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;cameraID&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;resolution_width&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;resolution_height&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;is_active_image&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;is_active_video&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;utc_offset&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;timezone_id&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;timezone_name&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;reference_logo&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;reference_url&#39;</span><span class="p">],</span>
-                                                     <span class="n">current_object</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">][</span><span class="s1">&#39;m3u8_url&#39;</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">current_object</span> <span class="ow">in</span> <span class="n">camera_response_array</span><span class="p">:</span>
+            <span class="n">camera_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Camera</span><span class="o">.</span><span class="n">process_json</span><span class="p">(</span><span class="o">**</span><span class="n">current_object</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">camera_processed</span></div></div>
 </pre></div>
 

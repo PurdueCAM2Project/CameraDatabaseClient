@@ -153,36 +153,272 @@
 <h1>pythonAPIClient package<a class="headerlink" href="#pythonapiclient-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-pythonAPIClient.camera">
 <span id="pythonapiclient-camera-module"></span><h2>pythonAPIClient.camera module<a class="headerlink" href="#module-pythonAPIClient.camera" title="Permalink to this headline">¶</a></h2>
-<p>This class holds the code to make camera objects.</p>
+<p>Represents a camera.</p>
 <dl class="class">
 <dt id="pythonAPIClient.camera.Camera">
-<em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">Camera</code><span class="sig-paren">(</span><em>cameraID</em>, <em>camera_type</em>, <em>source</em>, <em>lat</em>, <em>lng</em>, <em>country</em>, <em>state</em>, <em>city</em>, <em>resolution_width</em>, <em>resolution_height</em>, <em>is_active_image</em>, <em>is_active_video</em>, <em>utc_offset</em>, <em>timezone_id</em>, <em>timezone_name</em>, <em>reference_logo</em>, <em>reference_url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.Camera" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">Camera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.Camera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Represent a single camera</p>
+<p>Class representing a general camera.</p>
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.cameraID">
+<code class="descname">cameraID</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.cameraID" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Id of the camera.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.legacy_cameraID">
+<code class="descname">legacy_cameraID</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.legacy_cameraID" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int, optional</em> – Id of the camera in previous CAM2 camera database.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.camera_type">
+<code class="descname">camera_type</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.camera_type" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Type of the camera.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.source">
+<code class="descname">source</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.source" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.country">
+<code class="descname">country</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.country" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.state">
+<code class="descname">state</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.state" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.city">
+<code class="descname">city</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.city" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.longitude">
+<code class="descname">longitude</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.longitude" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.latitude">
+<code class="descname">latitude</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.latitude" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.is_active_image">
+<code class="descname">is_active_image</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.is_active_image" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.is_active_video">
+<code class="descname">is_active_video</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.is_active_video" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.resolution_width">
+<code class="descname">resolution_width</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.resolution_width" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.resolution_height">
+<code class="descname">resolution_height</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.resolution_height" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.utc_offset">
+<code class="descname">utc_offset</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.utc_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.timezone_id">
+<code class="descname">timezone_id</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.timezone_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.timezone_name">
+<code class="descname">timezone_name</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.timezone_name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.reference_logo">
+<code class="descname">reference_logo</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.reference_logo" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.Camera.reference_url">
+<code class="descname">reference_url</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.reference_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<p>Client initialization method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_entries</strong> (<em>dict</em>) – Dictionary of all field values of a camera.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>User should not construct any camera object on his/her own.</p>
+<p>Camera should only be initialized by results returned from the API.</p>
+<p class="last">Documentation of camera constructor is for CAM2 API team only.</p>
+</div>
+<dl class="staticmethod">
+<dt id="pythonAPIClient.camera.Camera.process_json">
+<em class="property">static </em><code class="descname">process_json</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#Camera.process_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.Camera.process_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="pythonAPIClient.camera.IPCamera">
-<em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">IPCamera</code><span class="sig-paren">(</span><em>cameraID</em>, <em>camera_type</em>, <em>source</em>, <em>lat</em>, <em>lng</em>, <em>country</em>, <em>state</em>, <em>city</em>, <em>resolution_width</em>, <em>resolution_height</em>, <em>is_active_image</em>, <em>is_active_video</em>, <em>utc_offset</em>, <em>timezone_id</em>, <em>timezone_name</em>, <em>reference_logo</em>, <em>reference_url</em>, <em>ip</em>, <em>port</em>, <em>brand</em>, <em>model</em>, <em>image_path</em>, <em>video_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#IPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.IPCamera" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">IPCamera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#IPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.IPCamera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.camera.Camera" title="pythonAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.camera.Camera</span></code></a></p>
-<p>Represent a single ip_camera
-This is a subclass of Camera</p>
+<p>Represent a single ip camera.</p>
+<p>This is a subclass of Camera.</p>
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.IPCamera.ip">
+<code class="descname">ip</code><a class="headerlink" href="#pythonAPIClient.camera.IPCamera.ip" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.IPCamera.port">
+<code class="descname">port</code><a class="headerlink" href="#pythonAPIClient.camera.IPCamera.port" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.IPCamera.brand">
+<code class="descname">brand</code><a class="headerlink" href="#pythonAPIClient.camera.IPCamera.brand" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.IPCamera.model">
+<code class="descname">model</code><a class="headerlink" href="#pythonAPIClient.camera.IPCamera.model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.IPCamera.image_path">
+<code class="descname">image_path</code><a class="headerlink" href="#pythonAPIClient.camera.IPCamera.image_path" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.IPCamera.video_path">
+<code class="descname">video_path</code><a class="headerlink" href="#pythonAPIClient.camera.IPCamera.video_path" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<p>Client initialization method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_entries</strong> (<em>dict</em>) – Dictionary of all field values of a camera.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>User should not construct any camera object on his/her own.</p>
+<p>Camera should only be initialized by results returned from the API.</p>
+<p class="last">Documentation of camera constructor is for CAM2 API team only.</p>
+</div>
+<dl class="staticmethod">
+<dt id="pythonAPIClient.camera.IPCamera.process_json">
+<em class="property">static </em><code class="descname">process_json</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="headerlink" href="#pythonAPIClient.camera.IPCamera.process_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="pythonAPIClient.camera.NonIPCamera">
-<em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">NonIPCamera</code><span class="sig-paren">(</span><em>cameraID</em>, <em>camera_type</em>, <em>source</em>, <em>lat</em>, <em>lng</em>, <em>country</em>, <em>state</em>, <em>city</em>, <em>resolution_width</em>, <em>resolution_height</em>, <em>is_active_image</em>, <em>is_active_video</em>, <em>utc_offset</em>, <em>timezone_id</em>, <em>timezone_name</em>, <em>reference_logo</em>, <em>reference_url</em>, <em>snapshot_url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#NonIPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.NonIPCamera" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">NonIPCamera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#NonIPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.NonIPCamera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.camera.Camera" title="pythonAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.camera.Camera</span></code></a></p>
-<p>Represent a non-IP camera.
-This is a subclass of Camera</p>
+<p>Represent a single non-ip camera.</p>
+<p>This is a subclass of Camera.</p>
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.NonIPCamera.snapshot_url">
+<code class="descname">snapshot_url</code><a class="headerlink" href="#pythonAPIClient.camera.NonIPCamera.snapshot_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em></p>
+</dd></dl>
+
+<p>Client initialization method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_entries</strong> (<em>dict</em>) – Dictionary of all field values of a camera.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>User should not construct any camera object on his/her own.</p>
+<p>Camera should only be initialized by results returned from the API.</p>
+<p class="last">Documentation of camera constructor is for CAM2 API team only.</p>
+</div>
+<dl class="staticmethod">
+<dt id="pythonAPIClient.camera.NonIPCamera.process_json">
+<em class="property">static </em><code class="descname">process_json</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="headerlink" href="#pythonAPIClient.camera.NonIPCamera.process_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="pythonAPIClient.camera.StreamCamera">
-<em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">StreamCamera</code><span class="sig-paren">(</span><em>cameraID</em>, <em>camera_type</em>, <em>source</em>, <em>lat</em>, <em>lng</em>, <em>country</em>, <em>state</em>, <em>city</em>, <em>resolution_width</em>, <em>resolution_height</em>, <em>is_active_image</em>, <em>is_active_video</em>, <em>utc_offset</em>, <em>timezone_id</em>, <em>timezone_name</em>, <em>reference_logo</em>, <em>reference_url</em>, <em>m3u8_url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#StreamCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.StreamCamera" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">StreamCamera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#StreamCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.StreamCamera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.camera.Camera" title="pythonAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.camera.Camera</span></code></a></p>
-<p>Represent a Stream camera.
-This is a subclass of Camera</p>
+<p>Represent a single stream camera.</p>
+<p>This is a subclass of Camera.</p>
+<dl class="attribute">
+<dt id="pythonAPIClient.camera.StreamCamera.m3u8_url">
+<code class="descname">m3u8_url</code><a class="headerlink" href="#pythonAPIClient.camera.StreamCamera.m3u8_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em></p>
+</dd></dl>
+
+<p>Client initialization method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_entries</strong> (<em>dict</em>) – Dictionary of all field values of a camera.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>User should not construct any camera object on his/her own.</p>
+<p>Camera should only be initialized by results returned from the API.</p>
+<p class="last">Documentation of camera constructor is for CAM2 API team only.</p>
+</div>
+<dl class="staticmethod">
+<dt id="pythonAPIClient.camera.StreamCamera.process_json">
+<em class="property">static </em><code class="descname">process_json</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="headerlink" href="#pythonAPIClient.camera.StreamCamera.process_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -282,7 +518,7 @@ Client secret should have a length of at least 71 characters.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>owner</strong> (<em>str</em>) – Username of the owner of the client application.</li>
-<li><strong>permissionLevel</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>, optional) – Permission level of the owner of the client application.
+<li><strong>permissionLevel</strong> (<em>str</em><em>, </em><em>optional</em>) – Permission level of the owner of the client application.
 Default permission level is ‘user’.</li>
 </ul>
 </td>
@@ -320,7 +556,7 @@ Default permission level is ‘user’.</li>
 
 <dl class="method">
 <dt id="pythonAPIClient.client.Client.add_camera">
-<code class="descname">add_camera</code><span class="sig-paren">(</span><em>Camera</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.add_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.add_camera" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_camera</code><span class="sig-paren">(</span><em>camera</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.add_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.add_camera" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
