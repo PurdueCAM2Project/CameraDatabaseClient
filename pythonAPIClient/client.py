@@ -172,19 +172,20 @@ class Client(object):
 
         url = Client.base_URL + 'cameras/search'
 
-        response = requests.get(url, headers=self.header_builder(), param=search_params)
+        response = requests.get(url, headers=self.header_builder(), params=search_params)
         if response.status_code == 401:
             self.request_token()
-            response = requests.get(url, headers=self.header_builder(), param=search_params)
+            response = requests.get(url, headers=self.header_builder(), params=search_params)
         elif response.status_code == 422:
             raise FormatError(response.json()['message'])
         elif response.status_code == 500:
             raise InternalError()
         elif response.status_code != 200:
             raise InternalError()
-        print response.json()
+
         camera_response_array = response.json()
         camera_processed = []
         for current_object in camera_response_array:
             camera_processed.append(Camera.process_json(**current_object))
+
         return camera_processed

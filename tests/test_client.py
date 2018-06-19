@@ -139,11 +139,12 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/search?country=USA'
+        url = self.base_URL + 'cameras/search'
         with self.assertRaises(TypeError):
             client.search_camera(country='USA')
-        mock_get.assert_called_with(url, headers={'Authorization': 'Bearer correctToken'})
-        self.assertEqual(2, mock_response.json.call_count)
+        mock_get.assert_called_with(url, headers={'Authorization': 'Bearer correctToken'},
+                                    params={'country': 'USA'})
+        self.assertEqual(2, mock_get.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_all_correct_Expired_Token(self, mock_get):
@@ -169,10 +170,11 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/search?country=USA'
+        url = self.base_URL + 'cameras/search'
         with self.assertRaises(InternalError):
             client.search_camera(country='USA')
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         params={'country': 'USA'})
         self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -188,12 +190,53 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 422
         mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/search?country=USA'
+        url = self.base_URL + 'cameras/search'
         with self.assertRaises(FormatError):
-            client.search_camera(country='USA')
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
+            client.search_camera(resolution_width='USA')
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         params={'resolution_width': 'USA'})
         self.assertEqual(1, mock_response.json.call_count)
 
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_search_camera_all_correct(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        expected_dict = [{"legacy_cameraID":31280, "type":"non_ip", "source":"webcam_jp",
+                          "country":"JP", "state":None, "city":None, "resolution_width":1,
+                          "resolution_height":1, "is_active_image":True,
+                          "is_active_video":False, "utc_offset":32400, "timezone_id":None,
+                          "timezone_name":None, "reference_logo":"webtral.jpg",
+                          "reference_url":"http://some_url", "cameraID":"5b0e74213651360004edb426",
+                          "retrieval":{"snapshot_url":"http://images./preview/adf.jpg"},
+                          "latitude":35.8876, "longitude":136.098}]
+        mock_response.json.return_value = expected_dict
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+        response_dict = client.search_camera(
+            country='JP', camera_type='non_ip', is_active_image=True, offset=100)
+        url = self.base_URL + 'cameras/search'
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         params={
+                                             'country': 'JP',
+                                             'type': 'non_ip',
+                                             'is_active_image': True,
+                                             'offset': 100})
+        self.assertEqual(1, mock_get.call_count)
+        actual_dict = {"legacy_cameraID":31280, "camera_type":"non_ip", "source":"webcam_jp",
+                       "country":"JP", "state":None, "city":None, "resolution_width":1,
+                       "resolution_height":1, "is_active_image":True,
+                       "is_active_video":False, "utc_offset":32400, "timezone_id":None,
+                       "timezone_name":None, "reference_logo":"webtral.jpg",
+                       "reference_url":"http://some_url", "cameraID":"5b0e74213651360004edb426",
+                       "snapshot_url":"http://images./preview/adf.jpg",
+                       "latitude":35.8876, "longitude":136.098}
+        self.assertEqual(response_dict[0].__dict__, actual_dict,
+                         'Returned json is not tranlated correctly')
+        return response_dict
 
 if __name__ == '__main__':
     unittest.main()
