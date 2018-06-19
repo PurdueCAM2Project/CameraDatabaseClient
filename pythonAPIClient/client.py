@@ -2,6 +2,7 @@
 Represents a CAM2 client application.
 """
 import requests
+import json
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError, FormatError
 from .camera import Camera
@@ -93,7 +94,6 @@ class Client(object):
             Client secret should have a length of at least 71 characters.
 
         """
-
         if len(clientId) != 96:
             raise InvalidClientIdError
         if len(clientSecret) < 71:
@@ -160,46 +160,29 @@ class Client(object):
                       source=None, country=None, state=None, city=None, resolution_width=None,
                       resolution_heigth=None, is_active_image=None, is_active_video=None,
                       offset=None):
+
         if self.token is None:
             self.request_token()
-        url = Client.base_URL + 'cameras/search?'
-        if latitude is not None:
-            url += 'lat=' + latitude + '&'
-        if longitude is not None:
-            url += 'lng=' + longitude + '&'
-        if radius is not None:
-            url += 'radius=' + radius + '&'
-        if camera_type is not None:
-            url += 'type=' + camera_type + '&'
-        if source is not None:
-            url += 'source=' + source + '&'
-        if country is not None:
-            url += 'country=' + country + '&'
-        if state is not None:
-            url += 'state=' + state + '&'
-        if city is not None:
-            url += 'city=' + city + '&'
-        if resolution_width is not None:
-            url += 'resolution_width=' + resolution_width + '&'
-        if resolution_heigth is not None:
-            url += 'resolution_heigth=' + resolution_heigth + '&'
-        if is_active_image is not None:
-            url += 'is_active_image=' + is_active_image + '&'
-        if is_active_video is not None:
-            url += 'is_active_video=' + is_active_video + '&'
-        if offset is not None:
-            url += 'offset=' + offset + '&'
-        url = url[:-1]
-        response = requests.get(url, headers=self.header_builder())
+        local_params = dict(locals())
+        local_params.pop('self', None)
+        local_params['type'] = local_params.pop('camera_type', None)
+
+        # filter out those parameters with value None, change true/false
+        search_params = {k: v for k, v in local_params.iteritems() if v is not None}
+
+        url = Client.base_URL + 'cameras/search'
+
+        response = requests.get(url, headers=self.header_builder(), param=search_params)
         if response.status_code == 401:
             self.request_token()
-            response = requests.get(url, headers=self.header_builder())
+            response = requests.get(url, headers=self.header_builder(), param=search_params)
         elif response.status_code == 422:
             raise FormatError(response.json()['message'])
         elif response.status_code == 500:
             raise InternalError()
         elif response.status_code != 200:
             raise InternalError()
+        print response.json()
         camera_response_array = response.json()
         camera_processed = []
         for current_object in camera_response_array:
