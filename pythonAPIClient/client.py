@@ -161,6 +161,44 @@ class Client(object):
                       resolution_heigth=None, is_active_image=None, is_active_video=None,
                       offset=None):
 
+        """A method to search camera by attributes and location.
+
+        Searching by location requires user to provide coordiantes for a desired center point
+         and a radius in meters. The search will carry out in the area bounded by the circle.
+
+        Parameters
+        ----------
+        latitude : float, optional
+        longitude : float, optional
+        radius : float, optional
+        offset : int, optional
+        camera_type : str, optional
+        source : str, optional
+        country : str, optional
+        state : str, optional
+        city : str, optional
+        resolution_width : int, optional
+        resolution_height : int, optional
+        is_active_image : bool, optional
+        is_active_video : bool, optional
+
+        Raises
+        ------
+        FormatError
+            If type of argument value is not expected for the given field.
+ 
+            Or radius cannot is less than 0.
+
+            Or incorrect latitude range. (it should be between +90 and -90)
+
+            Or incorrect longitude range. (it should be between +180 and -180) 
+
+        AuthenticationError
+            If the client secret of this client object does not match the clientID.
+        InternalError
+            If there is an API internal error.
+
+        """
         if self.token is None:
             self.request_token()
         local_params = dict(locals())
