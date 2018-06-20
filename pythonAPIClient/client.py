@@ -35,7 +35,6 @@ class Client(object):
         return head
 
     def __init__(self, clientId, clientSecret):
-        """"
         #clientId are of a fixed length of 96 characters.
         if len(id) != 96:
             raise InvalidClientIdError
@@ -47,10 +46,10 @@ class Client(object):
         self.clientSecret = clientSecret
         self.token = None
 
-        """
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.token = None
+
     """
     Functions for webUI
     """
@@ -106,37 +105,8 @@ class Client(object):
 
     # TODO: update a camera in database
     # replace others with desired field names
-    def update_camera(self, camera_type=None, is_active_image=None, is_active_video=None, snapshot_url=None,
-                      m3u8_url=None, ip=None, legacy_cameraID=None, source=None, lat=None, lng=None, country=None,
-                      state=None, city=None, resolution_width=None, resolution_height=None, utc_offset=None,
-                      timezone_id=None, timezone_name=None, reference_logo=None, reference_url=None, port=None,
-                      brand=None, model=None, image_path=None, video_path=None):
-
-        url = Client.base_URL + 'cameras/:cameraID'
-
-        if self.token is None:
-           self.request_token()
-
-        local_params = dict(locals())
-
-        del local_params['self']
-        local_params['type'] = local_params.pop('camera_type')
-        if camera_type == 'ip':
-            local_params['retrieval'] = {
-                'ip': ip,
-                'port': port,
-                'brand': brand,
-                'model': model,
-                'image_path': image_path,
-                'video_path': video_path
-            }
-        local_params['retrieval'] = json.dumps(local_params['retrieval'], sort_keys=True, indent=4, separators=(',', ':'))
-
-        response = requests.put(url, headers=self.header_builder(), data=local_params)
-        if response.status_code == 401:
-            self.request_token()
-            response = requests.get(url, headers=self.header_builder())
-            print(response.json()['401 Err'])
+    def update_camera(self, cameraID):
+        pass
 
     # TODO: get a camera
     def camera_by_id(self, cameraID):
