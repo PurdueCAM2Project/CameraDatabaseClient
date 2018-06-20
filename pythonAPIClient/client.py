@@ -35,8 +35,8 @@ class Client(object):
         return head
 
     def __init__(self, clientId, clientSecret):
-        #clientId are of a fixed length of 96 characters.
-        if len(id) != 96:
+        # clientId are of a fixed length of 96 characters.
+        if len(clientId) != 96:
             raise InvalidClientIdError
         # clientSecret are of a fixed length of 71 characters.
         if len(clientSecret) != 72:
@@ -105,7 +105,7 @@ class Client(object):
 
     # TODO: update a camera in database
     # replace others with desired field names
-    def update_camera(self, cameraID):
+    def update_camera(self, cameraID, others):
         pass
 
     # TODO: get a camera
