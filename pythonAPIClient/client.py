@@ -2,6 +2,7 @@
 Represents a CAM2 client application.
 """
 import requests
+import json
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError, FormatError
 from .camera import IPCamera, NonIPCamera, StreamCamera
@@ -9,15 +10,17 @@ from .camera import IPCamera, NonIPCamera, StreamCamera
 
 class Client(object):
     # Static variable to store the base URL.
-    base_URL = 'https://cam2-api.herokuapp.com/'
-
+    #base_URL = 'https://cam2-api.herokuapp.com/'
+    base_URL = 'http://localhost:8080/'
     """
     Represent a CAM2 client application.2323232
     """
 
     def request_token(self):
+
         url = Client.base_URL + 'auth/?clientID=' + self.clientId + \
               '&clientSecret=' + self.clientSecret
+
         response = requests.get(url)
         if response.status_code == 200:
             self.token = response.json()['token']
@@ -33,16 +36,25 @@ class Client(object):
         return head
 
     def __init__(self, clientId, clientSecret):
-        # clientId are of a fixed length of 96 characters.
-        if len(clientId) != 96:
+        """"
+        #clientId are of a fixed length of 96 characters.
+        if len(id) != 96:
             raise InvalidClientIdError
         # clientSecret are of a fixed length of 71 characters.
         if len(clientSecret) != 72:
             raise InvalidClientSecretError
+
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.token = None
 
+        """
+        self.clientId = clientId
+        self.clientSecret = clientSecret
+        self.token = None
+    """
+    Functions for webUI
+    """
     # TODO: return clientID and client secret
     def register(self, owner, permissionLevel='user'):
         pass
@@ -64,8 +76,34 @@ class Client(object):
         pass
 
     # TODO: add a camera to database
-    def add_camera(self, Camera):
-        pass
+    def add_camera(self, camera_type, is_active_image, is_active_video, snapshot_url, m3u8_url, ip, legacy_cameraID=None,
+                   source=None, lat=None, lng=None, country=None, state=None, city=None, resolution_width=None,
+                   resolution_height=None, utc_offset=None, timezone_id=None, timezone_name=None, reference_logo=None,
+                   reference_url=None, port=None, brand=None, model=None, image_path=None, video_path=None):
+
+        url = Client.base_URL + 'cameras/create'
+        if self.token is None:
+           self.request_token()
+        local_params = dict(locals())
+        del local_params['self']
+        local_params['type'] = local_params.pop('camera_type')
+        if camera_type == 'ip':
+            local_params['retrieval'] = {
+                'ip': ip,
+                'port': port,
+                'brand': brand,
+                'model': model,
+                'image_path': image_path,
+                'video_path': video_path
+            }
+
+        local_params['retrieval'] = json.dumps(local_params['retrieval'], sort_keys=True, indent=4, separators=(',', ':'))
+
+        response = requests.post(url, headers=self.header_builder(), data=local_params)
+        if response.status_code == 401:
+            self.request_token()
+            response = requests.get(url, headers=self.header_builder())
+            print(response.json()['401 Err'])
 
     # TODO: update a camera in database
     # replace others with desired field names
@@ -78,7 +116,7 @@ class Client(object):
 
     def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None,
                       source=None, country=None, state=None, city=None, resolution_width=None,
-                      resolution_heigth=None, is_active_image=None, is_active_video=None,
+                      resolution_height=None, is_active_image=None, is_active_video=None,
                       offset=None):
         if self.token is None:
             self.request_token()
@@ -101,8 +139,8 @@ class Client(object):
             url += 'city=' + city + '&'
         if resolution_width is not None:
             url += 'resolution_width=' + resolution_width + '&'
-        if resolution_heigth is not None:
-            url += 'resolution_heigth=' + resolution_heigth + '&'
+        if resolution_height is not None:
+            url += 'resolution_heigth=' + resolution_height + '&'
         if is_active_image is not None:
             url += 'is_active_image=' + is_active_image + '&'
         if is_active_video is not None:

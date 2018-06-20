@@ -28,13 +28,12 @@ class Camera(object):
         self.timezone_name = timezone_name
         self.reference_logo = reference_logo
         self.reference_url = reference_url
-
-
 class IPCamera(Camera):
     """
     Represent a single ip_camera
     This is a subclass of Camera
     """
+#<<<<<<< Updated upstream
     def __init__(self, cameraID, camera_type, source, lat, lng, country, state,
                  city, resolution_width, resolution_height, is_active_image,
                  is_active_video, utc_offset, timezone_id, timezone_name,
@@ -51,6 +50,32 @@ class IPCamera(Camera):
                                        utc_offset, timezone_id, timezone_name,
                                        reference_logo, reference_url)
 
+#=======
+    # TODO: define extra retrieval attributes and constructor of ip camera object
+    # replace others with desired field names
+    def __init__(self,cameraID, camera_type, source, lat, lng, country, state, city, resolution_width
+                , resolution_height, is_active_image, is_active_video, utc_offset, timezone_id
+                , timezone_name, reference_logo, reference_url, ip,port,brand,model,image_path,video_path):
+                self.ip = ip
+                self.port = port
+                self.brand = brand
+                self.model = model
+                self.image_path = image_path
+                self.video_path = video_path
+                super(IPCamera, self).__init__(cameraID, camera_type, source, lat, lng, country, state, city, resolution_width
+                , resolution_height, is_active_image, is_active_video, utc_offset, timezone_id
+                , timezone_name, reference_logo, reference_url)
+    def asdict(self):
+        data = super().asdict()
+        data['retrieval'] = {
+            "ip": self.ip,
+            "port": self.port,
+            "brand": self.brand,
+            "model": self.model,
+            "image_path": self.image_path,
+            "video_path": self.video_path
+        }
+#>>>>>>> Stashed changes
 
 class NonIPCamera(Camera):
     """
