@@ -231,9 +231,10 @@ class Client(object):
             A list of client's ID owned by the user.
 
         """
-        url = Client.base_URL + 'apps/by-owner?owner=' + owner
+        url = Client.base_URL + 'apps/by-owner'
+        param = {'owner': owner}
         header = self.header_builder()
-        response = requests.get(url, headers=header)
+        response = requests.get(url, headers=header, params=param)
         if response.status_code != 200:
             if response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
@@ -241,7 +242,7 @@ class Client(object):
                 if response.json()['message'] == 'Token expired':
                     self.request_token()
                     header = self.header_builder()
-                    response = requests.get(url, headers=header)
+                    response = requests.get(url, headers=header, params=param)
                     clientObject = response.json()
                     clientIDs = []
                     for ct in clientObject:
@@ -275,9 +276,10 @@ class Client(object):
             The number of requests made by the client.
 
         """
-        url = Client.base_URL+"apps/"+clientID+"/usage?owner="+owner
+        url = Client.base_URL+"apps/"+clientID+"/usage"
+        param = {'owner': owner}
         header = self.header_builder()
-        response = requests.get(url, headers=header)
+        response = requests.get(url, headers=header, params=param)
         if response.status_code != 200:
             if response.status_code == 403:
                 raise AuthorizationError(response.json()['message'])
@@ -285,7 +287,7 @@ class Client(object):
                 if response.json()['message'] == 'Token expired':
                     self.request_token()
                     header = self.header_builder()
-                    response = requests.get(url, headers=header)
+                    response = requests.get(url, headers=header, params=param)
                     return response.json()['api_usage']
                 else:
                     raise AuthenticationError(response.json()['message'])

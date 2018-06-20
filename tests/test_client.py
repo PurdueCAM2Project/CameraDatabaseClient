@@ -357,10 +357,11 @@ class TestClient(unittest.TestCase):
 
         mock_get.return_value = mock_response
         headers = {'Authorization': 'Bearer None'}
-        url = Client.base_URL + 'apps/by-owner?owner=test'
+        url = Client.base_URL + 'apps/by-owner'
+        param = {'owner': 'testowner'}
         expected_clientID_array = ['test_clientID1', 'test_clientID2']
-        self.assertEqual(client.client_ids_by_owner("test"), expected_clientID_array)
-        mock_get.assert_called_once_with(url, headers=headers)
+        self.assertEqual(client.client_ids_by_owner("testowner"), expected_clientID_array)
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_no_token(self, mock_get):
@@ -373,11 +374,12 @@ class TestClient(unittest.TestCase):
             'message': 'Failed to authenticate token'
         }
         mock_get.return_value = mock_response
-        url = self.base_URL+'apps/by-owner?owner=testowner'
+        url = self.base_URL+'apps/by-owner'
+        param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer None'}
         with self.assertRaises(AuthenticationError):
             client.client_ids_by_owner('testowner')
-        mock_get.assert_called_with(url, headers=headers)
+        mock_get.assert_called_with(url, headers=headers, params=param)
         self.assertEqual(2, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -419,11 +421,12 @@ class TestClient(unittest.TestCase):
             'message': 'No app exists with given clientID'
         }
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/by-owner?owner=testowner'
+        url = Client.base_URL + 'apps/by-owner'
+        param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer None'}
         with self.assertRaises(ResourceNotFoundError):
             client.client_ids_by_owner('testowner')
-        mock_get.assert_called_once_with(url, headers=headers)
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -434,11 +437,12 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/by-owner?owner=testowner'
+        url = Client.base_URL + 'apps/by-owner'
+        param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer None'}
         with self.assertRaises(InternalError):
             client.client_ids_by_owner('testowner')
-        mock_get.assert_called_once_with(url, headers=headers)
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -452,10 +456,11 @@ class TestClient(unittest.TestCase):
             'api_usage': 7
         }
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        url = Client.base_URL + 'apps/1/usage'
+        param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer None'}
         self.assertEqual(client.usage_by_client('1', 'testowner'), 7)
-        mock_get.assert_called_once_with(url, headers=headers)
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_usage_by_client_expired_token(self, mock_get):
@@ -483,7 +488,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(3, mock_get.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_get_usage_by_client_authorization(self, mock_get):
+    def test_get_usage_by_client_authorization_error(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
@@ -495,9 +500,10 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response
         with self.assertRaises(AuthorizationError):
             client.usage_by_client('1', 'testowner')
-        url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        url = Client.base_URL + 'apps/1/usage'
+        param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer None'}
-        mock_get.assert_called_once_with(url, headers=headers)
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -508,11 +514,12 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        url = Client.base_URL + 'apps/1/usage'
+        param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer None'}
         with self.assertRaises(InternalError):
             client.usage_by_client('1', 'testowner')
-        mock_get.assert_called_once_with(url, headers=headers)
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -526,11 +533,12 @@ class TestClient(unittest.TestCase):
             'message': 'No app exists with given clientID'
         }
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/1/usage?owner=testowner'
+        url = Client.base_URL + 'apps/1/usage'
+        param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer None'}
         with self.assertRaises(ResourceNotFoundError):
             client.usage_by_client('1', 'testowner')
-        mock_get.assert_called_once_with(url, headers=headers)
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.put')
