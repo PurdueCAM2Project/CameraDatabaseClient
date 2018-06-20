@@ -400,12 +400,9 @@ class TestClient(unittest.TestCase):
         # set second requests.get's result
         mock_response2 = mock.Mock()
         mock_response2.json.return_value = [
-            {
-             'clientID': 'test_clientID1'
-            },
-            {
-             'clientID': 'test_clientID2'
-            }]
+            {'clientID': 'test_clientID1'},
+            {'clientID': 'test_clientID2'}
+        ]
         mock_get.side_effect = [mock_response, mock_response1, mock_response2]
         # run the test
         client.client_ids_by_owner('testowner')
@@ -452,12 +449,12 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            'api_usage': '7'
+            'api_usage': 7
         }
         mock_get.return_value = mock_response
         url = Client.base_URL + 'apps/1/usage?owner=testowner'
         headers = {'Authorization': 'Bearer None'}
-        self.assertEqual(client.usage_by_client('1', 'testowner'), '7')
+        self.assertEqual(client.usage_by_client('1', 'testowner'), 7)
         mock_get.assert_called_once_with(url, headers=headers)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -470,12 +467,20 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             'message': 'Token expired'
         }
-        mock_get.return_value = mock_response
-        with self.assertRaises(AuthenticationError):
-            client.usage_by_client('1', 'testowner')
-        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
-                                    '&clientSecret='+clientSecret)
-        self.assertEqual(2, mock_response.json.call_count)
+        mock_response1 = mock.Mock()
+        mock_response1.status_code = 200
+        mock_response1.json.return_value = {
+            'token': 'newToken'
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 401
+        mock_response2.json.return_value = {
+            'api_usage': 1
+        }
+        mock_get.side_effect = [mock_response, mock_response1, mock_response2]
+        message = client.usage_by_client('1', 'testowner')
+        self.assertEqual(1, message)
+        self.assertEqual(3, mock_get.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_usage_by_client_authorization(self, mock_get):
@@ -545,20 +550,24 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.update_owner('1', 'testowner'), 'OK')
         mock_put.assert_called_once_with(url, headers=headers, data=data)
 
+    @mock.patch('pythonAPIClient.client.requests.get')
     @mock.patch('pythonAPIClient.client.requests.put')
-    def test_update_owner_expired_token(self, mock_put):
+    def test_update_owner_expired_token(self, mock_get, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_put.return_value = mock_response
-        url = Client.base_URL + 'apps/1'
-        headers = {'Authorization': 'Bearer None'}
-        data = {'owner': 'testowner'}
-        with self.assertRaises(ResourceNotFoundError):
-            client.update_owner('1', 'testowner')
-        mock_put.assert_called_once_with(url, headers=headers, data=data)
+
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken',
+            'message': 'OK'
+        }
+        mock_get.return_value = mock_response2
+        self.assertEqual('OK', client.update_owner('1', 'testowner'))
 
     @mock.patch('pythonAPIClient.client.requests.put')
     def test_update_owner_invalid_clientid(self, mock_put):
@@ -596,6 +605,24 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.update_permission('1', 'user'), 'OK')
         mock_put.assert_called_once_with(url, headers=headers, data=data)
 
+    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_permissionLevel_expired_token(self, mock_get, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_put.return_value = mock_response
+
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken',
+            'message': 'OK'
+        }
+        mock_get.return_value = mock_response2
+        self.assertEqual(client.update_permission('1', 'user'), 'OK')
 
 if __name__ == '__main__':
     unittest.main()

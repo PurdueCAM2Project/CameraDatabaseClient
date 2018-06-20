@@ -172,6 +172,7 @@ class Client(object):
         if response.status_code != 200:
             if response.status_code == 401:
                 self.request_token()
+                header = self.header_builder()
                 response = requests.put(url, headers=header, data=data)
                 return response.json()['message']
             elif response.status_code == 404:
@@ -206,6 +207,7 @@ class Client(object):
         if response.status_code != 200:
             if response.status_code == 401:
                 self.request_token()
+                header = self.header_builder()
                 response = requests.put(url, headers=header, data=data)
                 return response.json()['message']
             elif response.status_code == 404:
@@ -282,7 +284,8 @@ class Client(object):
             elif response.status_code == 401:
                 if response.json()['message'] == 'Token expired':
                     self.request_token()
-                    response = requests.get(url)
+                    header = self.header_builder()
+                    response = requests.get(url, headers=header)
                     return response.json()['api_usage']
                 else:
                     raise AuthenticationError(response.json()['message'])
