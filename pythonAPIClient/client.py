@@ -232,7 +232,6 @@ class Client(object):
         url = Client.base_URL + 'apps/by-owner?owner=' + owner
         header = self.header_builder()
         response = requests.get(url, headers=header)
-        print(response.status_code)
         if response.status_code != 200:
             if response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
@@ -242,7 +241,6 @@ class Client(object):
                     header = self.header_builder()
                     response = requests.get(url, headers=header)
                     clientObject = response.json()
-                    print(clientObject)
                     clientIDs = []
                     for ct in clientObject:
                         clientIDs.append(ct['clientID'])
@@ -253,7 +251,6 @@ class Client(object):
                 raise InternalError()
         else:
             clientObject = response.json()
-            print(clientObject)
             clientIDs = []
             for ct in clientObject:
                 clientIDs.append(ct['clientID'])
