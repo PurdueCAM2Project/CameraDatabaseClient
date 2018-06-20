@@ -129,21 +129,23 @@ class Client(object):
         header = self.header_builder()
         data = {'owner': owner, 'permissionLevel': permissionLevel}
         response = requests.post(url, headers=header, data=data)
-        if response.status_code == 404:
-            raise ResourceNotFoundError(response.json()['message'])
-        elif response.status_code == 422:
-            raise FormatError(response.json()['message'])
-        elif response.status_code == 401:
-            if response.json()['message'] == 'Token expired':
-                self.request_token()
-                header = self.header_builder()
-                data = {'owner': owner, 'permissionLevel': permissionLevel}
-                response = requests.post(url, headers=header, data=data)
+        if response.status_code != 200:
+            if response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            elif response.status_code == 401:
+                if response.json()['message'] == 'Token expired':
+                    self.request_token()
+                    header = self.header_builder()
+                    response = requests.post(url, headers=header, data=data)
+                    return response.json()['clientID'], response.json()['clientSecret']
+                else:
+                    raise AuthenticationError(response.json()['message'])
             else:
-                raise AuthenticationError(response.json()['message'])
-        elif response.status_code == 500:
-            raise InternalError()
-        return response.json()['clientID'], response.json()['clientSecret']
+                raise InternalError()
+        else:
+            return response.json()['clientID'], response.json()['clientSecret']
 
 
     # TODO: update client's owner
@@ -167,14 +169,17 @@ class Client(object):
         header = self.header_builder()
         data = {'owner': owner}
         response = requests.put(url, headers=header, data=data)
-        if response.status_code == 401:
-            self.request_token()
-            response = requests.put(url, data)
-        elif response.status_code == 500:
-            raise InternalError()
-        elif response.status_code == 404:
-            raise ResourceNotFoundError(response.json()['message'])
-        return response.json()['message']
+        if response.status_code != 200:
+            if response.status_code == 401:
+                self.request_token()
+                response = requests.put(url, headers=header, data=data)
+                return response.json()['message']
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            else:
+                raise InternalError()
+        else:
+            return response.json()['message']
 
 
     # TODO: update client's permissionLevel
@@ -198,14 +203,17 @@ class Client(object):
         header = self.header_builder()
         data = {'permissionLevel': permissionLevel}
         response = requests.put(url, headers=header, data=data)
-        if response.status_code == 401:
-            self.request_token()
-            response = requests.put(url, data)
-        elif response.status_code == 500:
-            raise InternalError()
-        elif response.status_code == 404:
-            raise ResourceNotFoundError(response.json()['message'])
-        return response.json()['message']
+        if response.status_code != 200:
+            if response.status_code == 401:
+                self.request_token()
+                response = requests.put(url, headers=header, data=data)
+                return response.json()['message']
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            else:
+                raise InternalError()
+        else:
+            return response.json()['message']
 
 
     # TODO: get clientID by owner
@@ -224,21 +232,32 @@ class Client(object):
         url = Client.base_URL + 'apps/by-owner?owner=' + owner
         header = self.header_builder()
         response = requests.get(url, headers=header)
-        if response.status_code == 404:
-            raise ResourceNotFoundError(response.json()['message'])
-        elif response.status_code == 401:
-            if response.json()['message'] == 'Token expired':
-                self.request_token()
-                response = requests.get(url)
+        print(response.status_code)
+        if response.status_code != 200:
+            if response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            elif response.status_code == 401:
+                if response.json()['message'] == 'Token expired':
+                    self.request_token()
+                    header = self.header_builder()
+                    response = requests.get(url, headers=header)
+                    clientObject = response.json()
+                    print(clientObject)
+                    clientIDs = []
+                    for ct in clientObject:
+                        clientIDs.append(ct['clientID'])
+                    return clientIDs
+                else:
+                    raise AuthenticationError(response.json()['message'])
             else:
-                raise AuthenticationError(response.json()['message'])
-        elif response.status_code == 500:
-            raise InternalError()
-        clientObject = response.json()
-        clientIDs = []
-        for ct in clientObject:
-            clientIDs.append(ct['clientID'])
-        return clientIDs
+                raise InternalError()
+        else:
+            clientObject = response.json()
+            print(clientObject)
+            clientIDs = []
+            for ct in clientObject:
+                clientIDs.append(ct['clientID'])
+            return clientIDs
 
     # TODO: get api usage count by client
     def usage_by_client(self, clientID, owner):
@@ -260,19 +279,22 @@ class Client(object):
         url = Client.base_URL+"apps/"+clientID+"/usage?owner="+owner
         header = self.header_builder()
         response = requests.get(url, headers=header)
-        if response.status_code == 403:
-            raise AuthorizationError(response.json()['message'])
-        elif response.status_code == 401:
-            if response.json()['message'] == 'Token expired':
-                self.request_token()
-                response = requests.get(url)
+        if response.status_code != 200:
+            if response.status_code == 403:
+                raise AuthorizationError(response.json()['message'])
+            elif response.status_code == 401:
+                if response.json()['message'] == 'Token expired':
+                    self.request_token()
+                    response = requests.get(url)
+                    return response.json()['api_usage']
+                else:
+                    raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
             else:
-                raise AuthenticationError(response.json()['message'])
-        elif response.status_code == 500:
-            raise InternalError()
-        elif response.status_code == 404:
-            raise ResourceNotFoundError(response.json()['message'])
-        return response.json()['api_usage']
+                raise InternalError()
+        else:
+            return response.json()['api_usage']
 
 
     # TODO: add a camera to database
