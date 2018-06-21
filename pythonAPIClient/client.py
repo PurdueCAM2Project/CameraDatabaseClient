@@ -139,13 +139,11 @@ class Client(object):
                     self.request_token()
                     header = self.header_builder()
                     response = requests.post(url, headers=header, data=data)
-                    return response.json()['clientID'], response.json()['clientSecret']
                 else:
                     raise AuthenticationError(response.json()['message'])
             else:
                 raise InternalError()
-        else:
-            return response.json()['clientID'], response.json()['clientSecret']
+        return response.json()['clientID'], response.json()['clientSecret']
 
 
     # TODO: update client's owner
@@ -174,13 +172,11 @@ class Client(object):
                 self.request_token()
                 header = self.header_builder()
                 response = requests.put(url, headers=header, data=data)
-                return response.json()['message']
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
             else:
                 raise InternalError()
-        else:
-            return response.json()['message']
+        return response.json()['message']
 
 
     # TODO: update client's permissionLevel
@@ -209,13 +205,11 @@ class Client(object):
                 self.request_token()
                 header = self.header_builder()
                 response = requests.put(url, headers=header, data=data)
-                return response.json()['message']
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
             else:
                 raise InternalError()
-        else:
-            return response.json()['message']
+        return response.json()['message']
 
 
     # TODO: get clientID by owner
@@ -243,21 +237,15 @@ class Client(object):
                     self.request_token()
                     header = self.header_builder()
                     response = requests.get(url, headers=header, params=param)
-                    clientObject = response.json()
-                    clientIDs = []
-                    for ct in clientObject:
-                        clientIDs.append(ct['clientID'])
-                    return clientIDs
                 else:
                     raise AuthenticationError(response.json()['message'])
             else:
                 raise InternalError()
-        else:
-            clientObject = response.json()
-            clientIDs = []
-            for ct in clientObject:
-                clientIDs.append(ct['clientID'])
-            return clientIDs
+        clientObject = response.json()
+        clientIDs = []
+        for ct in clientObject:
+            clientIDs.append(ct['clientID'])
+        return clientIDs
 
     # TODO: get api usage count by client
     def usage_by_client(self, clientID, owner):
@@ -288,15 +276,13 @@ class Client(object):
                     self.request_token()
                     header = self.header_builder()
                     response = requests.get(url, headers=header, params=param)
-                    return response.json()['api_usage']
                 else:
                     raise AuthenticationError(response.json()['message'])
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
             else:
                 raise InternalError()
-        else:
-            return response.json()['api_usage']
+        return response.json()['api_usage']
 
 
     # TODO: add a camera to database
