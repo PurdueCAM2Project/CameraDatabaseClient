@@ -5,22 +5,59 @@ import requests
 import json
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError, FormatError
-from .camera import IPCamera, NonIPCamera, StreamCamera
-
+from .camera import Camera
 
 class Client(object):
-    # Static variable to store the base URL.
-    #base_URL = 'https://cam2-api.herokuapp.com/'
-    base_URL = 'http://localhost:8080/'
+
+    """Class representing a CAM2 client application.
+
+    [More detailed description of what client object do.]
+
+
+    Attributes
+    ----------
+    clientId : str
+        Id of the client application.
+    clientSecret : str
+        Secret of the client application.
+    token : str
+        Token for the client to access the CAM2 database.
+        Each token expires in 5 minutes.
+
+        [User does not need to provide this attribute]
+
+    Note
+    ----
+
+        In order to access the package, register a new application by contacting the CAM2 team
+        at https://www.cam2project.net/.
+
     """
-    Represent a CAM2 client application.2323232
+
+    base_URL = 'https://cam2-api.herokuapp.com/'
+    """str: Static variable to store the base URL.
+
+    This is the URL of CAM2 Database API. User is able to send API calls directly to this URL.
+
     """
 
     def request_token(self):
 
+        """A method to request an access token for the client application.
+
+        Raises
+        ------
+        ResourceNotFoundError
+            If no client app exists with the clientID of this client object.
+        AuthenticationError
+            If the client secret of this client object does not match the clientID.
+        InternalError
+            If there is an API internal error.
+
+        """
+
         url = Client.base_URL + 'auth/?clientID=' + self.clientId + \
               '&clientSecret=' + self.clientSecret
-
         response = requests.get(url)
         if response.status_code == 200:
             self.token = response.json()['token']
@@ -36,27 +73,58 @@ class Client(object):
         return head
 
     def __init__(self, clientId, clientSecret):
-        """"
-        #clientId are of a fixed length of 96 characters.
-        if len(id) != 96:
-            raise InvalidClientIdError
-        # clientSecret are of a fixed length of 71 characters.
-        if len(clientSecret) != 72:
-            raise InvalidClientSecretError
 
-        self.clientId = clientId
-        self.clientSecret = clientSecret
-        self.token = None
+        """Client initialization method.
+
+        Parameters
+        ----------
+        clientId : str
+            Id of the client application.
+        clientSecret : str
+            Secret of the client application.
+
+        Raises
+        ------
+        InvalidClientIdError
+            If the clientID is not in the correct format.
+            ClientID should have a fixed length of 96 characters.
+        InvalidClientSecretError
+            If the client secret is not in the correct format.
+            Client secret should have a length of at least 71 characters.
 
         """
+
+        if len(clientId) != 96:
+            raise InvalidClientIdError
+        if len(clientSecret) < 71:
+            raise InvalidClientSecretError
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.token = None
-    """
-    Functions for webUI
-    """
-    # TODO: return clientID and client secret
+
+    # Functions for webUI
+
     def register(self, owner, permissionLevel='user'):
+        """Client initialization method.
+
+        Parameters
+        ----------
+        owner : str
+            Username of the owner of the client application.
+        permissionLevel : str, optional
+            Permission level of the owner of the client application.
+            Default permission level is 'user'.
+
+        Raises
+        ------
+
+        Returns
+        -------
+        str
+            Client id of the newly registered client application.
+        str
+            Client secret of the newly registered client application.
+        """
         pass
 
     # TODO: update client's owner
@@ -156,70 +224,10 @@ class Client(object):
             raise FormatError(response.json()['message'])
         elif response.status_code == 500:
             raise InternalError()
+        elif response.status_code != 200:
+            raise InternalError()
         camera_response_array = response.json()
         camera_processed = []
-        for x in enumerate(camera_response_array):
-            current_object = camera_response_array[x]
-            if current_object['type'] == 'ip':
-                camera_processed.append(IPCamera(current_object['cameraID'],
-                                                 current_object['type'],
-                                                 current_object['source'],
-                                                 current_object['latitude'],
-                                                 current_object['longitude'],
-                                                 current_object['country'],
-                                                 current_object['state'],
-                                                 current_object['city'],
-                                                 current_object['resolution_width'],
-                                                 current_object['resolution_height'],
-                                                 current_object['is_active_image'],
-                                                 current_object['is_active_video'],
-                                                 current_object['utc_offset'],
-                                                 current_object['timezone_id'],
-                                                 current_object['timezone_name'],
-                                                 current_object['reference_logo'],
-                                                 current_object['reference_url'],
-                                                 current_object['retrieval']['ip'],
-                                                 current_object['retrieval']['port'],
-                                                 current_object['retrieval']['brand'],
-                                                 current_object['retrieval']['model'],
-                                                 current_object['retrieval']['image_path'],
-                                                 current_object['retrieval']['video_path']))
-            elif current_object['type'] == 'non_ip':
-                camera_processed.append(NonIPCamera(current_object['cameraID'],
-                                                    current_object['type'],
-                                                    current_object['source'],
-                                                    current_object['latitude'],
-                                                    current_object['longitude'],
-                                                    current_object['country'],
-                                                    current_object['state'],
-                                                    current_object['city'],
-                                                    current_object['resolution_width'],
-                                                    current_object['resolution_height'],
-                                                    current_object['is_active_image'],
-                                                    current_object['is_active_video'],
-                                                    current_object['utc_offset'],
-                                                    current_object['timezone_id'],
-                                                    current_object['timezone_name'],
-                                                    current_object['reference_logo'],
-                                                    current_object['reference_url'],
-                                                    current_object['retrieval']['snapshot_url']))
-            else:
-                camera_processed.append(StreamCamera(current_object['cameraID'],
-                                                     current_object['type'],
-                                                     current_object['source'],
-                                                     current_object['latitude'],
-                                                     current_object['longitude'],
-                                                     current_object['country'],
-                                                     current_object['state'],
-                                                     current_object['city'],
-                                                     current_object['resolution_width'],
-                                                     current_object['resolution_height'],
-                                                     current_object['is_active_image'],
-                                                     current_object['is_active_video'],
-                                                     current_object['utc_offset'],
-                                                     current_object['timezone_id'],
-                                                     current_object['timezone_name'],
-                                                     current_object['reference_logo'],
-                                                     current_object['reference_url'],
-                                                     current_object['retrieval']['m3u8_url']))
+        for current_object in camera_response_array:
+            camera_processed.append(Camera.process_json(**current_object))
         return camera_processed
