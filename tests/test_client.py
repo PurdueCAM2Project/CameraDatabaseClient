@@ -151,14 +151,23 @@ class TestClient(unittest.TestCase):
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'ExpiredToken'
+        # set result for first search camera
         mock_response = mock.Mock()
         mock_response.status_code = 401
-        mock_get.return_value = mock_response
-        with self.assertRaises(TypeError):
-            client.search_camera(country='USA')
-        mock_get.assert_called_with(self.base_URL + 'auth/?clientID=' + clientId +
-                                    '&clientSecret=' + clientSecret)
-        self.assertEqual(1, mock_response.json.call_count)
+        # set result for request_token()
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken'
+        }
+        # set result for second search camera
+        mock_response3 = mock.Mock()
+        mock_response3.json.return_value = []
+
+        mock_get.side_effect = [mock_response, mock_response2, mock_response3]
+        camera = client.search_camera(country='USA')
+        self.assertEqual(3, mock_get.call_count)
+        self.assertEqual([], camera)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_all_correct_Internal_Error(self, mock_get):
