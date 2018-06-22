@@ -3,7 +3,7 @@ Represents a CAM2 client application.
 """
 import requests
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
-    InvalidClientSecretError, ResourceNotFoundError, FormatError
+    InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
 from .camera import Camera
 
 class Client(object):
@@ -154,7 +154,38 @@ class Client(object):
 
     # TODO: get a camera
     def camera_by_id(self, cameraID):
-        pass
+        """
+        A method to get a camera object by using camera's ID
+
+        Parameters
+        ----------
+        cameraID : str
+
+        Returns
+        -------
+        :obj:`Camera`
+            A camera object.
+
+        """
+        url = Client.base_URL + "cameras/" + cameraID
+        header = self.header_builder()
+        response = requests.get(url, headers=header)
+        if response.status_code != 200:
+            if response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            elif response.status_code == 401:
+                if response.json()['message'] == 'Token expired':
+                    self.request_token()
+                    return self.camera_by_id(cameraID)
+                else:
+                    raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 403:
+                raise AuthorizationError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            else:
+                raise InternalError()
+        return response.json()
 
     def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None,
                       source=None, country=None, state=None, city=None, resolution_width=None,
