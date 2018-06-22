@@ -194,6 +194,86 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
         self.assertEqual(1, mock_response.json.call_count)
 
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_id_all_correct(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        expected_dict = {
+            "longitude": "-129.09",
+            "latitude": "44.9087"
+        }
+        mock_response.json.return_value = expected_dict
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+        url = self.base_URL + 'cameras/12345'
+        self.assertEqual(client.camera_by_id('12345'), expected_dict)
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_id_expired_token_success(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            "token": "newToken"
+        }
+        mock_response3 = mock.Mock()
+        expected_dict = {
+            "longitude": "-129.09",
+            "latitude": "44.9087"
+        }
+        mock_response3.json.return_value = expected_dict
+        mock_get.side_effect = [mock_response, mock_response2, mock_response3]
+        self.assertEqual(client.camera_by_id('12345'), expected_dict)
+        self.assertEqual(3, mock_get.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_id_expired_token_failure(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            "token": "newToken"
+        }
+        mock_get.side_effect = [mock_response, mock_response2, mock_response, mock_response2,
+                                mock_response, mock_response2, mock_response]
+        with self.assertRaises(AuthenticationError):
+            client.camera_by_id('12345')
+        self.assertEqual(7, mock_get.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_id_internal_error(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+        with self.assertRaises(InternalError):
+            client.camera_by_id('12345')
+        url = self.base_URL + 'cameras/12345'
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
+
 
 if __name__ == '__main__':
     unittest.main()

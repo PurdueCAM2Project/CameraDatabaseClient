@@ -175,8 +175,14 @@ class Client(object):
                 raise ResourceNotFoundError(response.json()['message'])
             elif response.status_code == 401:
                 if response.json()['message'] == 'Token expired':
-                    self.request_token()
-                    return self.camera_by_id(cameraID)
+                    expiredCount = 1
+                    while response.status_code == 401:
+                        self.request_token()
+                        header = self.header_builder()
+                        response = requests.get(url, headers=header)
+                        if expiredCount == 3:
+                            raise AuthenticationError(response.json()['message'])
+                        expiredCount += 1
                 else:
                     raise AuthenticationError(response.json()['message'])
             elif response.status_code == 403:
