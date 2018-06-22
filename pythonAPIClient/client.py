@@ -180,6 +180,11 @@ class Client(object):
         resolution_height : int, optional
         is_active_image : bool, optional
         is_active_video : bool, optional
+        
+        Returns
+        -------
+        :obj:`list` of :obj:`Camera`
+            List of cameras that satisfy the search criteria.
 
         Raises
         ------
