@@ -253,7 +253,7 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.post')
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_register_expired_token(self, mock_get, mock_post):
+    def test_register_expired_token_success(self, mock_get, mock_post):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
@@ -288,6 +288,35 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
                                     '&clientSecret='+clientSecret)
         self.assertEqual(2, mock_post.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_register_expired_token_failure(self, mock_get, mock_post):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'ExpiredToken'
+        # set first request.post's result
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Token expired',
+        }
+        mock_post.return_value = mock_response
+        # set request_token()'s result
+        mock_get_response = mock.Mock()
+        mock_get_response.status_code = 200
+        mock_get_response.json.return_value = {
+            'token': 'newToken'
+        }
+        mock_get.return_value = mock_get_response
+        # run the test
+        with self.assertRaises(AuthenticationError):
+            client.register('testowner')
+        mock_get.assert_called_with(self.base_URL + 'auth/?clientID=' + clientId +
+                                    '&clientSecret=' + clientSecret)
+        self.assertEqual(4, mock_post.call_count)
+        self.assertEqual(3, mock_get.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_no_owner(self, mock_post):
@@ -396,7 +425,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(2, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_get_clientID_by_owner_expired_token(self, mock_get):
+    def test_get_clientID_by_owner_expired_token_success(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
@@ -423,6 +452,30 @@ class TestClient(unittest.TestCase):
         # run the test
         client.client_ids_by_owner('testowner')
         self.assertEqual(3, mock_get.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_clientID_by_owner_expired_token_failure(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        # set first requests.get's result
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Token expired',
+        }
+        # set request_token()'s result
+        mock_response1 = mock.Mock()
+        mock_response1.status_code = 200
+        mock_response1.json.return_value = {
+            'token': 'newToken'
+        }
+        mock_get.side_effect = [mock_response, mock_response1, mock_response,
+                                mock_response1, mock_response, mock_response1, mock_response]
+        # run the test
+        with self.assertRaises(AuthenticationError):
+            client.client_ids_by_owner('testowner')
+        self.assertEqual(7, mock_get.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_incorrect_clientID(self, mock_get):
@@ -477,7 +530,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, headers=headers, params=param)
 
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_get_usage_by_client_expired_token(self, mock_get):
+    def test_get_usage_by_client_expired_token_success(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
@@ -500,6 +553,27 @@ class TestClient(unittest.TestCase):
         message = client.usage_by_client('1', 'testowner')
         self.assertEqual(1, message)
         self.assertEqual(3, mock_get.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_usage_by_client_expired_token_failure(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Token expired'
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken'
+        }
+        mock_get.side_effect = [mock_response, mock_response2, mock_response,
+                                mock_response2, mock_response, mock_response2, mock_response]
+        with self.assertRaises(AuthenticationError):
+            client.usage_by_client('1', 'testowner')
+        self.assertEqual(7, mock_get.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_usage_by_client_authorization_error(self, mock_get):
@@ -574,7 +648,7 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.put')
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_update_owner_expired_token(self, mock_get, mock_put):
+    def test_update_owner_expired_token_success(self, mock_get, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
@@ -591,10 +665,34 @@ class TestClient(unittest.TestCase):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken',
+            'token': 'newToken'
         }
         mock_get.return_value = mock_response2
         self.assertEqual('OK', client.update_owner('1', 'testowner'))
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_update_owner_expired_token_failure(self, mock_get, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Token expired'
+        }
+        mock_put.return_value = mock_response
+
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken',
+        }
+        mock_get.return_value = mock_response2
+        with self.assertRaises(AuthenticationError):
+            client.update_owner('1', 'testowner')
+        self.assertEqual(4, mock_put.call_count)
+        self.assertEqual(3, mock_get.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.put')
     def test_update_owner_invalid_clientid(self, mock_put):
@@ -634,7 +732,7 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.put')
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_update_permissionLevel_expired_token(self, mock_get, mock_put):
+    def test_update_permissionLevel_expired_token_success(self, mock_get, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
@@ -655,6 +753,30 @@ class TestClient(unittest.TestCase):
         }
         mock_get.return_value = mock_response2
         self.assertEqual(client.update_permission('1', 'user'), 'OK')
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_update_permissionLevel_expired_token_failure(self, mock_get, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Token expired'
+        }
+        mock_put.return_value = mock_response
+
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken',
+        }
+        mock_get.return_value = mock_response2
+        with self.assertRaises(AuthenticationError):
+            client.update_permission('1', 'user')
+        self.assertEqual(4, mock_put.call_count)
+        self.assertEqual(3, mock_get.call_count)
 
 if __name__ == '__main__':
     unittest.main()

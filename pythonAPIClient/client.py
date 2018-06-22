@@ -31,6 +31,11 @@ class Client(object):
         In order to access the package, register a new application by contacting the CAM2 team
         at https://www.cam2project.net/.
 
+        For each methods except request.token() and header_builder(),
+        those methods will rerun request_token() to get a new token if token expires.
+        But if the requests get status code of 404 for more than 3 times,
+        we raise an Authentication error.
+
     """
 
     base_URL = 'https://cam2-api.herokuapp.com/'
@@ -124,6 +129,7 @@ class Client(object):
             Client id of the newly registered client application.
         str
             Client secret of the newly registered client application.
+
         """
         url = Client.base_URL + 'apps/register'
         header = self.header_builder()
@@ -136,8 +142,14 @@ class Client(object):
                 raise FormatError(response.json()['message'])
             elif response.status_code == 401:
                 if response.json()['message'] == 'Token expired':
-                    self.request_token()
-                    return self.register(owner, permissionLevel)
+                    expiredCount = 1
+                    while response.status_code == 401:
+                        self.request_token()
+                        header = self.header_builder()
+                        response = requests.post(url, headers=header, data=data)
+                        if expiredCount == 3:
+                            raise AuthenticationError(response.json()['message'])
+                        expiredCount += 1
                 else:
                     raise AuthenticationError(response.json()['message'])
             else:
@@ -168,8 +180,14 @@ class Client(object):
         response = requests.put(url, headers=header, data=data)
         if response.status_code != 200:
             if response.status_code == 401:
-                self.request_token()
-                return self.update_owner(clientID, owner)
+                expiredCount = 1
+                while response.status_code == 401:
+                    self.request_token()
+                    header = self.header_builder()
+                    response = requests.put(url, headers=header, data=data)
+                    if expiredCount == 3:
+                        raise AuthenticationError(response.json()['message'])
+                    expiredCount += 1
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
             else:
@@ -200,8 +218,14 @@ class Client(object):
         response = requests.put(url, headers=header, data=data)
         if response.status_code != 200:
             if response.status_code == 401:
-                self.request_token()
-                return self.update_permission(clientID, permissionLevel)
+                expiredCount = 1
+                while response.status_code == 401:
+                    self.request_token()
+                    header = self.header_builder()
+                    response = requests.put(url, headers=header, data=data)
+                    if expiredCount == 3:
+                        raise AuthenticationError(response.json()['message'])
+                    expiredCount += 1
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
             else:
@@ -231,8 +255,14 @@ class Client(object):
                 raise ResourceNotFoundError(response.json()['message'])
             elif response.status_code == 401:
                 if response.json()['message'] == 'Token expired':
-                    self.request_token()
-                    return self.client_ids_by_owner(owner)
+                    expiredCount = 1
+                    while response.status_code == 401:
+                        self.request_token()
+                        header = self.header_builder()
+                        response = requests.get(url, headers=header, params=param)
+                        if expiredCount == 3:
+                            raise AuthenticationError(response.json()['message'])
+                        expiredCount += 1
                 else:
                     raise AuthenticationError(response.json()['message'])
             else:
@@ -242,6 +272,7 @@ class Client(object):
         for ct in clientObject:
             clientIDs.append(ct['clientID'])
         return clientIDs
+
 
     # TODO: get api usage count by client
     def usage_by_client(self, clientID, owner):
@@ -269,8 +300,14 @@ class Client(object):
                 raise AuthorizationError(response.json()['message'])
             elif response.status_code == 401:
                 if response.json()['message'] == 'Token expired':
-                    self.request_token()
-                    return self.usage_by_client(clientID, owner)
+                    expiredCount = 1
+                    while response.status_code == 401:
+                        self.request_token()
+                        header = self.header_builder()
+                        response = requests.get(url, headers=header, params=param)
+                        if expiredCount == 3:
+                            raise AuthenticationError(response.json()['message'])
+                        expiredCount += 1
                 else:
                     raise AuthenticationError(response.json()['message'])
             elif response.status_code == 404:
