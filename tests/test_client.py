@@ -197,7 +197,6 @@ class TestClient(unittest.TestCase):
                                          params={'resolution_width': 'USA'})
         self.assertEqual(1, mock_response.json.call_count)
 
-
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_all_correct(self, mock_get):
         clientId = '0' * 96
@@ -235,6 +234,27 @@ class TestClient(unittest.TestCase):
                        "snapshot_url":"http://images./preview/adf.jpg",
                        "latitude":35.8876, "longitude":136.098}
         self.assertEqual(response_list[0].__dict__, actual_dict,
+                         'Returned json is not tranlated correctly')
+        return response_list
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_search_camera_empty(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        expected_dict = []
+        mock_response.json.return_value = expected_dict
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+        response_list = client.search_camera(offset=10000)
+        url = self.base_URL + 'cameras/search'
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         params={'offset': 10000})
+        self.assertEqual(1, mock_get.call_count)
+        actual_list = []
+        self.assertEqual(response_list, actual_list,
                          'Returned json is not tranlated correctly')
         return response_list
 
