@@ -229,6 +229,7 @@ class TestClient(unittest.TestCase):
             "token": "newToken"
         }
         mock_response3 = mock.Mock()
+        mock_response3.status_code = 200
         expected_dict = {
             "longitude": "-129.09",
             "latitude": "44.9087"

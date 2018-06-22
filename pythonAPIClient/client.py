@@ -167,24 +167,18 @@ class Client(object):
             A camera object.
 
         """
+        if self.token is None:
+            self.request_token()
         url = Client.base_URL + "cameras/" + cameraID
         header = self.header_builder()
-        response = requests.get(url, headers=header)
+        response = self.check_token(response=requests.get(url, headers=header),
+                            flag='GET', url=url)
+
         if response.status_code != 200:
-            if response.status_code == 404:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
-            elif response.status_code == 401:
-                if response.json()['message'] == 'Token expired':
-                    expiredCount = 1
-                    while response.status_code == 401:
-                        self.request_token()
-                        header = self.header_builder()
-                        response = requests.get(url, headers=header)
-                        if expiredCount == 3:
-                            raise AuthenticationError(response.json()['message'])
-                        expiredCount += 1
-                else:
-                    raise AuthenticationError(response.json()['message'])
             elif response.status_code == 403:
                 raise AuthorizationError(response.json()['message'])
             elif response.status_code == 422:
@@ -192,6 +186,20 @@ class Client(object):
             else:
                 raise InternalError()
         return response.json()
+
+    def check_token(self, response, flag, url=base_URL, data=None, params=None):
+        counter = 0
+        while response.status_code == 401 and counter < 3:
+            self.request_token()
+            header = self.header_builder()
+            if flag == 'GET':
+                response = requests.get(url, headers=header, params=params)
+            elif flag == 'POST':
+                response = requests.post(url, headers=header, data=data)
+            else:
+                response = requests.put(url, headers=header, data=data)
+            counter += 1
+        return response
 
     def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None,
                       source=None, country=None, state=None, city=None, resolution_width=None,
