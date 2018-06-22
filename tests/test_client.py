@@ -266,6 +266,7 @@ class TestClient(unittest.TestCase):
         }
         # set second request.post's result
         mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
         mock_response2.json.return_value = {
             'clientID': 'test_clientID',
             'clientSecret': 'test_clientSecret'
@@ -413,6 +414,7 @@ class TestClient(unittest.TestCase):
         }
         # set second requests.get's result
         mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
         mock_response2.json.return_value = [
             {'clientID': 'test_clientID1'},
             {'clientID': 'test_clientID2'}
@@ -490,7 +492,7 @@ class TestClient(unittest.TestCase):
             'token': 'newToken'
         }
         mock_response2 = mock.Mock()
-        mock_response2.status_code = 401
+        mock_response2.status_code = 200
         mock_response2.json.return_value = {
             'api_usage': 1
         }
@@ -580,6 +582,7 @@ class TestClient(unittest.TestCase):
         mock_response.status_code = 401
 
         mock_response3 = mock.Mock()
+        mock_response3.status_code = 200
         mock_response3.json.return_value = {
             'message': 'OK'
         }
@@ -639,6 +642,7 @@ class TestClient(unittest.TestCase):
         mock_response.status_code = 401
 
         mock_response3 = mock.Mock()
+        mock_response3.status_code = 200
         mock_response3.json.return_value = {
             'message': 'OK'
         }

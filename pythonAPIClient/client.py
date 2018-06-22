@@ -137,8 +137,7 @@ class Client(object):
             elif response.status_code == 401:
                 if response.json()['message'] == 'Token expired':
                     self.request_token()
-                    header = self.header_builder()
-                    response = requests.post(url, headers=header, data=data)
+                    return self.register(owner, permissionLevel)
                 else:
                     raise AuthenticationError(response.json()['message'])
             else:
@@ -170,8 +169,7 @@ class Client(object):
         if response.status_code != 200:
             if response.status_code == 401:
                 self.request_token()
-                header = self.header_builder()
-                response = requests.put(url, headers=header, data=data)
+                return self.update_owner(clientID, owner)
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
             else:
@@ -203,8 +201,7 @@ class Client(object):
         if response.status_code != 200:
             if response.status_code == 401:
                 self.request_token()
-                header = self.header_builder()
-                response = requests.put(url, headers=header, data=data)
+                return self.update_permission(clientID, permissionLevel)
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
             else:
@@ -235,8 +232,7 @@ class Client(object):
             elif response.status_code == 401:
                 if response.json()['message'] == 'Token expired':
                     self.request_token()
-                    header = self.header_builder()
-                    response = requests.get(url, headers=header, params=param)
+                    return self.client_ids_by_owner(owner)
                 else:
                     raise AuthenticationError(response.json()['message'])
             else:
@@ -274,8 +270,7 @@ class Client(object):
             elif response.status_code == 401:
                 if response.json()['message'] == 'Token expired':
                     self.request_token()
-                    header = self.header_builder()
-                    response = requests.get(url, headers=header, params=param)
+                    return self.usage_by_client(clientID, owner)
                 else:
                     raise AuthenticationError(response.json()['message'])
             elif response.status_code == 404:
