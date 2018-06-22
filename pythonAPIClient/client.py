@@ -45,6 +45,21 @@ class Client(object):
 
     """
 
+    def _check_token(self, response, flag, url=base_URL, data=None, params=None):
+        counter = 0
+        while response.status_code == 401 and \
+                response.json()['message'] == 'Token expired' and counter < 3:
+            self.request_token()
+            header = self.header_builder()
+            if flag == 'GET':
+                response = requests.get(url, headers=header, params=params)
+            elif flag == 'POST':
+                response = requests.post(url, headers=header, data=data)
+            else:
+                response = requests.put(url, headers=header, data=data)
+            counter += 1
+        return response
+
     def request_token(self):
 
         """A method to request an access token for the client application.
@@ -132,8 +147,8 @@ class Client(object):
         url = Client.base_URL + 'apps/register'
         header = self.header_builder()
         data = {'owner': owner, 'permissionLevel': permissionLevel}
-        response = self.check_token(response=requests.post(url, headers=header, data=data),
-                                    flag='POST', url=url)
+        response = self._check_token(response=requests.post(url, headers=header, data=data),
+                                     flag='POST', url=url)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
@@ -145,19 +160,6 @@ class Client(object):
                 raise InternalError()
         return response.json()['clientID'], response.json()['clientSecret']
 
-    def check_token(self, response, flag, url=base_URL, data=None, params=None):
-        counter = 0
-        while response.status_code == 401 and counter < 3:
-            self.request_token()
-            header = self.header_builder()
-            if flag == 'GET':
-                response = requests.get(url, headers=header, params=params)
-            elif flag == 'POST':
-                response = requests.post(url, headers=header, data=data)
-            else:
-                response = requests.put(url, headers=header, data=data)
-            counter += 1
-        return response
 
     # TODO: update client's owner
     def update_owner(self, clientID, owner):
@@ -179,8 +181,8 @@ class Client(object):
         url = Client.base_URL + 'apps/' + clientID
         header = self.header_builder()
         data = {'owner': owner}
-        response = self.check_token(response=requests.put(url, headers=header, data=data),
-                                    flag='PUT', url=url)
+        response = self._check_token(response=requests.put(url, headers=header, data=data),
+                                     flag='PUT', url=url)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
@@ -210,8 +212,8 @@ class Client(object):
         url = Client.base_URL + 'apps/' + clientID
         header = self.header_builder()
         data = {'permissionLevel': permissionLevel}
-        response = self.check_token(response=requests.put(url, headers=header, data=data),
-                                    flag='PUT', url=url)
+        response = self._check_token(response=requests.put(url, headers=header, data=data),
+                                     flag='PUT', url=url)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
@@ -237,8 +239,8 @@ class Client(object):
         url = Client.base_URL + 'apps/by-owner'
         param = {'owner': owner}
         header = self.header_builder()
-        response = self.check_token(response=requests.get(url, headers=header, params=param),
-                                    flag='GET', url=url)
+        response = self._check_token(response=requests.get(url, headers=header, params=param),
+                                     flag='GET', url=url)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
@@ -272,8 +274,8 @@ class Client(object):
         url = Client.base_URL + "apps/" + clientID + "/usage"
         param = {'owner': owner}
         header = self.header_builder()
-        response = self.check_token(response=requests.get(url, headers=header, params=param),
-                                    flag='GET', url=url)
+        response = self._check_token(response=requests.get(url, headers=header, params=param),
+                                     flag='GET', url=url)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])

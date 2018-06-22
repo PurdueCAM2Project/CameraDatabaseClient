@@ -612,7 +612,9 @@ class TestClient(unittest.TestCase):
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 401
-
+        mock_response.json.return_value = {
+            'message': 'Token expired'
+        }
         mock_response3 = mock.Mock()
         mock_response3.status_code = 200
         mock_response3.json.return_value = {
@@ -696,7 +698,9 @@ class TestClient(unittest.TestCase):
         client = Client(clientId, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 401
-
+        mock_response.json.return_value = {
+            'message': 'Token expired'
+        }
         mock_response3 = mock.Mock()
         mock_response3.status_code = 200
         mock_response3.json.return_value = {
