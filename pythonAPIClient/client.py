@@ -212,7 +212,10 @@ class Client(object):
         response = requests.get(url, headers=self.header_builder(), params=search_params)
         if response.status_code == 401:
             self.request_token()
-            response = requests.get(url, headers=self.header_builder(), params=search_params)
+            return self.search_camera(latitude, longitude, radius, camera_type,
+                                      source, country, state, city, resolution_width,
+                                      resolution_heigth, is_active_image, is_active_video,
+                                      offset)
         elif response.status_code == 422:
             raise FormatError(response.json()['message'])
         elif response.status_code == 500:
