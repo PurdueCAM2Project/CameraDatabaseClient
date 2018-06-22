@@ -7,7 +7,6 @@ pythonAPIClient.camera module
 
 .. automodule:: pythonAPIClient.camera
     :members:
-    :inherited-members:
 
 pythonAPIClient.client module
 -----------------------------
