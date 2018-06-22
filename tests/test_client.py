@@ -231,27 +231,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual(2, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
-    def test_register_incorrect_token(self, mock_post):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        # manipulate request.post's result
-        mock_response = mock.Mock()
-        mock_response.status_code = 401
-        mock_response.json.return_value = {
-            "message": "Failed to authenticate token"
-        }
-        mock_post.return_value = mock_response
-        # validate result
-        url = Client.base_URL + 'apps/register'
-        data = {'owner': 'testowner', 'permissionLevel': 'user'}
-        header = {'Authorization': 'Bearer None'}
-        with self.assertRaises(AuthenticationError):
-            client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(2, mock_response.json.call_count)
-
-    @mock.patch('pythonAPIClient.client.requests.post')
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_register_expired_token_success(self, mock_get, mock_post):
         clientId = '0' * 96
@@ -280,11 +259,9 @@ class TestClient(unittest.TestCase):
         }
         mock_get.return_value = mock_get_response
         # run the test
-        expected_clientID = 'test_clientID'
-        expected_clientSecret = 'test_clientSecret'
         resultID, resultSecret = client.register('testowner')
-        self.assertEqual(resultID, expected_clientID)
-        self.assertEqual(resultSecret, expected_clientSecret)
+        self.assertEqual(resultID, 'test_clientID')
+        self.assertEqual(resultSecret, 'test_clientSecret')
         mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
                                     '&clientSecret='+clientSecret)
         self.assertEqual(2, mock_post.call_count)
@@ -404,25 +381,6 @@ class TestClient(unittest.TestCase):
         expected_clientID_array = ['test_clientID1', 'test_clientID2']
         self.assertEqual(client.client_ids_by_owner("testowner"), expected_clientID_array)
         mock_get.assert_called_once_with(url, headers=headers, params=param)
-
-    @mock.patch('pythonAPIClient.client.requests.get')
-    def test_get_clientID_by_owner_no_token(self, mock_get):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        mock_response = mock.Mock()
-        mock_response.status_code = 401
-        mock_response.json.return_value = {
-            'message': 'Failed to authenticate token'
-        }
-        mock_get.return_value = mock_response
-        url = self.base_URL+'apps/by-owner'
-        param = {'owner': 'testowner'}
-        headers = {'Authorization': 'Bearer None'}
-        with self.assertRaises(AuthenticationError):
-            client.client_ids_by_owner('testowner')
-        mock_get.assert_called_with(url, headers=headers, params=param)
-        self.assertEqual(2, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_expired_token_success(self, mock_get):
