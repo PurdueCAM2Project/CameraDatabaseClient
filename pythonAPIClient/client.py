@@ -171,8 +171,7 @@ class Client(object):
             self.request_token()
         url = Client.base_URL + "cameras/" + cameraID
         header = self.header_builder()
-        response = self.check_token(response=requests.get(url, headers=header),
-                            flag='GET', url=url)
+        response = self.check_token(response=requests.get(url, headers=header), flag='GET', url=url)
 
         if response.status_code != 200:
             if response.status_code == 401:
