@@ -216,7 +216,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        response_dict = client.search_camera(
+        response_list = client.search_camera(
             country='JP', camera_type='non_ip', is_active_image=True, offset=100)
         url = self.base_URL + 'cameras/search'
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
@@ -234,9 +234,9 @@ class TestClient(unittest.TestCase):
                        "reference_url":"http://some_url", "cameraID":"5b0e74213651360004edb426",
                        "snapshot_url":"http://images./preview/adf.jpg",
                        "latitude":35.8876, "longitude":136.098}
-        self.assertEqual(response_dict[0].__dict__, actual_dict,
+        self.assertEqual(response_list[0].__dict__, actual_dict,
                          'Returned json is not tranlated correctly')
-        return response_dict
+        return response_list
 
 if __name__ == '__main__':
     unittest.main()
