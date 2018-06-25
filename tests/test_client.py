@@ -275,6 +275,22 @@ class TestClient(unittest.TestCase):
         url = self.base_URL + 'cameras/12345'
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
 
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_id_format_error(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 422
+        mock_response.json.return_value = {
+            'message': 'Format Error'
+        }
+        mock_get.return_value = mock_response
+        with self.assertRaises(FormatError):
+            client.camera_by_id('12345')
+        url = self.base_URL + 'cameras/12345'
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
 
 if __name__ == '__main__':
     unittest.main()

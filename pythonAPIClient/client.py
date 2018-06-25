@@ -40,6 +40,21 @@ class Client(object):
 
     """
 
+    def _check_token(self, response, flag, url=base_URL, data=None, params=None):
+        counter = 0
+        while response.status_code == 401 and \
+                response.json()['message'] == 'Token expired' and counter < 3:
+            self.request_token()
+            header = self.header_builder()
+            if flag == 'GET':
+                response = requests.get(url, headers=header, params=params)
+            elif flag == 'POST':
+                response = requests.post(url, headers=header, data=data)
+            else:
+                response = requests.put(url, headers=header, data=data)
+            counter += 1
+        return response
+
     def request_token(self):
 
         """A method to request an access token for the client application.
@@ -171,7 +186,7 @@ class Client(object):
             self.request_token()
         url = Client.base_URL + "cameras/" + cameraID
         header = self.header_builder()
-        response = self.check_token(response=requests.get(url, headers=header), flag='GET', url=url)
+        response = self._check_token(response=requests.get(url, headers=header), flag='GET', url=url)
 
         if response.status_code != 200:
             if response.status_code == 401:
@@ -185,20 +200,6 @@ class Client(object):
             else:
                 raise InternalError()
         return response.json()
-
-    def check_token(self, response, flag, url=base_URL, data=None, params=None):
-        counter = 0
-        while response.status_code == 401 and counter < 3:
-            self.request_token()
-            header = self.header_builder()
-            if flag == 'GET':
-                response = requests.get(url, headers=header, params=params)
-            elif flag == 'POST':
-                response = requests.post(url, headers=header, data=data)
-            else:
-                response = requests.put(url, headers=header, data=data)
-            counter += 1
-        return response
 
     def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None,
                       source=None, country=None, state=None, city=None, resolution_width=None,
