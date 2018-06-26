@@ -145,10 +145,12 @@ class Client(object):
 
         """
         url = Client.base_URL + 'apps/register'
+        if self.token is None:
+            self.request_token()
         header = self.header_builder()
-        data = {'owner': owner, 'permissionLevel': permissionLevel}
-        response = self._check_token(response=requests.post(url, headers=header, data=data),
-                                     flag='POST', url=url)
+        response = self._check_token(response=requests.post(
+            url, headers=header, data={'owner': owner, 'permissionLevel': permissionLevel}
+        ), flag='POST', url=url)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
@@ -159,7 +161,6 @@ class Client(object):
             else:
                 raise InternalError()
         return response.json()['clientID'], response.json()['clientSecret']
-
 
     # TODO: update client's owner
     def update_owner(self, clientID, owner):
@@ -179,10 +180,12 @@ class Client(object):
 
         """
         url = Client.base_URL + 'apps/' + clientID
+        if self.token is None:
+            self.request_token()
         header = self.header_builder()
-        data = {'owner': owner}
-        response = self._check_token(response=requests.put(url, headers=header, data=data),
-                                     flag='PUT', url=url)
+        response = self._check_token(response=requests.put(
+            url, headers=header, data={'owner': owner}
+        ), flag='PUT', url=url)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
@@ -210,10 +213,12 @@ class Client(object):
 
         """
         url = Client.base_URL + 'apps/' + clientID
+        if self.token is None:
+            self.request_token()
         header = self.header_builder()
-        data = {'permissionLevel': permissionLevel}
-        response = self._check_token(response=requests.put(url, headers=header, data=data),
-                                     flag='PUT', url=url)
+        response = self._check_token(
+            response=requests.put(url, headers=header, data={'permissionLevel': permissionLevel}),
+            flag='PUT', url=url)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
@@ -237,10 +242,12 @@ class Client(object):
 
         """
         url = Client.base_URL + 'apps/by-owner'
-        param = {'owner': owner}
+        if self.token is None:
+            self.request_token()
         header = self.header_builder()
-        response = self._check_token(response=requests.get(url, headers=header, params=param),
-                                     flag='GET', url=url)
+        response = self._check_token(response=requests.get(
+            url, headers=header, params={'owner': owner}
+        ), flag='GET', url=url)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
@@ -272,10 +279,12 @@ class Client(object):
 
         """
         url = Client.base_URL + "apps/" + clientID + "/usage"
-        param = {'owner': owner}
+        if self.token is None:
+            self.request_token()
         header = self.header_builder()
-        response = self._check_token(response=requests.get(url, headers=header, params=param),
-                                     flag='GET', url=url)
+        response = self._check_token(response=requests.get(
+            url, headers=header, params={'owner': owner}
+        ), flag='GET', url=url)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
