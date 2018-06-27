@@ -264,7 +264,13 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultSecret, 'test_clientSecret')
         mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
                                     '&clientSecret='+clientSecret)
-        self.assertEqual(2, mock_post.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        data = {'owner': 'testowner', 'permissionLevel': 'user'}
+        call_list = [mock.call(self.base_URL + 'apps/register', headers=headers, data=data),
+                     mock.call(self.base_URL + 'apps/register', headers=newheaders, data=data)]
+        # mock_post.assert_called_once_with(self.base_URL + 'apps/register', headers=headers, data=data)
+        self.assertEqual(mock_post.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -292,8 +298,15 @@ class TestClient(unittest.TestCase):
             client.register('testowner')
         mock_get.assert_called_with(self.base_URL + 'auth/?clientID=' + clientId +
                                     '&clientSecret=' + clientSecret)
-        self.assertEqual(4, mock_post.call_count)
-        self.assertEqual(3, mock_get.call_count)
+        self.assertEqual(3, mock_post.call_count)
+        self.assertEqual(2, mock_get.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        data = {'owner': 'testowner', 'permissionLevel': 'user'}
+        call_list = [mock.call(self.base_URL + 'apps/register', headers=headers, data=data),
+                     mock.call(self.base_URL + 'apps/register', headers=newheaders, data=data),
+                     mock.call(self.base_URL + 'apps/register', headers=newheaders, data=data)]
+        self.assertEqual(mock_post.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_register_no_owner(self, mock_post):
@@ -388,7 +401,7 @@ class TestClient(unittest.TestCase):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        client.token = "Expired token"
+        client.token = "ExpiredToken"
         # set first requests.get's result
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -412,13 +425,20 @@ class TestClient(unittest.TestCase):
         # run the test
         client.client_ids_by_owner('testowner')
         self.assertEqual(3, mock_get.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        params = {'owner': 'testowner'}
+        call_list = [mock.call(self.base_URL + 'apps/by-owner', headers=headers, params=params),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'apps/by-owner', headers=newheaders, params=params)]
+        self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_expired_token_failure(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        client.token = "Expired token"
+        client.token = "ExpiredToken"
         # set first requests.get's result
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -436,7 +456,16 @@ class TestClient(unittest.TestCase):
         # run the test
         with self.assertRaises(AuthenticationError):
             client.client_ids_by_owner('testowner')
-        self.assertEqual(7, mock_get.call_count)
+        self.assertEqual(5, mock_get.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        params = {'owner': 'testowner'}
+        call_list = [mock.call(self.base_URL + 'apps/by-owner', headers=headers, params=params),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'apps/by-owner', headers=newheaders, params=params),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'apps/by-owner', headers=newheaders, params=params)]
+        self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_clientID_by_owner_incorrect_clientID(self, mock_get):
@@ -498,7 +527,7 @@ class TestClient(unittest.TestCase):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        client.token = "Expired Token"
+        client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -515,16 +544,22 @@ class TestClient(unittest.TestCase):
             'api_usage': 1
         }
         mock_get.side_effect = [mock_response, mock_response1, mock_response2]
-        message = client.usage_by_client('1', 'testowner')
-        self.assertEqual(1, message)
+        self.assertEqual(1, client.usage_by_client('1', 'testowner'))
         self.assertEqual(3, mock_get.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        params = {'owner': 'testowner'}
+        call_list = [mock.call(self.base_URL + 'apps/1/usage', headers=headers, params=params),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'apps/1/usage', headers=newheaders, params=params)]
+        self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_usage_by_client_expired_token_failure(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        client.token = "Expired Token"
+        client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -539,7 +574,16 @@ class TestClient(unittest.TestCase):
                                 mock_response2, mock_response, mock_response2, mock_response]
         with self.assertRaises(AuthenticationError):
             client.usage_by_client('1', 'testowner')
-        self.assertEqual(7, mock_get.call_count)
+        self.assertEqual(5, mock_get.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        params = {'owner': 'testowner'}
+        call_list = [mock.call(self.base_URL + 'apps/1/usage', headers=headers, params=params),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'apps/1/usage', headers=newheaders, params=params),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'apps/1/usage', headers=newheaders, params=params)]
+        self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_usage_by_client_authorization_error(self, mock_get):
@@ -622,7 +666,7 @@ class TestClient(unittest.TestCase):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        client.token = "Expired Token"
+        client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -642,6 +686,12 @@ class TestClient(unittest.TestCase):
         }
         mock_get.return_value = mock_response2
         self.assertEqual('OK', client.update_owner('1', 'testowner'))
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        data = {'owner': 'testowner'}
+        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=newheaders, data=data)]
+        self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.put')
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -649,7 +699,7 @@ class TestClient(unittest.TestCase):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        client.token = "Expired Token"
+        client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -665,8 +715,15 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response2
         with self.assertRaises(AuthenticationError):
             client.update_owner('1', 'testowner')
-        self.assertEqual(4, mock_put.call_count)
-        self.assertEqual(3, mock_get.call_count)
+        self.assertEqual(3, mock_put.call_count)
+        self.assertEqual(2, mock_get.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        data = {'owner': 'testowner'}
+        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=newheaders, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=newheaders, data=data)]
+        self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.put')
     def test_update_owner_invalid_clientid(self, mock_put):
@@ -712,7 +769,7 @@ class TestClient(unittest.TestCase):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        client.token = "Expired Token"
+        client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -732,6 +789,12 @@ class TestClient(unittest.TestCase):
         }
         mock_get.return_value = mock_response2
         self.assertEqual(client.update_permission('1', 'user'), 'OK')
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        data = {'permissionLevel': 'user'}
+        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=newheaders, data=data)]
+        self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.put')
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -739,7 +802,7 @@ class TestClient(unittest.TestCase):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        client.token = "Expired Token"
+        client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -755,8 +818,15 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response2
         with self.assertRaises(AuthenticationError):
             client.update_permission('1', 'user')
-        self.assertEqual(4, mock_put.call_count)
-        self.assertEqual(3, mock_get.call_count)
+        self.assertEqual(3, mock_put.call_count)
+        self.assertEqual(2, mock_get.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        data = {'permissionLevel': 'user'}
+        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=newheaders, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=newheaders, data=data)]
+        self.assertEqual(mock_put.call_args_list, call_list)
 
 if __name__ == '__main__':
     unittest.main()
