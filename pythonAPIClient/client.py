@@ -31,9 +31,9 @@ class Client(object):
         In order to access the package, register a new application by contacting the CAM2 team
         at https://www.cam2project.net/.
 
-        For each methods except request.token() and header_builder(),
+        For each methods except internal method like _check_token(),
         those methods will rerun request_token() to get a new token if token expires.
-        But if the requests get status code of 404 for more than 3 times,
+        But if the requests get status code of 401 for more than 2 times,
         we raise an Authentication error.
 
     """
@@ -45,10 +45,10 @@ class Client(object):
 
     """
 
-    def _check_token(self, response, flag, url=base_URL, data=None, params=None):
+    def _check_token(self, response, flag, url, data=None, params=None):
         counter = 0
         while response.status_code == 401 and \
-                response.json()['message'] == 'Token expired' and counter < 3:
+                response.json()['message'] == 'Token expired' and counter < 2:
             self.request_token()
             header = self.header_builder()
             if flag == 'GET':
