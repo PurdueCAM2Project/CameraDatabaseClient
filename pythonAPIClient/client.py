@@ -3,11 +3,11 @@ Represents a CAM2 client application.
 """
 import requests
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
-    InvalidClientSecretError, ResourceNotFoundError, FormatError
+    InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
 from .camera import Camera
 
-class Client(object):
 
+class Client(object):
     """Class representing a CAM2 client application.
 
     [More detailed description of what client object do.]
@@ -31,6 +31,11 @@ class Client(object):
         In order to access the package, register a new application by contacting the CAM2 team
         at https://www.cam2project.net/.
 
+        For each methods except internal method like _check_token(),
+        those methods will rerun request_token() to get a new token if token expires.
+        But if the requests get status code of 401 for more than 2 times,
+        we raise an Authentication error.
+
     """
 
     base_URL = 'https://cam2-api.herokuapp.com/'
@@ -39,6 +44,21 @@ class Client(object):
     This is the URL of CAM2 Database API. User is able to send API calls directly to this URL.
 
     """
+
+    def _check_token(self, response, flag, url, data=None, params=None):
+        counter = 0
+        while response.status_code == 401 and \
+                response.json()['message'] == 'Token expired' and counter < 2:
+            self.request_token()
+            header = self.header_builder()
+            if flag == 'GET':
+                response = requests.get(url, headers=header, params=params)
+            elif flag == 'POST':
+                response = requests.post(url, headers=header, data=data)
+            else:
+                response = requests.put(url, headers=header, data=data)
+            counter += 1
+        return response
 
     def request_token(self):
 
@@ -115,8 +135,6 @@ class Client(object):
             Permission level of the owner of the client application.
             Default permission level is 'user'.
 
-        Raises
-        ------
 
         Returns
         -------
@@ -124,24 +142,160 @@ class Client(object):
             Client id of the newly registered client application.
         str
             Client secret of the newly registered client application.
+
         """
-        pass
+        url = Client.base_URL + 'apps/register'
+        if self.token is None:
+            self.request_token()
+        header = self.header_builder()
+        data = {'owner': owner, 'permissionLevel': permissionLevel}
+        response = self._check_token(response=requests.post(url, headers=header, data=data),
+                                     flag='POST', url=url, data=data)
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            else:
+                raise InternalError()
+        return response.json()['clientID'], response.json()['clientSecret']
+
 
     # TODO: update client's owner
     def update_owner(self, clientID, owner):
-        pass
+        """
+        Parameters
+        ----------
+        clientID : str
+            Client Id of the application.
+
+        owner : str, optional
+            (Optional) Username of owner.
+
+        Returns
+        -------
+        str
+            Success message.
+
+        """
+        url = Client.base_URL + 'apps/' + clientID
+        if self.token is None:
+            self.request_token()
+        header = self.header_builder()
+        data = {'owner': owner}
+        response = self._check_token(response=requests.put(url, headers=header, data=data),
+                                     flag='PUT', url=url, data=data)
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            else:
+                raise InternalError()
+        return response.json()['message']
 
     # TODO: update client's permissionLevel
     def update_permission(self, clientID, permissionLevel):
-        pass
+        """
+        Parameters
+        ----------
+        clientID : str
+            Client Id of the application.
+
+        permissionLevel : str, optional
+            Permission level of client.
+
+        Returns
+        -------
+        str
+            Success message.
+
+        """
+        url = Client.base_URL + 'apps/' + clientID
+        if self.token is None:
+            self.request_token()
+        header = self.header_builder()
+        data = {'permissionLevel': permissionLevel}
+        response = self._check_token(response=requests.put(url, headers=header, data=data),
+                                     flag='PUT', url=url, data=data)
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            else:
+                raise InternalError()
+        return response.json()['message']
 
     # TODO: get clientID by owner
     def client_ids_by_owner(self, owner):
-        pass
+        """
+        Parameters
+        ----------
+        owner : str
+            Username of the owner of the client application.
+
+        Returns
+        -------
+            A list of client's ID owned by the user.
+
+        """
+        url = Client.base_URL + 'apps/by-owner'
+        param = {'owner': owner}
+        if self.token is None:
+            self.request_token()
+        header = self.header_builder()
+        response = self._check_token(response=requests.get(url, headers=header, params=param),
+                                     flag='GET', url=url, params=param)
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            else:
+                raise InternalError()
+        clientObject = response.json()
+        clientIDs = []
+        for ct in clientObject:
+            clientIDs.append(ct['clientID'])
+        return clientIDs
 
     # TODO: get api usage count by client
-    def usage_by_client(self, clientID):
-        pass
+    def usage_by_client(self, clientID, owner):
+        """
+        Parameters
+        ----------
+        clientID : str
+            Client's ID of the application.
+
+        owner : str
+            Username of the owner of the client application.
+
+        Returns
+        -------
+        int
+            The number of requests made by the client.
+
+        """
+        url = Client.base_URL + "apps/" + clientID + "/usage"
+        param = {'owner': owner}
+        if self.token is None:
+            self.request_token()
+        header = self.header_builder()
+        response = self._check_token(response=requests.get(url, headers=header, params=param),
+                                     flag='GET', url=url, params=param)
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 403:
+                raise AuthorizationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            else:
+                raise InternalError()
+        return response.json()['api_usage']
 
     # TODO: add a camera to database
     def add_camera(self, camera):
