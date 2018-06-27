@@ -157,8 +157,7 @@
 <dl class="class">
 <dt id="pythonAPIClient.camera.Camera">
 <em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">Camera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.Camera" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class representing a general camera.</p>
+<dd><p>Class representing a general camera.</p>
 <dl class="attribute">
 <dt id="pythonAPIClient.camera.Camera.cameraID">
 <code class="descname">cameraID</code><a class="headerlink" href="#pythonAPIClient.camera.Camera.cameraID" title="Permalink to this definition">¶</a></dt>
@@ -282,18 +281,12 @@
 <p>Camera should only be initialized by results returned from the API.</p>
 <p class="last">Documentation of camera constructor is for CAM2 API team only.</p>
 </div>
-<dl class="staticmethod">
-<dt id="pythonAPIClient.camera.Camera.process_json">
-<em class="property">static </em><code class="descname">process_json</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#Camera.process_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.Camera.process_json" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="pythonAPIClient.camera.IPCamera">
 <em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">IPCamera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#IPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.IPCamera" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.camera.Camera" title="pythonAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.camera.Camera</span></code></a></p>
-<p>Represent a single ip camera.</p>
+<dd><p>Represent a single ip camera.</p>
 <p>This is a subclass of Camera.</p>
 <dl class="attribute">
 <dt id="pythonAPIClient.camera.IPCamera.ip">
@@ -346,18 +339,12 @@
 <p>Camera should only be initialized by results returned from the API.</p>
 <p class="last">Documentation of camera constructor is for CAM2 API team only.</p>
 </div>
-<dl class="staticmethod">
-<dt id="pythonAPIClient.camera.IPCamera.process_json">
-<em class="property">static </em><code class="descname">process_json</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="headerlink" href="#pythonAPIClient.camera.IPCamera.process_json" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="pythonAPIClient.camera.NonIPCamera">
 <em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">NonIPCamera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#NonIPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.NonIPCamera" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.camera.Camera" title="pythonAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.camera.Camera</span></code></a></p>
-<p>Represent a single non-ip camera.</p>
+<dd><p>Represent a single non-ip camera.</p>
 <p>This is a subclass of Camera.</p>
 <dl class="attribute">
 <dt id="pythonAPIClient.camera.NonIPCamera.snapshot_url">
@@ -380,18 +367,12 @@
 <p>Camera should only be initialized by results returned from the API.</p>
 <p class="last">Documentation of camera constructor is for CAM2 API team only.</p>
 </div>
-<dl class="staticmethod">
-<dt id="pythonAPIClient.camera.NonIPCamera.process_json">
-<em class="property">static </em><code class="descname">process_json</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="headerlink" href="#pythonAPIClient.camera.NonIPCamera.process_json" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="pythonAPIClient.camera.StreamCamera">
 <em class="property">class </em><code class="descclassname">pythonAPIClient.camera.</code><code class="descname">StreamCamera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/camera.html#StreamCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.camera.StreamCamera" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.camera.Camera" title="pythonAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.camera.Camera</span></code></a></p>
-<p>Represent a single stream camera.</p>
+<dd><p>Represent a single stream camera.</p>
 <p>This is a subclass of Camera.</p>
 <dl class="attribute">
 <dt id="pythonAPIClient.camera.StreamCamera.m3u8_url">
@@ -414,11 +395,6 @@
 <p>Camera should only be initialized by results returned from the API.</p>
 <p class="last">Documentation of camera constructor is for CAM2 API team only.</p>
 </div>
-<dl class="staticmethod">
-<dt id="pythonAPIClient.camera.StreamCamera.process_json">
-<em class="property">static </em><code class="descname">process_json</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="headerlink" href="#pythonAPIClient.camera.StreamCamera.process_json" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </div>
@@ -428,8 +404,7 @@
 <dl class="class">
 <dt id="pythonAPIClient.client.Client">
 <em class="property">class </em><code class="descclassname">pythonAPIClient.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>clientId</em>, <em>clientSecret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class representing a CAM2 client application.</p>
+<dd><p>Class representing a CAM2 client application.</p>
 <p>[More detailed description of what client object do.]</p>
 <dl class="attribute">
 <dt id="pythonAPIClient.client.Client.clientId">
@@ -453,8 +428,12 @@ Each token expires in 5 minutes.</p>
 
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In order to access the package, register a new application by contacting the CAM2 team
+<p>In order to access the package, register a new application by contacting the CAM2 team
 at <a class="reference external" href="https://www.cam2project.net/">https://www.cam2project.net/</a>.</p>
+<p class="last">For each methods except internal method like _check_token(),
+those methods will rerun request_token() to get a new token if token expires.
+But if the requests get status code of 401 for more than 2 times,
+we raise an Authentication error.</p>
 </div>
 <p>Client initialization method.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -504,11 +483,6 @@ Client secret should have a length of at least 71 characters.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="pythonAPIClient.client.Client.header_builder">
-<code class="descname">header_builder</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.header_builder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.header_builder" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="pythonAPIClient.client.Client.register">
 <code class="descname">register</code><span class="sig-paren">(</span><em>owner</em>, <em>permissionLevel='user'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Client initialization method.</p>
@@ -537,42 +511,88 @@ Default permission level is ‘user’.</li>
 <dl class="method">
 <dt id="pythonAPIClient.client.Client.update_owner">
 <code class="descname">update_owner</code><span class="sig-paren">(</span><em>clientID</em>, <em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.update_owner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.update_owner" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>clientID</strong> (<em>str</em>) – Client Id of the application.</li>
+<li><strong>owner</strong> (<em>str</em><em>, </em><em>optional</em>) – (Optional) Username of owner.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Success message.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="pythonAPIClient.client.Client.update_permission">
 <code class="descname">update_permission</code><span class="sig-paren">(</span><em>clientID</em>, <em>permissionLevel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.update_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.update_permission" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>clientID</strong> (<em>str</em>) – Client Id of the application.</li>
+<li><strong>permissionLevel</strong> (<em>str</em><em>, </em><em>optional</em>) – Permission level of client.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Success message.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="pythonAPIClient.client.Client.client_ids_by_owner">
 <code class="descname">client_ids_by_owner</code><span class="sig-paren">(</span><em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.client_ids_by_owner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.client_ids_by_owner" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>owner</strong> (<em>str</em>) – Username of the owner of the client application.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">A list of client’s ID owned by the user.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="pythonAPIClient.client.Client.usage_by_client">
-<code class="descname">usage_by_client</code><span class="sig-paren">(</span><em>clientID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.usage_by_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.usage_by_client" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pythonAPIClient.client.Client.add_camera">
-<code class="descname">add_camera</code><span class="sig-paren">(</span><em>camera</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.add_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.add_camera" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pythonAPIClient.client.Client.update_camera">
-<code class="descname">update_camera</code><span class="sig-paren">(</span><em>camID</em>, <em>others</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.update_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.update_camera" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pythonAPIClient.client.Client.camera_by_id">
-<code class="descname">camera_by_id</code><span class="sig-paren">(</span><em>cameraID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.camera_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.camera_by_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pythonAPIClient.client.Client.search_camera">
-<code class="descname">search_camera</code><span class="sig-paren">(</span><em>latitude=None</em>, <em>longitude=None</em>, <em>radius=None</em>, <em>camera_type=None</em>, <em>source=None</em>, <em>country=None</em>, <em>state=None</em>, <em>city=None</em>, <em>resolution_width=None</em>, <em>resolution_heigth=None</em>, <em>is_active_image=None</em>, <em>is_active_video=None</em>, <em>offset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.search_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.search_camera" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">usage_by_client</code><span class="sig-paren">(</span><em>clientID</em>, <em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.usage_by_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.usage_by_client" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>clientID</strong> (<em>str</em>) – Client’s ID of the application.</li>
+<li><strong>owner</strong> (<em>str</em>) – Username of the owner of the client application.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The number of requests made by the client.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -583,15 +603,13 @@ Default permission level is ‘user’.</li>
 <dl class="exception">
 <dt id="pythonAPIClient.error.Error">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">Error</code><a class="reference internal" href="_modules/pythonAPIClient/error.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.Error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
-<p>Represent a generic error.</p>
+<dd><p>Represent a generic error.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="pythonAPIClient.error.FormatError">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">FormatError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/error.html#FormatError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.FormatError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
-<p>Class representing format error.</p>
+<dd><p>Class representing format error.</p>
 <p>Detailed error message of the error can be shown by printing the error object.</p>
 <p>This corresponends to 422 RequestFormatError in CAM2 Database API.</p>
 <dl class="attribute">
@@ -605,29 +623,25 @@ Default permission level is ‘user’.</li>
 <dl class="exception">
 <dt id="pythonAPIClient.error.ResourceNotFoundError">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">ResourceNotFoundError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/error.html#ResourceNotFoundError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.ResourceNotFoundError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
-<p>Corresponends to 404 ResourceNotFoundError in API.</p>
+<dd><p>Corresponends to 404 ResourceNotFoundError in API.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="pythonAPIClient.error.AuthenticationError">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">AuthenticationError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/error.html#AuthenticationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.AuthenticationError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
-<p>Corresponends to 401 AuthenticationError in API.</p>
+<dd><p>Corresponends to 401 AuthenticationError in API.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="pythonAPIClient.error.InternalError">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">InternalError</code><a class="reference internal" href="_modules/pythonAPIClient/error.html#InternalError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.InternalError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
-<p>Corresponends to 500 InternalError in API.</p>
+<dd><p>Corresponends to 500 InternalError in API.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="pythonAPIClient.error.ResourceConflictError">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">ResourceConflictError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/error.html#ResourceConflictError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.ResourceConflictError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
-<p>Corresponends to 409 ResourceConflictError in API.
+<dd><p>Corresponends to 409 ResourceConflictError in API.
 It is used in POST /cameras/create and PUT /cameras/{:camerID} route
 signaling ‘legacyCameraIDAlreadyExist’</p>
 </dd></dl>
@@ -635,22 +649,19 @@ signaling ‘legacyCameraIDAlreadyExist’</p>
 <dl class="exception">
 <dt id="pythonAPIClient.error.AuthorizationError">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">AuthorizationError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/error.html#AuthorizationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.AuthorizationError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
-<p>Corresponends to 403 AuthorizationError in API.</p>
+<dd><p>Corresponends to 403 AuthorizationError in API.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="pythonAPIClient.error.InvalidClientIdError">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">InvalidClientIdError</code><a class="reference internal" href="_modules/pythonAPIClient/error.html#InvalidClientIdError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.InvalidClientIdError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
-<p>Corresponends to 403 AuthorizationError in API.</p>
+<dd><p>Corresponends to 403 AuthorizationError in API.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="pythonAPIClient.error.InvalidClientSecretError">
 <em class="property">exception </em><code class="descclassname">pythonAPIClient.error.</code><code class="descname">InvalidClientSecretError</code><a class="reference internal" href="_modules/pythonAPIClient/error.html#InvalidClientSecretError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.error.InvalidClientSecretError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pythonAPIClient.error.Error" title="pythonAPIClient.error.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pythonAPIClient.error.Error</span></code></a></p>
-<p>Class representing invalid clientSecret format error.</p>
+<dd><p>Class representing invalid clientSecret format error.</p>
 <p>A valid client secret should have a length of at least 71 characters.</p>
 <p>This corresponends to 422 RequestFormatError in CAM2 Database API.</p>
 <dl class="attribute">
