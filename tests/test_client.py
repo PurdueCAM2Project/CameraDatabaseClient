@@ -269,7 +269,6 @@ class TestClient(unittest.TestCase):
         data = {'owner': 'testowner', 'permissionLevel': 'user'}
         call_list = [mock.call(self.base_URL + 'apps/register', headers=headers, data=data),
                      mock.call(self.base_URL + 'apps/register', headers=newheaders, data=data)]
-        # mock_post.assert_called_once_with(self.base_URL + 'apps/register', headers=headers, data=data)
         self.assertEqual(mock_post.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.post')
@@ -429,7 +428,8 @@ class TestClient(unittest.TestCase):
         newheaders = {'Authorization': 'Bearer newToken'}
         params = {'owner': 'testowner'}
         call_list = [mock.call(self.base_URL + 'apps/by-owner', headers=headers, params=params),
-                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
+                               '&clientSecret=' + clientSecret),
                      mock.call(self.base_URL + 'apps/by-owner', headers=newheaders, params=params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
@@ -461,9 +461,11 @@ class TestClient(unittest.TestCase):
         newheaders = {'Authorization': 'Bearer newToken'}
         params = {'owner': 'testowner'}
         call_list = [mock.call(self.base_URL + 'apps/by-owner', headers=headers, params=params),
-                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
+                               '&clientSecret=' + clientSecret),
                      mock.call(self.base_URL + 'apps/by-owner', headers=newheaders, params=params),
-                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
+                               '&clientSecret=' + clientSecret),
                      mock.call(self.base_URL + 'apps/by-owner', headers=newheaders, params=params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
@@ -550,7 +552,8 @@ class TestClient(unittest.TestCase):
         newheaders = {'Authorization': 'Bearer newToken'}
         params = {'owner': 'testowner'}
         call_list = [mock.call(self.base_URL + 'apps/1/usage', headers=headers, params=params),
-                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
+                               '&clientSecret=' + clientSecret),
                      mock.call(self.base_URL + 'apps/1/usage', headers=newheaders, params=params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
@@ -579,9 +582,11 @@ class TestClient(unittest.TestCase):
         newheaders = {'Authorization': 'Bearer newToken'}
         params = {'owner': 'testowner'}
         call_list = [mock.call(self.base_URL + 'apps/1/usage', headers=headers, params=params),
-                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
+                               '&clientSecret=' + clientSecret),
                      mock.call(self.base_URL + 'apps/1/usage', headers=newheaders, params=params),
-                     mock.call(self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
+                               '&clientSecret=' + clientSecret),
                      mock.call(self.base_URL + 'apps/1/usage', headers=newheaders, params=params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
