@@ -367,20 +367,17 @@ class Client(object):
         search_params = {k: v for k, v in local_params.items() if v is not None}
 
         url = Client.base_URL + 'cameras/search'
-
-        response = requests.get(url, headers=self.header_builder(), params=search_params)
-        if response.status_code == 401:
-            self.request_token()
-            return self.search_camera(latitude, longitude, radius, camera_type,
-                                      source, country, state, city, resolution_width,
-                                      resolution_heigth, is_active_image, is_active_video,
-                                      offset)
-        elif response.status_code == 422:
-            raise FormatError(response.json()['message'])
-        elif response.status_code == 500:
-            raise InternalError()
-        elif response.status_code != 200:
-            raise InternalError()
+        header = self.header_builder()
+        response = self._check_token(response=requests.get(url, headers=header,
+                                     params=search_params),
+                                     flag='GET', url=url, params=search_params)
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            elif response.status_code != 200:
+                raise InternalError()
 
         camera_response_array = response.json()
         camera_processed = []
