@@ -841,14 +841,26 @@ class TestClient(unittest.TestCase):
         client.token = 'CorrectToken'
         mock_response = mock.Mock()
         expected_dict = {
-            "longitude": "-129.09",
-            "latitude": "44.9087"
+            'camera_type': 'ip',
+            'ip': '210.1.1.2',
+            'latitude': '44.9087',
+            'longitude': '-129.09',
+            'port': '80'
         }
-        mock_response.json.return_value = expected_dict
+        mock_dict = {
+            "longitude": "-129.09",
+            "latitude": "44.9087",
+            'type': 'ip',
+            'retrieval': {
+                'ip': '210.1.1.2',
+                'port': '80'
+            }
+        }
+        mock_response.json.return_value = mock_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
         url = self.base_URL + 'cameras/12345'
-        self.assertEqual(client.camera_by_id('12345'), expected_dict)
+        self.assertEqual(client.camera_by_id('12345').__dict__, expected_dict)
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
 
 
@@ -871,12 +883,24 @@ class TestClient(unittest.TestCase):
         mock_response3 = mock.Mock()
         mock_response3.status_code = 200
         expected_dict = {
-            "longitude": "-129.09",
-            "latitude": "44.9087"
+            'camera_type': 'ip',
+            'ip': '210.1.1.2',
+            'latitude': '44.9087',
+            'longitude': '-129.09',
+            'port': '80'
         }
-        mock_response3.json.return_value = expected_dict
+        mock_dict = {
+            "longitude": "-129.09",
+            "latitude": "44.9087",
+            'type': 'ip',
+            'retrieval': {
+                'ip': '210.1.1.2',
+                'port': '80'
+            }
+        }
+        mock_response3.json.return_value = mock_dict
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
-        self.assertEqual(client.camera_by_id('12345'), expected_dict)
+        self.assertEqual(client.camera_by_id('12345').__dict__, expected_dict)
         self.assertEqual(3, mock_get.call_count)
         headers = {'Authorization': 'Bearer ExpiredToken'}
         newheaders = {'Authorization': 'Bearer newToken'}

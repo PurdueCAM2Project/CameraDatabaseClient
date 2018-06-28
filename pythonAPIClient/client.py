@@ -340,7 +340,7 @@ class Client(object):
                 raise FormatError(response.json()['message'])
             else:
                 raise InternalError()
-        return response.json()
+        return Camera.process_json(**response.json())
 
     def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None,
                       source=None, country=None, state=None, city=None, resolution_width=None,
