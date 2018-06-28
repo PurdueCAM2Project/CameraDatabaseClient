@@ -818,17 +818,19 @@ class TestClient(unittest.TestCase):
         mock_get.side_effect = [mock_response, mock_response2, mock_response,
                                 mock_response2, mock_response]
         with self.assertRaises(AuthenticationError):
-            camera = client.search_camera(country='USA')
+            client.search_camera(country='USA')
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
         search_params = {'country': 'USA'}
+        search_url = self.base_URL + 'cameras/search'
         token_params = {'clientID': clientId, 'clientSecret': clientSecret}
-        call_list = [mock.call(self.base_URL + 'cameras/search', headers=headers, params=search_params),
-                     mock.call(self.base_URL + 'auth', params=token_params),
-                     mock.call(self.base_URL + 'cameras/search', headers=new_headers, params=search_params),
-                     mock.call(self.base_URL + 'auth', params=token_params),
-                     mock.call(self.base_URL + 'cameras/search', headers=new_headers, params=search_params)]
+        token_url = self.base_URL + 'auth'
+        call_list = [mock.call(search_url, headers=headers, params=search_params),
+                     mock.call(token_url, params=token_params),
+                     mock.call(search_url, headers=new_headers, params=search_params),
+                     mock.call(token_url, params=token_params),
+                     mock.call(search_url, headers=new_headers, params=search_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -853,28 +855,24 @@ class TestClient(unittest.TestCase):
         mock_response3 = mock.Mock()
         mock_response3.status_code = 200
 
-        mock_get.side_effect = [mock_response, mock_response2, mock_response3]
-        camera = client.search_camera(country='JP')
         expected_dict = []
         mock_response3.json.return_value = expected_dict
-        mock_get.return_value = mock_response3
-        response_list = client.search_camera(country='JP')
-        self.assertEqual(3, mock_get.call_count)
-        self.assertEqual([], camera)
-
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
-        self.assertEqual(response_list, expected_dict, 'Empty camera list is not correctly parsed.')
+        self.assertEqual(client.search_camera(country='JP'), expected_dict,
+                         'Empty camera list is not correctly parsed.')
         self.assertEqual(3, mock_get.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
         search_params = {'country': 'JP'}
+        search_url = self.base_URL + 'cameras/search'
         token_params = {'clientID': clientId, 'clientSecret': clientSecret}
-        call_list = [mock.call(self.base_URL + 'cameras/search', headers=headers, params=search_params),
-                     mock.call(self.base_URL + 'auth', params=token_params),
-                     mock.call(self.base_URL + 'cameras/search', headers=new_headers, params=search_params)]
+        token_url = self.base_URL + 'auth'
+        call_list = [mock.call(search_url, headers=headers, params=search_params),
+                     mock.call(token_url, params=token_params),
+                     mock.call(search_url, headers=new_headers, params=search_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
-        
+
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_search_camera_all_correct_Internal_Error(self, mock_get):
         clientId = '0' * 96
