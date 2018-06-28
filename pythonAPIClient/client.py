@@ -15,7 +15,7 @@ class Client(object):
 
     Attributes
     ----------
-    clientId : str
+    clientID : str
         Id of the client application.
     clientSecret : str
         Secret of the client application.
@@ -38,8 +38,8 @@ class Client(object):
 
     """
 
-    base_URL = 'https://cam2-api.herokuapp.com/'
-    """str: Static variable to store the base URL.
+    base_url = 'https://cam2-api.herokuapp.com/'
+    """str: Static variable to store the base url.
 
     This is the URL of CAM2 Database API. User is able to send API calls directly to this URL.
 
@@ -75,10 +75,9 @@ class Client(object):
 
         """
 
-        url = Client.base_URL + 'auth/?clientID=' + self.clientId + \
-              '&clientSecret=' + self.clientSecret
-
-        response = requests.get(url)
+        url = self.base_url + 'auth'
+        param = {'clientID': self.clientID, 'clientSecret': self.clientSecret}
+        response = requests.get(url, params=param)
         if response.status_code == 200:
             self.token = response.json()['token']
         elif response.status_code == 404:
@@ -92,13 +91,13 @@ class Client(object):
         head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
 
-    def __init__(self, clientId, clientSecret):
+    def __init__(self, clientID, clientSecret):
 
         """Client initialization method.
 
         Parameters
         ----------
-        clientId : str
+        clientID : str
             Id of the client application.
         clientSecret : str
             Secret of the client application.
@@ -113,11 +112,11 @@ class Client(object):
             Client secret should have a length of at least 71 characters.
 
         """
-        if len(clientId) != 96:
+        if len(clientID) != 96:
             raise InvalidClientIdError
         if len(clientSecret) < 71:
             raise InvalidClientSecretError
-        self.clientId = clientId
+        self.clientID = clientID
         self.clientSecret = clientSecret
         self.token = None
 
@@ -143,7 +142,7 @@ class Client(object):
             Client secret of the newly registered client application.
 
         """
-        url = Client.base_URL + 'apps/register'
+        url = Client.base_url + 'apps/register'
         if self.token is None:
             self.request_token()
         header = self.header_builder()
@@ -179,7 +178,7 @@ class Client(object):
             Success message.
 
         """
-        url = Client.base_URL + 'apps/' + clientID
+        url = Client.base_url + 'apps/' + clientID
         if self.token is None:
             self.request_token()
         header = self.header_builder()
@@ -212,7 +211,7 @@ class Client(object):
             Success message.
 
         """
-        url = Client.base_URL + 'apps/' + clientID
+        url = Client.base_url + 'apps/' + clientID
         if self.token is None:
             self.request_token()
         header = self.header_builder()
@@ -241,7 +240,7 @@ class Client(object):
             A list of client's ID owned by the user.
 
         """
-        url = Client.base_URL + 'apps/by-owner'
+        url = Client.base_url + 'apps/by-owner'
         param = {'owner': owner}
         if self.token is None:
             self.request_token()
@@ -278,7 +277,7 @@ class Client(object):
             The number of requests made by the client.
 
         """
-        url = Client.base_URL + "apps/" + clientID + "/usage"
+        url = Client.base_url + "apps/" + clientID + "/usage"
         param = {'owner': owner}
         if self.token is None:
             self.request_token()
@@ -366,7 +365,7 @@ class Client(object):
         # filter out those parameters with value None, change true/false
         search_params = {k: v for k, v in local_params.items() if v is not None}
 
-        url = Client.base_URL + 'cameras/search'
+        url = Client.base_url + 'cameras/search'
         header = self.header_builder()
         response = self._check_token(
             response=requests.get(url, headers=header, params=search_params),
@@ -375,6 +374,8 @@ class Client(object):
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
             elif response.status_code == 422:
                 raise FormatError(response.json()['message'])
             elif response.status_code != 200:
