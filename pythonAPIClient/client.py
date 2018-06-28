@@ -368,9 +368,10 @@ class Client(object):
 
         url = Client.base_URL + 'cameras/search'
         header = self.header_builder()
-        response = self._check_token(response=requests.get(url, headers=header,
-                                     params=search_params),
-                                     flag='GET', url=url, params=search_params)
+        response = self._check_token(
+            response=requests.get(url, headers=header, params=search_params),
+            flag='GET', url=url, params=search_params)
+
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
