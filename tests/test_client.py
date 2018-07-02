@@ -13,7 +13,7 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 class TestClient(unittest.TestCase):
 
     def setUp(self):
-        self.base_URL = 'http://localhost:8080/'
+        self.base_URL = 'https://cam2-api.herokuapp.com/'
 
     def test_client_init_wrong_ClientId_Length(self):
         with self.assertRaises(InvalidClientIdError):
