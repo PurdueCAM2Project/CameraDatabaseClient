@@ -39,8 +39,8 @@ class Client(object):
 
     """
 
-    #base_URL = 'https://cam2-api.herokuapp.com/'
-    base_URL = 'http://localhost:8080/'
+    base_URL = 'https://cam2-api.herokuapp.com/'
+
     """str: Static variable to store the base URL.
 
     This is the URL of CAM2 Database API. User is able to send API calls directly to this URL.
@@ -113,12 +113,10 @@ class Client(object):
             Client secret should have a length of at least 71 characters.
 
         """
-        """
         if len(clientId) != 96:
             raise InvalidClientIdError
         if len(clientSecret) < 71:
             raise InvalidClientSecretError
-        """
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.token = None
