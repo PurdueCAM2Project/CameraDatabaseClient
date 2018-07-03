@@ -116,35 +116,31 @@ class IPCamera(Camera):
             "video_path": self.video_path
         }
 
-    Attributes
-    ----------
-    ip : str
-    port : str
-    brand : str, optional
-    model : str, optional
-    image_path : str, optional
-    video_path : str, optional
+    class IPCamera(Camera):
+        """Represent a single ip camera.
+        This is a subclass of Camera.
+        Attributes
+        ----------
+        ip : str
+        port : str
+        brand : str, optional
+        model : str, optional
+        image_path : str, optional
+        video_path : str, optional
+        """
 
-    """
+    class NonIPCamera(Camera):
+        """Represent a single non-ip camera.
+        This is a subclass of Camera.
+        Attributes
+        ----------
+        snapshot_url : str
+        """
 
-class NonIPCamera(Camera):
-    """Represent a single non-ip camera.
-
-    This is a subclass of Camera.
-
-    Attributes
-    ----------
-    snapshot_url : str
-
-    """
-
-class StreamCamera(Camera):
-    """Represent a single stream camera.
-
-    This is a subclass of Camera.
-
-    Attributes
-    ----------
-    m3u8_url : str
-
-    """
+    class StreamCamera(Camera):
+        """Represent a single stream camera.
+        This is a subclass of Camera.
+        Attributes
+        ----------
+        m3u8_url : str
+        """
