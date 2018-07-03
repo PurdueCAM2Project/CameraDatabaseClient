@@ -229,8 +229,8 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultID, expected_clientID)
         self.assertEqual(resultSecret, expected_clientSecret)
         self.assertEqual(2, mock_response.json.call_count)
-    @mock.patch('pythonAPIClient.client.requests.post')
 
+    @mock.patch('pythonAPIClient.client.requests.post')
     def test_add_camera_ip(self, mock_post):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -333,9 +333,9 @@ class TestClient(unittest.TestCase):
                 'resolution_width': 720, 'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA',
                 'longitude': 'test_long', 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                 'm3u8_url': 'test_m3u8', 'snapshot_url': None, 'ip': None, 'is_active_video': True,
-                'is_active_image': False, 'type': 'non-ip', 'retrieval': '{\n    "snapshot_url":null\n}'}
+                'is_active_image': False, 'type': 'stream', 'retrieval': '{\n    "m3u8_url":"test_m3u8"\n}'}
 
-        resultID = client.add_camera(camera_type='non-ip', is_active_image=False, is_active_video=True,
+        resultID = client.add_camera(camera_type='stream', is_active_image=False, is_active_video=True,
                                      snapshot_url=None, m3u8_url='test_m3u8', legacy_cameraID=000000000,
                                      source='test_source', latitude='test_lad', longitude='test_long', country='USA',
                                      state='Indiana', city='West Lafayette', resolution_width=720,
@@ -1079,6 +1079,3 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'apps/1', headers=newheaders, data=data),
                      mock.call(self.base_URL + 'apps/1', headers=newheaders, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
-
-if __name__ == '__main__':
-    unittest.main()
