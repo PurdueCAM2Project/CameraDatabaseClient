@@ -45,6 +45,7 @@ class Client(object):
 
     """
 
+
     def _check_token(self, response, flag, url, data=None, params=None):
         counter = 0
         while response.status_code == 401 and \
@@ -308,7 +309,38 @@ class Client(object):
 
     # TODO: get a camera
     def camera_by_id(self, cameraID):
-        pass
+        """
+        A method to get a camera object by using camera's ID
+
+        Parameters
+        ----------
+        cameraID : str
+
+        Returns
+        -------
+        :obj:`Camera`
+            A camera object.
+
+        """
+        if self.token is None:
+            self.request_token()
+        url = Client.base_URL + "cameras/" + cameraID
+        header = self.header_builder()
+        response = self._check_token(response=requests.get(url, headers=header),
+                                     flag='GET', url=url)
+
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            elif response.status_code == 403:
+                raise AuthorizationError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            else:
+                raise InternalError()
+        return Camera.process_json(**response.json())
 
     def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None,
                       source=None, country=None, state=None, city=None, resolution_width=None,
