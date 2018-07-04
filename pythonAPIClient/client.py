@@ -410,7 +410,7 @@ class Client(object):
                 raise ResourceNotFoundError(response.json()['message'])
             elif response.status_code == 422:
                 raise FormatError(response.json()['message'])
-            elif response.status_code != 200:
+            else:
                 raise InternalError()
 
         camera_response_array = response.json()
