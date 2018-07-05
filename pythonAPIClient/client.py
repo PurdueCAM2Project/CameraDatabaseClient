@@ -402,8 +402,8 @@ class Client(object):
         camera_type : str
             Type of the camera. Type can only be 'ip', 'non_ip', or 'stream'.
         ip : str, optional
-            [for IP camera] Ip address of the camera. Although marked as optional, this field is required
-            when the camera type is 'ip'.
+            [for IP camera] Ip address of the camera. Although marked as optional,
+            this field is required when the camera type is 'ip'.
         port : Int, optional
             [for IP camera] Port of the camera. If no port provided, it will be set to default 80.
         image_path : str, optional
@@ -411,11 +411,11 @@ class Client(object):
         video_path : str, optinal
             [for IP camera] Path to retrievae vidoe from the camera.
         snapshot_url : str, optional
-            [for non_IP camera] Url to retrieval image frames from the camera. Although marked as optional, this field is required
-            when the camera type is 'non_ip'.
+            [for non_IP camera] Url to retrieval image frames from the camera.
+            Although marked as optional, this field is required when the camera type is 'non_ip'.
         m3u8_url : str, optional
-            [for stream camera] Url to retrieval video stream from the camera. Although marked as optional, this field is required
-            when the camera type is 'stream'.
+            [for stream camera] Url to retrieval video stream from the camera.
+            Although marked as optional, this field is required when the camera type is 'stream'.
 
         Returns
         -------
@@ -424,29 +424,19 @@ class Client(object):
             matches the provided retrieval information, an empty list will be returned.
 
         """
-        # function locals() contain all local variables;
-        # use another variable param to build a dict in the first line of the method
-        # will catch all method parameters & their values without catching other local variables
-        # used in the method but not used in api call.
-
-        param = dict(locals())
-        param.pop('self')
         url = Client.base_URL + "apps/match"
+        kwargs['type'] = camera_type
 
         # validate parameter names here.
 
         if self.token is None:
             self.request_token()
         header = self.header_builder()
-        response = self._check_token(response=requests.get(url, headers=header, params=param),
-                                     flag='GET', url=url, params=param)
+        response = self._check_token(response=requests.get(url, headers=header, params=kwargs),
+                                     flag='GET', url=url, params=kwargs)
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
-            elif response.status_code == 403:
-                raise AuthorizationError(response.json()['message'])
-            elif response.status_code == 404:
-                raise ResourceNotFoundError(response.json()['message'])
             elif response.status_code == 422:
                 raise FormatError(response.json()['message'])
             else:
