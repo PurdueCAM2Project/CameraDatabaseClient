@@ -229,6 +229,41 @@ class Client(object):
             else:
                 raise InternalError()
         return response.json()['message']
+	
+    #TODO : reset Secret
+    def reset_secret(self, clientID):
+        """
+        Parameters
+        ----------
+
+        cliendID: str
+            Client Id of the application.
+
+        Returns
+        --------
+        str
+            New clientSecret
+
+        """
+        url = Client.base_URL + 'apps/'+clientID+'/secret'
+        if self.token is None:
+            self.request_token()
+        header = self.header_builder()
+        response = self._check_token(response=requests.put(url, headers=header, data=None),
+                                     flag='PUT', url=url, data=None)
+
+        if response.status_code != 200:
+
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+
+            else:
+                raise InternalError()
+
+        return response.json()['clientSecret']
 
     # TODO: get clientID by owner
     def client_ids_by_owner(self, owner):
