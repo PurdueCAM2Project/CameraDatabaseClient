@@ -6,12 +6,18 @@ import sys
 from os import path
 import mock
 from pythonAPIClient.client import Client
-from pythonAPIClient.error import AuthenticationError, InternalError, InvalidClientIdError,\
-     InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
+from pythonAPIClient.error import AuthenticationError, InternalError, InvalidClientIdError, \
+    InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
+
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-class TestClient(unittest.TestCase):
 
+class TestClient(unittest.TestCase):
+    """
+    Test all requests from
+    https://purduecam2project.github.io/CameraDatabaseAPI/#api-cameras-camCreate
+    with different scenarios
+    """
     def setUp(self):
         self.base_URL = 'https://cam2-api.herokuapp.com/'
 
@@ -21,7 +27,6 @@ class TestClient(unittest.TestCase):
             return client
 
     def test_client_init_wrong_Client_Secret_Length(self):
-
         # client secret shorter than 71
         with self.assertRaises(InvalidClientSecretError):
             client = Client('0' * 96, 'dummySecret')
@@ -37,7 +42,7 @@ class TestClient(unittest.TestCase):
                          'Secret not stored in the client object.')
         self.assertIs(client.token, None, 'Token not set to default')
 
-        #client secret longer than 71
+        # client secret longer than 71
         clientSecret2 = '0' * 80
         client2 = Client(clientId, clientSecret2)
         self.assertTrue(isinstance(client2, Client))
@@ -67,7 +72,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 404
         mock_get.return_value = mock_response
-        url = self.base_URL + 'auth/?clientID='+clientId+'&clientSecret='+clientSecret
+        url = self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret
         with self.assertRaises(ResourceNotFoundError):
             client.request_token()
         mock_get.assert_called_once_with(url)
@@ -87,7 +92,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 401
         mock_get.return_value = mock_response
-        url = self.base_URL + 'auth/?clientID='+clientId+'&clientSecret='+clientSecret
+        url = self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret
         with self.assertRaises(AuthenticationError):
             client.request_token()
         mock_get.assert_called_once_with(url)
@@ -108,7 +113,7 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response
         response_dict = client.request_token()
         mock_get.assert_called_once_with(
-            self.base_URL + 'auth/?clientID='+clientId+'&clientSecret='+clientSecret)
+            self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret)
         self.assertEqual(1, mock_response.json.call_count)
         self.assertEqual(client.token, 'correctToken', 'token not stored in the client object.')
         return response_dict
@@ -121,7 +126,7 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = self.base_URL +'auth/?clientID='+clientId+'&clientSecret='+clientSecret
+        url = self.base_URL + 'auth/?clientID=' + clientId + '&clientSecret=' + clientSecret
         with self.assertRaises(InternalError):
             client.request_token()
         mock_get.assert_called_once_with(url)
@@ -262,8 +267,8 @@ class TestClient(unittest.TestCase):
         resultID, resultSecret = client.register('testowner')
         self.assertEqual(resultID, 'test_clientID')
         self.assertEqual(resultSecret, 'test_clientSecret')
-        mock_get.assert_called_with(self.base_URL +'auth/?clientID='+clientId+
-                                    '&clientSecret='+clientSecret)
+        mock_get.assert_called_with(self.base_URL + 'auth/?clientID=' + clientId +
+                                    '&clientSecret=' + clientSecret)
         headers = {'Authorization': 'Bearer ExpiredToken'}
         newheaders = {'Authorization': 'Bearer newToken'}
         data = {'owner': 'testowner', 'permissionLevel': 'user'}
@@ -863,7 +868,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.camera_by_id('12345').__dict__, expected_dict)
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
 
-
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_camera_id_expired_token_success(self, mock_get):
         clientId = '0' * 96
@@ -971,6 +975,166 @@ class TestClient(unittest.TestCase):
             client.camera_by_id('12345')
         url = self.base_URL + 'cameras/12345'
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_all_correct(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = "CorrectToken"
+        mock_response = mock.Mock()
+        mock_response.status_code = 200
+        clientObject = [
+            {
+                'cameraID': '5ae0ecbd336359291be74c12',
+                'timestamp': '2018-07-04T19:52:52.337Z',
+            },
+            {
+                'cameraID': '5ae0ecbd336312391be74c12',
+                'timestamp': '2018-07-04T20:52:52.337Z',
+            },
+            {
+                'cameraID': '5ae0ecbd336354291be74c12',
+                'timestamp': '2018-07-04T21:52:52.337Z',
+            },
+        ]
+        mock_response.json.return_value = clientObject
+        mock_get.return_value = mock_response
+
+        headers = {'Authorization': 'Bearer CorrectToken'}
+        url = Client.base_URL + 'apps/db-change'
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        self.assertEqual(client.get_change_log(), clientObject)
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_expired_token_success(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'ExpiredToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            "token": "newToken"
+        }
+        mock_response3 = mock.Mock()
+        mock_response3.status_code = 200
+        clientObject = [
+            {
+                'cameraID': '5ae0ecbd336359291be74c12',
+                'timestamp': '2018-07-04T19:52:52.337Z',
+            },
+            {
+                'cameraID': '5ae0ecbd336312391be74c12',
+                'timestamp': '2018-07-04T20:52:52.337Z',
+            },
+            {
+                'cameraID': '5ae0ecbd336354291be74c12',
+                'timestamp': '2018-07-04T21:52:52.337Z',
+            },
+        ]
+        mock_response3.json.return_value = clientObject
+        mock_get.side_effect = [mock_response, mock_response2, mock_response3]
+
+        self.assertEqual(client.get_change_log(), clientObject)
+        self.assertEqual(3, mock_get.call_count)
+        url = Client.base_URL + 'apps/db-change'
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        call_list = [mock.call(url, headers=headers, params=param),
+                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
+                               '&clientSecret=' + clientSecret),
+                     mock.call(url, headers=newheaders, params=param)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_expired_token_failure(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'ExpiredToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            "token": "newToken"
+        }
+        mock_get.side_effect = [mock_response, mock_response2, mock_response,
+                                mock_response2, mock_response]
+        with self.assertRaises(AuthenticationError):
+            client.get_change_log()
+
+        url = Client.base_URL + 'apps/db-change'
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        call_list = [
+            mock.call(url, headers=headers, params=param),
+            mock.call(self.base_URL + 'auth/?clientID=' + clientId +
+                      '&clientSecret=' + clientSecret),
+            mock.call(url, headers=newheaders, params=param),
+            mock.call(self.base_URL + 'auth/?clientID=' + clientId +
+                      '&clientSecret=' + clientSecret),
+            mock.call(url, headers=newheaders, params=param)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_with_internal_error(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = "CorrectToken"
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+        headers = {'Authorization': 'Bearer CorrectToken'}
+        with self.assertRaises(InternalError):
+            client.get_change_log()
+
+        url = Client.base_URL + 'apps/db-change'
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_format_error(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 422
+        mock_response.json.return_value = {
+            'message': 'Format Error'
+        }
+        mock_get.return_value = mock_response
+        with self.assertRaises(FormatError):
+            client.get_change_log()
+        url = Client.base_URL + 'apps/db-change'
+        headers = {'Authorization': 'Bearer CorrectToken'}
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
+
 
 if __name__ == '__main__':
     unittest.main()
