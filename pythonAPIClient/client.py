@@ -1,8 +1,8 @@
 """
 Represents a CAM2 client application.
 """
-import requests
 import json
+import requests
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError, FormatError, \
     AuthorizationError, ResourceConflictError
@@ -444,7 +444,6 @@ class Client(object):
                 raise ResourceNotFoundError(response.json()['message'])
             elif response.status_code == 500:
                 raise InternalError()
-
         return response.json()['cameraID']
 
     # TODO: get a camera

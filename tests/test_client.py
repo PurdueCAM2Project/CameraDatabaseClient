@@ -6,7 +6,6 @@ import sys
 from os import path
 import mock
 from pythonAPIClient.client import Client
-from pythonAPIClient.camera import NonIPCamera
 from pythonAPIClient.error import AuthenticationError, InternalError, InvalidClientIdError,\
      InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
@@ -807,7 +806,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.camera_by_id('12345').__dict__, expected_dict)
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
 
-
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_camera_id_expired_token_success(self, mock_get):
         clientID = '0' * 96
@@ -1400,8 +1398,11 @@ class TestClient(unittest.TestCase):
                                         brand='test_brand', model='test_model',
                                         image_path='test_image_path', video_path='test_vid_path')
         self.assertEqual(resultID, testCamID)
-        mock_get.assert_called_with(self.base_URL + 'auth/?clientID=' + clientId +
-                                    '&clientSecret=' + clientSecret)
+        params = {
+            'clientID': clientId,
+            'clientSecret': clientSecret
+        }
+        mock_get.assert_called_with(self.base_URL + 'auth', params=params)
         headers = {'Authorization': 'Bearer ExpiredToken'}
         newheaders = {'Authorization': 'Bearer newToken'}
 
