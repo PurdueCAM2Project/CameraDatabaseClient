@@ -4,7 +4,8 @@ Represents a CAM2 client application.
 import requests
 import json
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
-    InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError, ResourceConflictError
+    InvalidClientSecretError, ResourceNotFoundError, FormatError, \
+    AuthorizationError, ResourceConflictError
 from .camera import Camera
 
 
@@ -297,19 +298,16 @@ class Client(object):
         return response.json()['api_usage']
 
     # TODO: add a camera to database
-    def add_camera(self, camera_type=None, is_active_image=None, is_active_video=None, ip=None, snapshot_url=None,
-                   m3u8_url=None, legacy_cameraID=None, source=None, latitude=None, longitude=None, country=None,
-                   state=None, city=None, resolution_width=None, resolution_height=None, utc_offset=None,
-                   timezone_id=None, timezone_name=None, reference_logo=None, reference_url=None, port=None, brand=None,
-                   model=None, image_path=None, video_path=None):
+    def add_camera(self):
         pass
 
-    def update_camera(self, cameraID, camera_type=None, is_active_image=None, is_active_video=None, ip=None,
-                      snapshot_url=None, m3u8_url=None, legacy_cameraID=None, source=None, latitude=None,
-                      longitude=None, country=None, state=None, city=None, resolution_width=None,
-                      resolution_height=None, utc_offset=None, timezone_id=None, timezone_name=None,
-                      reference_logo=None, reference_url=None, port=None, brand=None, model=None, image_path=None,
-                      video_path=None):
+    def update_camera(self, cameraID, camera_type=None, is_active_image=None,
+                      is_active_video=None, ip=None, snapshot_url=None, m3u8_url=None,
+                      legacy_cameraID=None, source=None, latitude=None, longitude=None,
+                      country=None, state=None, city=None, resolution_width=None,
+                      resolution_height=None, utc_offset=None, timezone_id=None,
+                      timezone_name=None, reference_logo=None, reference_url=None, port=None,
+                      brand=None, model=None, image_path=None, video_path=None):
 
         """update_camera initialization method.
 

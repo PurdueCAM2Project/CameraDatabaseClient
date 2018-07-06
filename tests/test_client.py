@@ -852,23 +852,28 @@ class TestClient(unittest.TestCase):
         expected_cameraID = '5ae0ecbd336359291be74c12'
         url = Client.base_URL + 'cameras/' + expected_cameraID
         header = {'Authorization': 'Bearer correctToken'}
-        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo', 'timezone_name': 'test_t_name',
-                'timezone_id': 'test_t_id', 'utc_offset': 3, 'resolution_height': 480, 'resolution_width': 720,
-                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'm3u8_url': None,
-                'snapshot_url': None, 'is_active_video': True, 'is_active_image': False,
-                'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
-                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", "model": "test_model", '
-                             '"image_path": "test_image_path", "video_path": "test_vid_path"}'}
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", '
+                             '"model": "test_model", "image_path": "test_image_path", '
+                             '"video_path": "test_vid_path"}'}
 
         resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='ip',
-                                        is_active_image=False, is_active_video=True, legacy_cameraID=000000000,
-                                        source='test_source', latitude='test_lad', longitude='test_long', country='USA',
-                                        state='Indiana', city='West Lafayette', resolution_width=720,
-                                        resolution_height=480, utc_offset=3, timezone_id='test_t_id',
-                                        timezone_name='test_t_name', reference_logo='test_ref_logo',
-                                        reference_url='test_ref_url', port='8080', brand='test_brand',
-                                        model='test_model', image_path='test_image_path', video_path='test_vid_path')
+                                        is_active_image=False, is_active_video=True,
+                                        legacy_cameraID=000000000, source='test_source',
+                                        latitude='test_lad', longitude='test_long', country='USA',
+                                        state='Indiana', city='West Lafayette',
+                                        resolution_width=720,resolution_height=480, utc_offset=3,
+                                        timezone_id='test_t_id', timezone_name='test_t_name',
+                                        reference_logo='test_ref_logo',
+                                        reference_url='test_ref_url', port='8080',
+                                        brand='test_brand', model='test_model',
+                                        image_path='test_image_path', video_path='test_vid_path')
         mock_put.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -891,21 +896,26 @@ class TestClient(unittest.TestCase):
         expected_cameraID = '5ae0ecbd336359291be74c12'
         url = Client.base_URL + 'cameras/' + expected_cameraID
         header = {'Authorization': 'Bearer correctToken'}
-        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None, 'port': None,
-                'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo', 'timezone_name': 'test_t_name',
-                'timezone_id': 'test_t_id', 'utc_offset': 3, 'resolution_height': 480, 'resolution_width': 720,
-                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'm3u8_url': None, 'ip': None,
-                'is_active_video': True, 'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12',
-                'type': 'non-ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
+        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
+                'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'ip': None, 'is_active_video': True, 'is_active_image': False,
+                'cameraID': '5ae0ecbd336359291be74c12', 'type': 'non-ip',
+                'retrieval': '{"snapshot_url": "test_snapshot"}'}
 
         resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='non-ip',
-                                        is_active_image=False, is_active_video=True, snapshot_url='test_snapshot',
-                                        m3u8_url=None, legacy_cameraID=000000000, source='test_source',
-                                        latitude='test_lad', longitude='test_long', country='USA', state='Indiana',
-                                        city='West Lafayette', resolution_width=720, resolution_height=480,
-                                        utc_offset=3, timezone_id='test_t_id', timezone_name='test_t_name',
-                                        reference_logo='test_ref_logo', reference_url='test_ref_url')
+                                        is_active_image=False, is_active_video=True,
+                                        snapshot_url='test_snapshot', m3u8_url=None,
+                                        legacy_cameraID=000000000, source='test_source',
+                                        latitude='test_lad', longitude='test_long', country='USA',
+                                        state='Indiana', city='West Lafayette',
+                                        resolution_width=720, resolution_height=480, utc_offset=3,
+                                        timezone_id='test_t_id', timezone_name='test_t_name',
+                                        reference_logo='test_ref_logo',
+                                        reference_url='test_ref_url')
         mock_put.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -928,21 +938,27 @@ class TestClient(unittest.TestCase):
         expected_cameraID = '5ae0ecbd336359291be74c12'
         url = Client.base_URL + 'cameras/' + expected_cameraID
         header = {'Authorization': 'Bearer correctToken'}
-        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None, 'port': None,
-                'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo', 'timezone_name': 'test_t_name',
-                'timezone_id': 'test_t_id', 'utc_offset': 3, 'resolution_height': 480, 'resolution_width': 720,
-                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'snapshot_url': None, 'ip': None,
-                'is_active_video': True, 'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12',
+        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
+                'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'snapshot_url': None, 'ip': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12',
                 'type': 'stream', 'retrieval': '{"m3u8_url": "test_m3u8"}'}
 
         resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='stream',
-                                        is_active_image=False, is_active_video=True, snapshot_url=None,
-                                        m3u8_url='test_m3u8', legacy_cameraID=000000000, source='test_source',
-                                        latitude='test_lad', longitude='test_long', country='USA', state='Indiana',
-                                        city='West Lafayette', resolution_width=720, resolution_height=480,
-                                        utc_offset=3, timezone_id='test_t_id', timezone_name='test_t_name',
-                                        reference_logo='test_ref_logo', reference_url='test_ref_url')
+                                        is_active_image=False, is_active_video=True,
+                                        snapshot_url=None, m3u8_url='test_m3u8',
+                                        legacy_cameraID=000000000, source='test_source',
+                                        latitude='test_lad', longitude='test_long', country='USA',
+                                        state='Indiana', city='West Lafayette',
+                                        resolution_width=720, resolution_height=480,
+                                        utc_offset=3, timezone_id='test_t_id',
+                                        timezone_name='test_t_name',
+                                        reference_logo='test_ref_logo',
+                                        reference_url='test_ref_url')
         mock_put.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -977,29 +993,36 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_get_response
         # run the test
         resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='ip',
-                                        is_active_image=False, is_active_video=True, legacy_cameraID=000000000,
-                                        source='test_source', latitude='test_lad', longitude='test_long', country='USA',
-                                        state='Indiana', city='West Lafayette', resolution_width=720,
-                                        resolution_height=480, utc_offset=3, timezone_id='test_t_id',
-                                        timezone_name='test_t_name', reference_logo='test_ref_logo',
-                                        reference_url='test_ref_url', port='8080', brand='test_brand',
-                                        model='test_model', image_path='test_image_path', video_path='test_vid_path')
+                                        is_active_image=False, is_active_video=True,
+                                        legacy_cameraID=000000000, source='test_source',
+                                        latitude='test_lad', longitude='test_long', country='USA',
+                                        state='Indiana', city='West Lafayette',
+                                        resolution_width=720, resolution_height=480, utc_offset=3,
+                                        timezone_id='test_t_id', timezone_name='test_t_name',
+                                        reference_logo='test_ref_logo',
+                                        reference_url='test_ref_url', port='8080',
+                                        brand='test_brand', model='test_model',
+                                        image_path='test_image_path', video_path='test_vid_path')
         self.assertEqual(resultID, testCamID)
         mock_get.assert_called_with(self.base_URL + 'auth/?clientID=' + clientId +
                                     '&clientSecret=' + clientSecret)
         headers = {'Authorization': 'Bearer ExpiredToken'}
         newheaders = {'Authorization': 'Bearer newToken'}
 
-        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo', 'timezone_name': 'test_t_name',
-                'timezone_id': 'test_t_id', 'utc_offset': 3, 'resolution_height': 480, 'resolution_width': 720,
-                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'm3u8_url': None,
-                'snapshot_url': None, 'is_active_video': True, 'is_active_image': False,
-                'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
-                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", "model": "test_model", '
-                             '"image_path": "test_image_path", "video_path": "test_vid_path"}'}
-        call_list = [mock.call(self.base_URL + 'cameras/' + testCamID, headers=headers, data=data),
-                     mock.call(self.base_URL + 'cameras/' + testCamID, headers=newheaders, data=data)]
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", '
+                             '"model": "test_model", "image_path": "test_image_path", '
+                             '"video_path": "test_vid_path"}'}
+        call_list = [mock.call(self.base_URL + 'cameras/' + testCamID, headers=headers,
+                               data=data),
+                     mock.call(self.base_URL + 'cameras/' + testCamID, headers=newheaders,
+                               data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.put')
@@ -1016,25 +1039,30 @@ class TestClient(unittest.TestCase):
         # validate result
         testCamID = '5ae0ecbd336359291be74c12'
         url = Client.base_URL + 'cameras/' + testCamID
-        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo', 'timezone_name': 'test_t_name',
-                'timezone_id': 'test_t_id', 'utc_offset': 3, 'resolution_height': 480, 'resolution_width': 720,
-                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'm3u8_url': None,
-                'snapshot_url': None, 'is_active_video': True, 'is_active_image': False,
-                'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
-                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", "model": "test_model", '
-                             '"image_path": "test_image_path", "video_path": "test_vid_path"}'}
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", '
+                             '"model": "test_model", "image_path": "test_image_path", '
+                             '"video_path": "test_vid_path"}'}
         header = {'Authorization': 'Bearer correctToken'}
 
         with self.assertRaises(InternalError):
             client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='ip',
-                                 is_active_image=False, is_active_video=True, legacy_cameraID=000000000,
-                                 source='test_source', latitude='test_lad', longitude='test_long', country='USA',
-                                 state='Indiana', city='West Lafayette', resolution_width=720,
-                                 resolution_height=480, utc_offset=3, timezone_id='test_t_id',
-                                 timezone_name='test_t_name', reference_logo='test_ref_logo',
-                                 reference_url='test_ref_url', port='8080', brand='test_brand',
-                                 model='test_model', image_path='test_image_path', video_path='test_vid_path')
+                                 is_active_image=False, is_active_video=True,
+                                 legacy_cameraID=000000000, source='test_source',
+                                 latitude='test_lad', longitude='test_long', country='USA',
+                                 state='Indiana', city='West Lafayette',
+                                 resolution_width=720, resolution_height=480, utc_offset=3,
+                                 timezone_id='test_t_id', timezone_name='test_t_name',
+                                 reference_logo='test_ref_logo',
+                                 reference_url='test_ref_url', port='8080',
+                                 brand='test_brand', model='test_model',
+                                 image_path='test_image_path', video_path='test_vid_path')
         mock_put.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(0, mock_response.json.call_count)
 
@@ -1053,24 +1081,30 @@ class TestClient(unittest.TestCase):
         mock_put.return_value = mock_response
         testCamID = '5ae0ecbd336359291be74c12'
         url = self.base_URL + 'cameras/' + testCamID
-        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo', 'timezone_name': 'test_t_name',
-                'timezone_id': 'test_t_id', 'utc_offset': 3, 'resolution_height': 480, 'resolution_width': 720,
-                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'm3u8_url': None,
-                'snapshot_url': None, 'is_active_video': True, 'is_active_image': False,
-                'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
-                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", "model": "test_model", '
-                             '"image_path": "test_image_path", "video_path": "test_vid_path"}'}
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", '
+                             '"model": "test_model", "image_path": "test_image_path", '
+                             '"video_path": "test_vid_path"}'}
         with self.assertRaises(FormatError):
             client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='ip',
-                                 is_active_image=False, is_active_video=True, legacy_cameraID=000000000,
-                                 source='test_source', latitude='test_lad', longitude='test_long', country='USA',
-                                 state='Indiana', city='West Lafayette', resolution_width=720,
-                                 resolution_height=480, utc_offset=3, timezone_id='test_t_id',
-                                 timezone_name='test_t_name', reference_logo='test_ref_logo',
-                                 reference_url='test_ref_url', port='8080', brand='test_brand',
-                                 model='test_model', image_path='test_image_path', video_path='test_vid_path')
-        mock_put.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'}, data=data)
+                                 is_active_image=False, is_active_video=True,
+                                 legacy_cameraID=000000000, source='test_source',
+                                 latitude='test_lad', longitude='test_long', country='USA',
+                                 state='Indiana', city='West Lafayette',
+                                 resolution_width=720, resolution_height=480, utc_offset=3,
+                                 timezone_id='test_t_id', timezone_name='test_t_name',
+                                 reference_logo='test_ref_logo',
+                                 reference_url='test_ref_url', port='8080',
+                                 brand='test_brand', model='test_model',
+                                 image_path='test_image_path', video_path='test_vid_path')
+        mock_put.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.put')
@@ -1088,23 +1122,28 @@ class TestClient(unittest.TestCase):
         testCamID = '5ae0ecbd336359291be74c12'
         url = self.base_URL + 'cameras/' + testCamID
         headers = {'Authorization': 'Bearer correctToken'}
-        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo', 'timezone_name': 'test_t_name',
-                'timezone_id': 'test_t_id', 'utc_offset': 3, 'resolution_height': 480, 'resolution_width': 720,
-                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'm3u8_url': None,
-                'snapshot_url': None, 'is_active_video': True, 'is_active_image': False,
-                'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
-                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", "model": "test_model", '
-                             '"image_path": "test_image_path", "video_path": "test_vid_path"}'}
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", '
+                             '"model": "test_model", "image_path": "test_image_path", '
+                             '"video_path": "test_vid_path"}'}
         with self.assertRaises(ResourceNotFoundError):
             client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='ip',
-                                 is_active_image=False, is_active_video=True, legacy_cameraID=000000000,
-                                 source='test_source', latitude='test_lad', longitude='test_long', country='USA',
-                                 state='Indiana', city='West Lafayette', resolution_width=720,
-                                 resolution_height=480, utc_offset=3, timezone_id='test_t_id',
-                                 timezone_name='test_t_name', reference_logo='test_ref_logo',
-                                 reference_url='test_ref_url', port='8080', brand='test_brand',
-                                 model='test_model', image_path='test_image_path', video_path='test_vid_path')
+                                 is_active_image=False, is_active_video=True,
+                                 legacy_cameraID=000000000, source='test_source',
+                                 latitude='test_lad', longitude='test_long', country='USA',
+                                 state='Indiana', city='West Lafayette',
+                                 resolution_width=720, resolution_height=480, utc_offset=3,
+                                 timezone_id='test_t_id', timezone_name='test_t_name',
+                                 reference_logo='test_ref_logo',
+                                 reference_url='test_ref_url', port='8080',
+                                 brand='test_brand', model='test_model',
+                                 image_path='test_image_path', video_path='test_vid_path')
         mock_put.assert_called_once_with(url, headers=headers, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
