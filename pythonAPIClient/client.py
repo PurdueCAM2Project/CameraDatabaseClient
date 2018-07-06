@@ -304,17 +304,19 @@ class Client(object):
                    model=None, image_path=None, video_path=None):
         pass
 
-    def update_camera(self, camera_type=None, is_active_image=None, is_active_video=None, ip=None, snapshot_url=None,
-                      m3u8_url=None, legacy_cameraID=None, source=None, latitude=None, longitude=None, country=None,
-                      state=None, city=None, resolution_width=None, resolution_height=None, utc_offset=None,
-                      timezone_id=None, timezone_name=None, reference_logo=None, reference_url=None, port=None,
-                      brand=None,
-                      model=None, image_path=None, video_path=None):
+    def update_camera(self, cameraID, camera_type=None, is_active_image=None, is_active_video=None, ip=None,
+                      snapshot_url=None, m3u8_url=None, legacy_cameraID=None, source=None, latitude=None,
+                      longitude=None, country=None, state=None, city=None, resolution_width=None,
+                      resolution_height=None, utc_offset=None, timezone_id=None, timezone_name=None,
+                      reference_logo=None, reference_url=None, port=None, brand=None, model=None, image_path=None,
+                      video_path=None):
 
         """update_camera initialization method.
 
                 Parameters
                 ----------
+                cameraID : str
+                    Required cameraID for the update camera
                 camera_type : str
                     Type of camera.
                     Allowed values: 'ip', 'non_ip', 'stream'/
@@ -396,38 +398,37 @@ class Client(object):
                     cameraID: the new camera ID for the created camera
         """
 
+        local_params = dict(locals())
+
         if self.token is None:
             self.request_token()
 
-        testCamID = '5ae0ecbd336359291be74c12'
-        url = Client.base_URL + 'cameras/' + testCamID
-
-        local_params = dict(locals())
+        url = Client.base_URL + 'cameras/' + cameraID
 
         local_params['type'] = local_params.pop('camera_type')
-
         del local_params['self']
+
         if camera_type == 'ip':
+
             local_params['retrieval'] = {
-                'ip': ip,
-                'port': port,
-                'brand': brand,
-                'model': model,
-                'image_path': image_path,
-                'video_path': video_path
+                'ip': local_params.pop('ip'),
+                'port': local_params.pop('port'),
+                'brand': local_params.pop('brand'),
+                'model': local_params.pop('model'),
+                'image_path': local_params.pop('image_path'),
+                'video_path': local_params.pop('video_path')
             }
         elif camera_type == 'non-ip':
             local_params['retrieval'] = {
-                'snapshot_url': snapshot_url
+                'snapshot_url': local_params.pop('snapshot_url')
             }
         elif camera_type == 'stream':
             local_params['retrieval'] = {
-                'm3u8_url': m3u8_url
+                'm3u8_url': local_params.pop('m3u8_url')
             }
 
         # Change the given dict into an object for API
-        local_params['retrieval'] = json.dumps(local_params['retrieval'], sort_keys=True, indent=4,
-                                               separators=(',', ':'))
+        local_params['retrieval'] = json.dumps(local_params['retrieval'])
 
         response = self._check_token(requests.put(url, data=local_params, headers=self.header_builder()), flag='PUT',
                                      url=url, data=local_params)
@@ -441,10 +442,10 @@ class Client(object):
             elif response.status_code == 401:
                 self.request_token()
                 response = requests.post(url, headers=self.header_builder(), data=local_params)
-            elif response.status_code == 500:
-                raise InternalError()
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
+            elif response.status_code == 500:
+                raise InternalError()
 
         return response.json()['cameraID']
 
