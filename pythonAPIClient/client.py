@@ -420,7 +420,7 @@ class Client(object):
 
         return camera_processed
 
-    def cam_match(self, camera_type, **kwargs):
+    def check_cam_exist(self, camera_type, **kwargs):
         """
         A method to get one or more camera object that has the given retrieval method
         in the database.
@@ -447,12 +447,12 @@ class Client(object):
 
         Returns
         -------
-        :list
+        :obj:`list` of :obj:`Camera`
             List of camera objects that has the given retrieval method. If there ar eno cameras
             matches the provided retrieval information, an empty list will be returned.
 
         """
-        url = Client.base_URL + "apps/match"
+        url = Client.base_URL + "cameras/exist"
         kwargs['type'] = camera_type
 
         # validate parameter names here.
