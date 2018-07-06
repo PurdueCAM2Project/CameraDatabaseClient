@@ -17,7 +17,7 @@ class Client(object):
 
     Attributes
     ----------
-    clientId : str
+    clientID : str
         Id of the client application.
     clientSecret : str
         Secret of the client application.
@@ -48,6 +48,7 @@ class Client(object):
 
     """
 
+
     def _check_token(self, response, flag, url, data=None, params=None):
         counter = 0
         while response.status_code == 401 and \
@@ -76,10 +77,9 @@ class Client(object):
             If there is an API internal error.
         """
 
-        url = Client.base_URL + 'auth/?clientID=' + self.clientId + \
-              '&clientSecret=' + self.clientSecret
-
-        response = requests.get(url)
+        url = self.base_URL + 'auth'
+        param = {'clientID': self.clientID, 'clientSecret': self.clientSecret}
+        response = requests.get(url, params=param)
         if response.status_code == 200:
             self.token = response.json()['token']
         elif response.status_code == 404:
@@ -93,13 +93,13 @@ class Client(object):
         head = {'Authorization': 'Bearer ' + str(self.token)}
         return head
 
-    def __init__(self, clientId, clientSecret):
+    def __init__(self, clientID, clientSecret):
 
         """Client initialization method.
 
         Parameters
         ----------
-        clientId : str
+        clientID : str
             Id of the client application.
         clientSecret : str
             Secret of the client application.
@@ -114,11 +114,11 @@ class Client(object):
             Client secret should have a length of at least 71 characters.
 
         """
-        if len(clientId) != 96:
+        if len(clientID) != 96:
             raise InvalidClientIdError
         if len(clientSecret) < 71:
             raise InvalidClientSecretError
-        self.clientId = clientId
+        self.clientID = clientID
         self.clientSecret = clientSecret
         self.token = None
 
@@ -449,54 +449,115 @@ class Client(object):
 
     # TODO: get a camera
     def camera_by_id(self, cameraID):
-        pass
+        """
+        A method to get a camera object by using camera's ID
+
+        Parameters
+        ----------
+        cameraID : str
+
+        Returns
+        -------
+        :obj:`Camera`
+            A camera object.
+
+        """
+        if self.token is None:
+            self.request_token()
+        url = Client.base_URL + "cameras/" + cameraID
+        header = self.header_builder()
+        response = self._check_token(response=requests.get(url, headers=header),
+                                     flag='GET', url=url)
+
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            elif response.status_code == 403:
+                raise AuthorizationError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            else:
+                raise InternalError()
+        return Camera.process_json(**response.json())
 
     def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None,
                       source=None, country=None, state=None, city=None, resolution_width=None,
                       resolution_height=None, is_active_image=None, is_active_video=None,
                       offset=None):
+
+        """A method to search camera by attributes and location.
+
+        Searching by location requires user to provide coordiantes for a desired center point
+         and a radius in meters. The search will carry out in the area bounded by the circle.
+
+        Parameters
+        ----------
+        latitude : float, optional
+        longitude : float, optional
+        radius : float, optional
+        offset : int, optional
+        camera_type : str, optional
+        source : str, optional
+        country : str, optional
+        state : str, optional
+        city : str, optional
+        resolution_width : int, optional
+        resolution_height : int, optional
+        is_active_image : bool, optional
+        is_active_video : bool, optional
+
+        Returns
+        -------
+        :obj:`list` of :obj:`Camera`
+            List of cameras that satisfy the search criteria.
+
+        Raises
+        ------
+        FormatError
+            If type of argument value is not expected for the given field.
+
+            Or radius cannot is less than 0.
+
+            Or incorrect latitude range. (it should be between +90 and -90)
+
+            Or incorrect longitude range. (it should be between +180 and -180)
+
+        AuthenticationError
+            If the client secret of this client object does not match the clientID.
+        InternalError
+            If there is an API internal error.
+
+        """
         if self.token is None:
             self.request_token()
-        url = Client.base_URL + 'cameras/search?'
-        if latitude is not None:
-            url += 'lat=' + latitude + '&'
-        if longitude is not None:
-            url += 'lng=' + longitude + '&'
-        if radius is not None:
-            url += 'radius=' + radius + '&'
-        if camera_type is not None:
-            url += 'type=' + camera_type + '&'
-        if source is not None:
-            url += 'source=' + source + '&'
-        if country is not None:
-            url += 'country=' + country + '&'
-        if state is not None:
-            url += 'state=' + state + '&'
-        if city is not None:
-            url += 'city=' + city + '&'
-        if resolution_width is not None:
-            url += 'resolution_width=' + resolution_width + '&'
-        if resolution_height is not None:
-            url += 'resolution_heigth=' + resolution_height + '&'
-        if is_active_image is not None:
-            url += 'is_active_image=' + is_active_image + '&'
-        if is_active_video is not None:
-            url += 'is_active_video=' + is_active_video + '&'
-        if offset is not None:
-            url += 'offset=' + offset + '&'
-        url = url[:-1]
-        response = requests.get(url, headers=self.header_builder())
-        if response.status_code == 401:
-            self.request_token()
-            response = requests.get(url, headers=self.header_builder())
-        elif response.status_code == 422:
-            raise FormatError(response.json()['message'])
-        elif response.status_code == 500:
-            raise InternalError()
-        elif response.status_code != 200:
-            raise InternalError()
+        local_params = dict(locals())
+        local_params.pop('self', None)
+        local_params['type'] = local_params.pop('camera_type', None)
+
+        # filter out those parameters with value None, change true/false
+        search_params = {k: v for k, v in local_params.items() if v is not None}
+
+        url = Client.base_URL + 'cameras/search'
+        header = self.header_builder()
+        response = self._check_token(
+            response=requests.get(url, headers=header, params=search_params),
+            flag='GET', url=url, params=search_params)
+
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            else:
+                raise InternalError()
+
         camera_response_array = response.json()
         camera_processed = []
         for current_object in camera_response_array:
             camera_processed.append(Camera.process_json(**current_object))
+
         return camera_processed
