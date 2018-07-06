@@ -420,8 +420,6 @@ class Client(object):
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
-            elif response.status_code == 403:
-                raise AuthorizationError(response.json()['message'])
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
             elif response.status_code == 422:

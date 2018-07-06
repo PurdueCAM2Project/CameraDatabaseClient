@@ -1096,25 +1096,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
-    def test_get_change_log_with_internal_error(self, mock_get):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = "CorrectToken"
-        mock_response = mock.Mock()
-        mock_response.status_code = 500
-        mock_get.return_value = mock_response
-        headers = {'Authorization': 'Bearer CorrectToken'}
-        with self.assertRaises(InternalError):
-            client.get_change_log()
-
-        url = Client.base_URL + 'apps/db-change'
-        param = {'start': None,
-                 'end': None,
-                 'offset': None}
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
-
-    @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_change_log_format_error(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1123,7 +1104,7 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 422
         mock_response.json.return_value = {
-            'message': 'Format Error'
+            "message": "Format Error"
         }
         mock_get.return_value = mock_response
         with self.assertRaises(FormatError):
@@ -1135,6 +1116,45 @@ class TestClient(unittest.TestCase):
                  'offset': None}
         mock_get.assert_called_once_with(url, headers=headers, params=param)
 
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_resource_not_found_error(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 404
+        mock_response.json.return_value = {
+            "message": "Resource Not Found Error"
+        }
+        mock_get.return_value = mock_response
+        with self.assertRaises(ResourceNotFoundError):
+            client.get_change_log()
+        url = Client.base_URL + 'apps/db-change'
+        headers = {'Authorization': 'Bearer CorrectToken'}
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_with_internal_error(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = "CorrectToken"
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+        with self.assertRaises(InternalError):
+            client.get_change_log()
+
+        url = Client.base_URL + 'apps/db-change'
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        headers = {'Authorization': 'Bearer CorrectToken'}
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
 
 if __name__ == '__main__':
     unittest.main()
