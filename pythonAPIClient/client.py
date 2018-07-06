@@ -405,7 +405,17 @@ class Client(object):
 
         Returns
         -------
+        list of dict of {str : str}
             A list of objects containing cameraID and creation time of the log.
+
+        Raises
+        ------
+        AuthenticationError
+            If the client secret of this client object does not match the clientID.
+        InternalError
+            If there is an API internal error.
+        FormatError
+            If type of argument value is not expected for the given field.
 
         """
         url = Client.base_URL + 'apps/db-change'
@@ -420,8 +430,6 @@ class Client(object):
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
-            elif response.status_code == 404:
-                raise ResourceNotFoundError(response.json()['message'])
             elif response.status_code == 422:
                 raise FormatError(response.json()['message'])
             else:
