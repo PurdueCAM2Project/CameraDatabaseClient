@@ -780,9 +780,9 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_camera_id_all_correct(self, mock_get):
-        clientId = '0' * 96
+        clientID = '0' * 96
         clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
+        client = Client(clientID, clientSecret)
         client.token = 'CorrectToken'
         mock_response = mock.Mock()
         expected_dict = {
@@ -811,9 +811,9 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_camera_id_expired_token_success(self, mock_get):
-        clientId = '0' * 96
+        clientID = '0' * 96
         clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
+        client = Client(clientID, clientSecret)
         client.token = 'ExpiredToken'
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -848,18 +848,19 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.camera_by_id('12345').__dict__, expected_dict)
         self.assertEqual(3, mock_get.call_count)
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        newheaders = {'Authorization': 'Bearer newToken'}
-        call_list = [mock.call(self.base_URL + 'cameras/12345', headers=headers),
-                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
-                               '&clientSecret=' + clientSecret),
-                     mock.call(self.base_URL + 'cameras/12345', headers=newheaders, params=None)]
+        new_headers = {'Authorization': 'Bearer newToken'}
+        get_url = self.base_URL + 'cameras/12345'
+        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
+        call_list = [mock.call(get_url, headers=headers),
+                     mock.call(self.token_url, params=token_params),
+                     mock.call(get_url, headers=new_headers)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_camera_id_expired_token_failure(self, mock_get):
-        clientId = '0' * 96
+        clientID = '0' * 96
         clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
+        client = Client(clientID, clientSecret)
         client.token = 'ExpiredToken'
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -876,21 +877,21 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(AuthenticationError):
             client.camera_by_id('12345')
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        newheaders = {'Authorization': 'Bearer newToken'}
-        call_list = [mock.call(self.base_URL + 'cameras/12345', headers=headers),
-                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
-                               '&clientSecret=' + clientSecret),
-                     mock.call(self.base_URL + 'cameras/12345', headers=newheaders, params=None),
-                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
-                               '&clientSecret=' + clientSecret),
-                     mock.call(self.base_URL + 'cameras/12345', headers=newheaders, params=None)]
+        new_headers = {'Authorization': 'Bearer newToken'}
+        get_url = self.base_URL + 'cameras/12345'
+        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
+        call_list = [mock.call(get_url, headers=headers),
+                     mock.call(self.token_url, params=token_params),
+                     mock.call(get_url, headers=new_headers),
+                     mock.call(self.token_url, params=token_params),
+                     mock.call(get_url, headers=new_headers)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_camera_id_format_error(self, mock_get):
-        clientId = '0' * 96
+        clientID = '0' * 96
         clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
+        client = Client(clientID, clientSecret)
         client.token = 'CorrectToken'
         mock_response = mock.Mock()
         mock_response.status_code = 422
@@ -905,9 +906,9 @@ class TestClient(unittest.TestCase):
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_camera_id_internal_error(self, mock_get):
-        clientId = '0' * 96
+        clientID = '0' * 96
         clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
+        client = Client(clientID, clientSecret)
         client.token = 'CorrectToken'
         mock_response = mock.Mock()
         mock_response.status_code = 500
