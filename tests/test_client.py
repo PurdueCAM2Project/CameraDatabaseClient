@@ -1488,5 +1488,29 @@ class TestClient(unittest.TestCase):
                                              })
         self.assertEqual(1, mock_response.json.call_count)
 
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_exist_call_correct_resource_not_found_Error(self, mock_get):
+        clientID = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientID, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        expected_dict = {
+            "message": "No app exist with this client id."
+        }
+        mock_response.json.return_value = expected_dict
+        mock_response.status_code = 422
+        mock_get.return_value = mock_response
+        url = self.base_URL + 'cameras/exist'
+        with self.assertRaises(FormatError):
+            client.check_cam_exist(camera_type='ip', image_path='test_url', video_path='test_url')
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         params={
+                                             'type': 'ip',
+                                             'image_path': 'test_url',
+                                             'video_path': 'test_url'
+                                             })
+        self.assertEqual(1, mock_response.json.call_count)
+
 if __name__ == '__main__':
     unittest.main()

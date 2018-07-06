@@ -467,6 +467,8 @@ class Client(object):
                 raise AuthenticationError(response.json()['message'])
             elif response.status_code == 422:
                 raise FormatError(response.json()['message'])
+            elif response.status_code == 404:
+                raise FormatError(response.json()['message'])
             else:
                 raise InternalError()
         camera_response_array = response.json()
