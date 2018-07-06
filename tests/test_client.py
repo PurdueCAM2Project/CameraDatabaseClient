@@ -853,7 +853,7 @@ class TestClient(unittest.TestCase):
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         call_list = [mock.call(get_url, headers=headers),
                      mock.call(self.token_url, params=token_params),
-                     mock.call(get_url, headers=new_headers)]
+                     mock.call(get_url, headers=new_headers, params=None)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -882,9 +882,9 @@ class TestClient(unittest.TestCase):
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         call_list = [mock.call(get_url, headers=headers),
                      mock.call(self.token_url, params=token_params),
-                     mock.call(get_url, headers=new_headers),
+                     mock.call(get_url, headers=new_headers, params=None),
                      mock.call(self.token_url, params=token_params),
-                     mock.call(get_url, headers=new_headers)]
+                     mock.call(get_url, headers=new_headers, params=None)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
