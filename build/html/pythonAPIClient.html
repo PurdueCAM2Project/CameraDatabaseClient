@@ -403,12 +403,12 @@
 <p>Represents a CAM2 client application.</p>
 <dl class="class">
 <dt id="pythonAPIClient.client.Client">
-<em class="property">class </em><code class="descclassname">pythonAPIClient.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>clientId</em>, <em>clientSecret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pythonAPIClient.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>clientID</em>, <em>clientSecret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class representing a CAM2 client application.</p>
 <p>[More detailed description of what client object do.]</p>
 <dl class="attribute">
-<dt id="pythonAPIClient.client.Client.clientId">
-<code class="descname">clientId</code><a class="headerlink" href="#pythonAPIClient.client.Client.clientId" title="Permalink to this definition">¶</a></dt>
+<dt id="pythonAPIClient.client.Client.clientID">
+<code class="descname">clientID</code><a class="headerlink" href="#pythonAPIClient.client.Client.clientID" title="Permalink to this definition">¶</a></dt>
 <dd><p><em>str</em> – Id of the client application.</p>
 </dd></dl>
 
@@ -441,7 +441,7 @@ we raise an Authentication error.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>clientId</strong> (<em>str</em>) – Id of the client application.</li>
+<li><strong>clientID</strong> (<em>str</em>) – Id of the client application.</li>
 <li><strong>clientSecret</strong> (<em>str</em>) – Secret of the client application.</li>
 </ul>
 </td>
@@ -459,7 +459,7 @@ Client secret should have a length of at least 71 characters.</li>
 <dl class="attribute">
 <dt id="pythonAPIClient.client.Client.base_URL">
 <code class="descname">base_URL</code><em class="property"> = 'https://cam2-api.herokuapp.com/'</em><a class="headerlink" href="#pythonAPIClient.client.Client.base_URL" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – Static variable to store the base URL.</p>
+<dd><p><em>str</em> – Static variable to store the base url.</p>
 <p>This is the URL of CAM2 Database API. User is able to send API calls directly to this URL.</p>
 </dd></dl>
 
@@ -607,6 +607,58 @@ Default permission level is ‘user’.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A camera object.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Camera</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pythonAPIClient.client.Client.search_camera">
+<code class="descname">search_camera</code><span class="sig-paren">(</span><em>latitude=None</em>, <em>longitude=None</em>, <em>radius=None</em>, <em>camera_type=None</em>, <em>source=None</em>, <em>country=None</em>, <em>state=None</em>, <em>city=None</em>, <em>resolution_width=None</em>, <em>resolution_heigth=None</em>, <em>is_active_image=None</em>, <em>is_active_video=None</em>, <em>offset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.search_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.search_camera" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to search camera by attributes and location.</p>
+<dl class="docutils">
+<dt>Searching by location requires user to provide coordiantes for a desired center point</dt>
+<dd>and a radius in meters. The search will carry out in the area bounded by the circle.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>latitude</strong> (<em>float</em><em>, </em><em>optional</em>) – </li>
+<li><strong>longitude</strong> (<em>float</em><em>, </em><em>optional</em>) – </li>
+<li><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – </li>
+<li><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) – </li>
+<li><strong>camera_type</strong> (<em>str</em><em>, </em><em>optional</em>) – </li>
+<li><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – </li>
+<li><strong>country</strong> (<em>str</em><em>, </em><em>optional</em>) – </li>
+<li><strong>state</strong> (<em>str</em><em>, </em><em>optional</em>) – </li>
+<li><strong>city</strong> (<em>str</em><em>, </em><em>optional</em>) – </li>
+<li><strong>resolution_width</strong> (<em>int</em><em>, </em><em>optional</em>) – </li>
+<li><strong>resolution_height</strong> (<em>int</em><em>, </em><em>optional</em>) – </li>
+<li><strong>is_active_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – </li>
+<li><strong>is_active_video</strong> (<em>bool</em><em>, </em><em>optional</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of cameras that satisfy the search criteria.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Camera</span></code></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">FormatError</span></code> – If type of argument value is not expected for the given field.</p>
+<p>Or radius cannot is less than 0.</p>
+<p>Or incorrect latitude range. (it should be between +90 and -90)</p>
+<p>Or incorrect longitude range. (it should be between +180 and -180)</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AuthenticationError</span></code> – If the client secret of this client object does not match the clientID.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InternalError</span></code> – If there is an API internal error.</p>
+</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
