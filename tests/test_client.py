@@ -16,8 +16,8 @@ class TestClient(unittest.TestCase):
     This class contains test cases for client class methods
     """
     def setUp(self):
-        self.base_url = 'https://cam2-api.herokuapp.com/'
-        self.token_url = self.base_url + 'auth'
+        self.base_URL = 'https://cam2-api.herokuapp.com/'
+        self.token_url = self.base_URL + 'auth'
 
     def test_client_init_wrong_ClientId_Length(self):
         with self.assertRaises(InvalidClientIdError):
@@ -71,7 +71,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 404
         mock_get.return_value = mock_response
-        url = self.base_url + 'auth'
+        url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         with self.assertRaises(ResourceNotFoundError):
             client.request_token()
@@ -92,7 +92,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 401
         mock_get.return_value = mock_response
-        url = self.base_url + 'auth'
+        url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         with self.assertRaises(AuthenticationError):
             client.request_token()
@@ -113,7 +113,7 @@ class TestClient(unittest.TestCase):
         mock_response.status_code = 200
         mock_get.return_value = mock_response
         response_dict = client.request_token()
-        url = self.base_url + 'auth'
+        url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         mock_get.assert_called_once_with(url, params=params)
         self.assertEqual(1, mock_response.json.call_count)
@@ -128,7 +128,7 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = self.base_url + 'auth'
+        url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         with self.assertRaises(InternalError):
             client.request_token()
@@ -153,7 +153,7 @@ class TestClient(unittest.TestCase):
         # validate result
         expected_clientID = 'test_clientID'
         expected_clientSecret = 'test_clientSecret'
-        url = Client.base_url + 'apps/register'
+        url = Client.base_URL + 'apps/register'
         header = {'Authorization': 'Bearer correctToken'}
         data = {'owner': 'testowner', 'permissionLevel': 'user'}
         resultID, resultSecret = client.register('testowner')
@@ -200,7 +200,7 @@ class TestClient(unittest.TestCase):
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
-        reg_url = self.base_url + 'apps/register'
+        reg_url = self.base_URL + 'apps/register'
         reg_data = {'owner': 'testowner', 'permissionLevel': 'user'}
         call_list = [mock.call(reg_url, headers=headers, data=reg_data),
                      mock.call(reg_url, headers=new_headers, data=reg_data)]
@@ -238,7 +238,7 @@ class TestClient(unittest.TestCase):
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
-        reg_url = self.base_url + 'apps/register'
+        reg_url = self.base_URL + 'apps/register'
         reg_data = {'owner': 'testowner', 'permissionLevel': 'user'}
         call_list = [mock.call(reg_url, headers=headers, data=reg_data),
                      mock.call(reg_url, headers=new_headers, data=reg_data),
@@ -259,7 +259,7 @@ class TestClient(unittest.TestCase):
         }
         mock_post.return_value = mock_response
         # validate result
-        url = Client.base_url + 'apps/register'
+        url = Client.base_URL + 'apps/register'
         data = {'owner': 'testowner', 'permissionLevel': 'user'}
         header = {'Authorization': 'Bearer correctToken'}
         with self.assertRaises(FormatError):
@@ -282,7 +282,7 @@ class TestClient(unittest.TestCase):
         }
         mock_post.return_value = mock_response
         # validate result
-        url = Client.base_url + 'apps/register'
+        url = Client.base_URL + 'apps/register'
         data = {'owner': 'testowner', 'permissionLevel': 'user'}
         header = {'Authorization': 'Bearer correctToken'}
 
@@ -303,7 +303,7 @@ class TestClient(unittest.TestCase):
         mock_response.status_code = 500
         mock_post.return_value = mock_response
         # validate result
-        url = Client.base_url + 'apps/register'
+        url = Client.base_URL + 'apps/register'
         data = {'owner': 'testowner', 'permissionLevel': 'user'}
         header = {'Authorization': 'Bearer correctToken'}
 
@@ -327,7 +327,7 @@ class TestClient(unittest.TestCase):
 
         mock_get.return_value = mock_response
         headers = {'Authorization': 'Bearer correctToken'}
-        url = Client.base_url + 'apps/by-owner'
+        url = Client.base_URL + 'apps/by-owner'
         param = {'owner': 'testowner'}
         expected_clientID_array = ['test_clientID1', 'test_clientID2']
         self.assertEqual(client.client_ids_by_owner("testowner"), expected_clientID_array)
@@ -368,7 +368,7 @@ class TestClient(unittest.TestCase):
         new_headers = {'Authorization': 'Bearer newToken'}
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         ids_params = {'owner': 'testowner'}
-        ids_url = self.base_url + 'apps/by-owner'
+        ids_url = self.base_URL + 'apps/by-owner'
         call_list = [mock.call(ids_url, headers=headers, params=ids_params),
                      mock.call(self.token_url, params=token_params),
                      mock.call(ids_url, headers=new_headers, params=ids_params)]
@@ -403,7 +403,7 @@ class TestClient(unittest.TestCase):
         new_headers = {'Authorization': 'Bearer newToken'}
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         ids_params = {'owner': 'testowner'}
-        ids_url = self.base_url + 'apps/by-owner'
+        ids_url = self.base_URL + 'apps/by-owner'
         call_list = [mock.call(ids_url, headers=headers, params=ids_params),
                      mock.call(self.token_url, params=token_params),
                      mock.call(ids_url, headers=new_headers, params=ids_params),
@@ -423,7 +423,7 @@ class TestClient(unittest.TestCase):
             'message': 'No app exists with given clientID'
         }
         mock_get.return_value = mock_response
-        url = Client.base_url + 'apps/by-owner'
+        url = Client.base_URL + 'apps/by-owner'
         param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer correctToken'}
         with self.assertRaises(ResourceNotFoundError):
@@ -440,7 +440,7 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = Client.base_url + 'apps/by-owner'
+        url = Client.base_URL + 'apps/by-owner'
         param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer correctToken'}
         with self.assertRaises(InternalError):
@@ -460,7 +460,7 @@ class TestClient(unittest.TestCase):
             'api_usage': 7
         }
         mock_get.return_value = mock_response
-        url = Client.base_url + 'apps/1/usage'
+        url = Client.base_URL + 'apps/1/usage'
         param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer correctToken'}
         self.assertEqual(client.usage_by_client('1', 'testowner'), 7)
@@ -495,7 +495,7 @@ class TestClient(unittest.TestCase):
         new_headers = {'Authorization': 'Bearer newToken'}
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         usage_params = {'owner': 'testowner'}
-        usage_url = self.base_url + 'apps/1/usage'
+        usage_url = self.base_URL + 'apps/1/usage'
         call_list = [mock.call(usage_url, headers=headers, params=usage_params),
                      mock.call(self.token_url, params=token_params),
                      mock.call(usage_url, headers=new_headers, params=usage_params)]
@@ -527,7 +527,7 @@ class TestClient(unittest.TestCase):
         new_headers = {'Authorization': 'Bearer newToken'}
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         usage_params = {'owner': 'testowner'}
-        usage_url = self.base_url + 'apps/1/usage'
+        usage_url = self.base_URL + 'apps/1/usage'
         call_list = [mock.call(usage_url, headers=headers, params=usage_params),
                      mock.call(self.token_url, params=token_params),
                      mock.call(usage_url, headers=new_headers, params=usage_params),
@@ -549,7 +549,7 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response
         with self.assertRaises(AuthorizationError):
             client.usage_by_client('1', 'testowner')
-        url = Client.base_url + 'apps/1/usage'
+        url = Client.base_URL + 'apps/1/usage'
         param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer correctToken'}
         mock_get.assert_called_once_with(url, headers=headers, params=param)
@@ -567,7 +567,7 @@ class TestClient(unittest.TestCase):
             'message': 'No app exists with given clientID'
         }
         mock_get.return_value = mock_response
-        url = Client.base_url + 'apps/1/usage'
+        url = Client.base_URL + 'apps/1/usage'
         param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer correctToken'}
         with self.assertRaises(ResourceNotFoundError):
@@ -584,7 +584,7 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = Client.base_url + 'apps/1/usage'
+        url = Client.base_URL + 'apps/1/usage'
         param = {'owner': 'testowner'}
         headers = {'Authorization': 'Bearer correctToken'}
         with self.assertRaises(InternalError):
@@ -604,7 +604,7 @@ class TestClient(unittest.TestCase):
             'message': 'OK'
         }
         mock_put.return_value = mock_response
-        url = Client.base_url + 'apps/1'
+        url = Client.base_URL + 'apps/1'
         headers = {'Authorization': 'Bearer correctToken'}
         data = {'owner': 'testowner'}
         self.assertEqual(client.update_owner('1', 'testowner'), 'OK')
@@ -639,8 +639,8 @@ class TestClient(unittest.TestCase):
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
         data = {'owner': 'testowner'}
-        call_list = [mock.call(self.base_url + 'apps/1', headers=headers, data=data),
-                     mock.call(self.base_url + 'apps/1', headers=new_headers, data=data)]
+        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.put')
@@ -670,9 +670,9 @@ class TestClient(unittest.TestCase):
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
         data = {'owner': 'testowner'}
-        call_list = [mock.call(self.base_url + 'apps/1', headers=headers, data=data),
-                     mock.call(self.base_url + 'apps/1', headers=new_headers, data=data),
-                     mock.call(self.base_url + 'apps/1', headers=new_headers, data=data)]
+        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.put')
@@ -687,7 +687,7 @@ class TestClient(unittest.TestCase):
             'message': 'No app exists with given client id.'
         }
         mock_put.return_value = mock_response
-        url = Client.base_url + 'apps/1'
+        url = Client.base_URL + 'apps/1'
         headers = {'Authorization': 'Bearer correctToken'}
         data = {'owner': 'testowner'}
         with self.assertRaises(ResourceNotFoundError):
@@ -708,7 +708,7 @@ class TestClient(unittest.TestCase):
         }
         mock_put.return_value = mock_response
         headers = {'Authorization': 'Bearer correctToken'}
-        url = Client.base_url + 'apps/1'
+        url = Client.base_URL + 'apps/1'
         data = {'permissionLevel': 'user'}
         self.assertEqual(client.update_permission('1', 'user'), 'OK')
         mock_put.assert_called_once_with(url, headers=headers, data=data)
@@ -742,8 +742,8 @@ class TestClient(unittest.TestCase):
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
         data = {'permissionLevel': 'user'}
-        call_list = [mock.call(self.base_url + 'apps/1', headers=headers, data=data),
-                     mock.call(self.base_url + 'apps/1', headers=new_headers, data=data)]
+        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.put')
@@ -773,9 +773,9 @@ class TestClient(unittest.TestCase):
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
         data = {'permissionLevel': 'user'}
-        call_list = [mock.call(self.base_url + 'apps/1', headers=headers, data=data),
-                     mock.call(self.base_url + 'apps/1', headers=new_headers, data=data),
-                     mock.call(self.base_url + 'apps/1', headers=new_headers, data=data)]
+        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data),
+                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -929,7 +929,7 @@ class TestClient(unittest.TestCase):
         mock_response.status_code = 200
         mock_get.return_value = mock_response
         response_list = client.search_camera(offset=10000)
-        url = self.base_url + 'cameras/search'
+        url = self.base_URL + 'cameras/search'
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
                                          params={'offset': 10000})
         self.assertEqual(1, mock_get.call_count)
@@ -959,7 +959,7 @@ class TestClient(unittest.TestCase):
         mock_response.status_code = 200
         mock_get.return_value = mock_response
         response_list = client.search_camera()
-        url = self.base_url + 'cameras/search'
+        url = self.base_URL + 'cameras/search'
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
                                          params={})
         self.assertEqual(1, mock_get.call_count)
@@ -990,7 +990,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        url = self.base_url + 'cameras/search'
+        url = self.base_URL + 'cameras/search'
         with self.assertRaises(TypeError):
             client.search_camera(country='USA')
         mock_get.assert_called_with(url, headers={'Authorization': 'Bearer correctToken'},
@@ -1023,7 +1023,7 @@ class TestClient(unittest.TestCase):
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
         search_params = {'country': 'USA'}
-        search_url = self.base_url + 'cameras/search'
+        search_url = self.base_URL + 'cameras/search'
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         call_list = [mock.call(search_url, headers=headers, params=search_params),
                      mock.call(self.token_url, params=token_params),
@@ -1064,7 +1064,7 @@ class TestClient(unittest.TestCase):
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
         search_params = {'country': 'JP'}
-        search_url = self.base_url + 'cameras/search'
+        search_url = self.base_URL + 'cameras/search'
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         call_list = [mock.call(search_url, headers=headers, params=search_params),
                      mock.call(self.token_url, params=token_params),
@@ -1105,7 +1105,7 @@ class TestClient(unittest.TestCase):
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
         search_params = {'offset': 'JP'}
-        search_url = self.base_url + 'cameras/search'
+        search_url = self.base_URL + 'cameras/search'
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         call_list = [mock.call(search_url, headers=headers, params=search_params),
                      mock.call(self.token_url, params=token_params),
@@ -1146,7 +1146,7 @@ class TestClient(unittest.TestCase):
         headers = {'Authorization': 'Bearer ExpiredToken'}
         new_headers = {'Authorization': 'Bearer newToken'}
         search_params = {'country': 'JP'}
-        search_url = self.base_url + 'cameras/search'
+        search_url = self.base_URL + 'cameras/search'
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         call_list = [mock.call(search_url, headers=headers, params=search_params),
                      mock.call(self.token_url, params=token_params),
@@ -1162,7 +1162,7 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = self.base_url + 'cameras/search'
+        url = self.base_URL + 'cameras/search'
         with self.assertRaises(InternalError):
             client.search_camera(country='USA')
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
@@ -1182,7 +1182,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 422
         mock_get.return_value = mock_response
-        url = self.base_url + 'cameras/search'
+        url = self.base_URL + 'cameras/search'
         with self.assertRaises(FormatError):
             client.search_camera(resolution_width='USA')
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
@@ -1209,7 +1209,7 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response
         response_list = client.search_camera(
             country='JP', camera_type='non_ip', is_active_image=True, offset=100)
-        url = self.base_url + 'cameras/search'
+        url = self.base_URL + 'cameras/search'
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
                                          params={
                                              'country': 'JP',

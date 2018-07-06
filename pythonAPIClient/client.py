@@ -38,7 +38,7 @@ class Client(object):
 
     """
 
-    base_url = 'https://cam2-api.herokuapp.com/'
+    base_URL = 'https://cam2-api.herokuapp.com/'
     """str: Static variable to store the base url.
 
     This is the URL of CAM2 Database API. User is able to send API calls directly to this URL.
@@ -76,7 +76,7 @@ class Client(object):
 
         """
 
-        url = self.base_url + 'auth'
+        url = self.base_URL + 'auth'
         param = {'clientID': self.clientID, 'clientSecret': self.clientSecret}
         response = requests.get(url, params=param)
         if response.status_code == 200:
@@ -143,7 +143,7 @@ class Client(object):
             Client secret of the newly registered client application.
 
         """
-        url = Client.base_url + 'apps/register'
+        url = Client.base_URL + 'apps/register'
         if self.token is None:
             self.request_token()
         header = self.header_builder()
@@ -179,7 +179,7 @@ class Client(object):
             Success message.
 
         """
-        url = Client.base_url + 'apps/' + clientID
+        url = Client.base_URL + 'apps/' + clientID
         if self.token is None:
             self.request_token()
         header = self.header_builder()
@@ -212,7 +212,7 @@ class Client(object):
             Success message.
 
         """
-        url = Client.base_url + 'apps/' + clientID
+        url = Client.base_URL + 'apps/' + clientID
         if self.token is None:
             self.request_token()
         header = self.header_builder()
@@ -241,7 +241,7 @@ class Client(object):
             A list of client's ID owned by the user.
 
         """
-        url = Client.base_url + 'apps/by-owner'
+        url = Client.base_URL + 'apps/by-owner'
         param = {'owner': owner}
         if self.token is None:
             self.request_token()
@@ -278,7 +278,7 @@ class Client(object):
             The number of requests made by the client.
 
         """
-        url = Client.base_url + "apps/" + clientID + "/usage"
+        url = Client.base_URL + "apps/" + clientID + "/usage"
         param = {'owner': owner}
         if self.token is None:
             self.request_token()
@@ -397,7 +397,7 @@ class Client(object):
         # filter out those parameters with value None, change true/false
         search_params = {k: v for k, v in local_params.items() if v is not None}
 
-        url = Client.base_url + 'cameras/search'
+        url = Client.base_URL + 'cameras/search'
         header = self.header_builder()
         response = self._check_token(
             response=requests.get(url, headers=header, params=search_params),
