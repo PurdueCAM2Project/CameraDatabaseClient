@@ -153,8 +153,6 @@ class Client(object):
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
-            elif response.status_code == 404:
-                raise ResourceNotFoundError(response.json()['message'])
             elif response.status_code == 422:
                 raise FormatError(response.json()['message'])
             else:
@@ -251,8 +249,6 @@ class Client(object):
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
-            elif response.status_code == 404:
-                raise ResourceNotFoundError(response.json()['message'])
             else:
                 raise InternalError()
         clientObject = response.json()
@@ -384,6 +380,9 @@ class Client(object):
 
         AuthenticationError
             If the client secret of this client object does not match the clientID.
+        ResourceNotFoundError
+            If the client id of this client object does not match any client
+            in the database.
         InternalError
             If there is an API internal error.
 
@@ -406,8 +405,6 @@ class Client(object):
         if response.status_code != 200:
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
-            elif response.status_code == 404:
-                raise ResourceNotFoundError(response.json()['message'])
             elif response.status_code == 422:
                 raise FormatError(response.json()['message'])
             else:
@@ -451,6 +448,26 @@ class Client(object):
             List of camera objects that has the given retrieval method. If there ar eno cameras
             matches the provided retrieval information, an empty list will be returned.
 
+        Raises
+        ------
+        FormatError
+            If camera type is not valid.
+
+            or camera type is not provided.
+
+            or ip is not provided when the camera type is 'ip'.
+
+            or snapshot_url is not provided when the camera type is 'non_ip'.
+
+            or m3u8_url is not provided whe nthe camera ytpe is 'stream'.
+
+        AuthenticationError
+            If the client secret of this client object does not match the clientID.
+        ResourceNotFoundError
+            If the client id of this client object does not match any client
+            in the database.
+        InternalError
+            If there is an API internal error.
         """
         url = Client.base_URL + "cameras/exist"
         kwargs['type'] = camera_type
@@ -466,8 +483,6 @@ class Client(object):
             if response.status_code == 401:
                 raise AuthenticationError(response.json()['message'])
             elif response.status_code == 422:
-                raise FormatError(response.json()['message'])
-            elif response.status_code == 404:
                 raise FormatError(response.json()['message'])
             else:
                 raise InternalError()

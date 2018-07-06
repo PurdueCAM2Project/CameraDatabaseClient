@@ -267,28 +267,32 @@ class TestClient(unittest.TestCase):
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
-    def test_register_incorrect_clientID(self, mock_post):
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_register_incorrect_clientID(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientID, clientSecret)
-        # provide token for building header
-        client.token = "correctToken"
-        # manipulate request.post's result
+
+        # incorrect clientID in this case can only cause 404 error
+        # in request token function.
+        # which will only be called:
+        # 1: when no token exists for the client object
+        # 2: when previdous token expires
+
+        # this testcase test for the first scenario.
+        # the function exits before makeing the register api call.
+
         mock_response = mock.Mock()
         mock_response.status_code = 404
         mock_response.json.return_value = {
             "message": "No app exists with given clientID"
         }
-        mock_post.return_value = mock_response
-        # validate result
-        url = Client.base_URL + 'apps/register'
-        data = {'owner': 'testowner', 'permissionLevel': 'user'}
-        header = {'Authorization': 'Bearer correctToken'}
+        mock_get.return_value = mock_response
 
         with self.assertRaises(ResourceNotFoundError):
             client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header, data=data)
+        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
+        mock_get.assert_called_once_with(self.token_url, params=token_params)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
@@ -423,12 +427,11 @@ class TestClient(unittest.TestCase):
             'message': 'No app exists with given clientID'
         }
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/by-owner'
-        param = {'owner': 'testowner'}
-        headers = {'Authorization': 'Bearer correctToken'}
+
         with self.assertRaises(ResourceNotFoundError):
-            client.client_ids_by_owner('testowner')
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+            client.request_token()
+        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
+        mock_get.assert_called_once_with(self.token_url, params=token_params)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -1483,30 +1486,6 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
                                          params={
                                              'type': 'iip',
-                                             'image_path': 'test_url',
-                                             'video_path': 'test_url'
-                                             })
-        self.assertEqual(1, mock_response.json.call_count)
-
-    @mock.patch('pythonAPIClient.client.requests.get')
-    def test_camera_exist_call_correct_resource_not_found_Error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
-        mock_response = mock.Mock()
-        expected_dict = {
-            "message": "No app exist with this client id."
-        }
-        mock_response.json.return_value = expected_dict
-        mock_response.status_code = 422
-        mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/exist'
-        with self.assertRaises(FormatError):
-            client.check_cam_exist(camera_type='ip', image_path='test_url', video_path='test_url')
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
-                                         params={
-                                             'type': 'ip',
                                              'image_path': 'test_url',
                                              'video_path': 'test_url'
                                              })
