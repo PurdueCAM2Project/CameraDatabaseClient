@@ -443,8 +443,9 @@ class Client(object):
                 response = requests.post(url, headers=self.header_builder(), data=local_params)
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
-            elif response.status_code == 500:
+            else:
                 raise InternalError()
+
         return response.json()['cameraID']
 
     # TODO: get a camera
