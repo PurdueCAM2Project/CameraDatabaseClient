@@ -430,7 +430,7 @@ class Client(object):
 
         response = self._check_token(requests.put(url, data=local_params,
                                                   headers=self.header_builder()), flag='PUT',
-                                                  url=url, data=local_params)
+                                     url=url, data=local_params)
         if response.status_code != 201:
             if response.status_code == 403:
                 raise AuthenticationError(response.json()['message'])
