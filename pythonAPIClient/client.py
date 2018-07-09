@@ -1,8 +1,8 @@
 """
 Represents a CAM2 client application.
 """
-import requests
 import json
+import requests
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError,\
     FormatError, AuthorizationError, ResourceConflictError
