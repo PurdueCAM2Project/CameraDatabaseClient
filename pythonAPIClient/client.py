@@ -428,8 +428,9 @@ class Client(object):
         # Change the given dict into an object for API
         local_params['retrieval'] = json.dumps(local_params['retrieval'])
 
-        response = self._check_token(requests.put(url, data=local_params, headers=self.header_builder()), flag='PUT',
-                                     url=url, data=local_params)
+        response = self._check_token(requests.put(url, data=local_params,
+                                                  headers=self.header_builder()), flag='PUT',
+                                                  url=url, data=local_params)
         if response.status_code != 201:
             if response.status_code == 403:
                 raise AuthenticationError(response.json()['message'])

@@ -952,7 +952,8 @@ class TestClient(unittest.TestCase):
                           "resolution_height": 1, "is_active_image": True,
                           "is_active_video": False, "utc_offset": 32400, "timezone_id": None,
                           "timezone_name": None, "reference_logo": "webtral.jpg",
-                          "reference_url": "http://some_url", "cameraID": "5b0e74213651360004edb426",
+                          "reference_url": "http://some_url",
+                          "cameraID": "5b0e74213651360004edb426",
                           "retrieval": {"snapshot_url": "http://images./preview/adf.jpg"},
                           "latitude": 35.8876, "longitude": 136.098}] * 100
         mock_response.json.return_value = expected_dict
@@ -1264,7 +1265,7 @@ class TestClient(unittest.TestCase):
                                         legacy_cameraID=000000000, source='test_source',
                                         latitude='test_lad', longitude='test_long', country='USA',
                                         state='Indiana', city='West Lafayette',
-                                        resolution_width=720,resolution_height=480, utc_offset=3,
+                                        resolution_width=720, resolution_height=480, utc_offset=3,
                                         timezone_id='test_t_id', timezone_name='test_t_name',
                                         reference_logo='test_ref_logo',
                                         reference_url='test_ref_url', port='8080',
