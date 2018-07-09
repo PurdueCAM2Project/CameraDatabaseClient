@@ -783,6 +783,7 @@ class TestClient(unittest.TestCase):
         clientID = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientID, clientSecret)
+        client.token = 'CorrectToken'
         mock_response = mock.Mock()
         expected_dict = {
             'camera_type': 'ip',
