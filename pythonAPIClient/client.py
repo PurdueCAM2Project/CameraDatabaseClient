@@ -295,11 +295,12 @@ class Client(object):
                 raise InternalError()
         return response.json()['api_usage']
 
-    def add_camera(self, camera_type, is_active_image, is_active_video, ip, snapshot_url,
-                   m3u8_url, legacy_cameraID=None, source=None, latitude=None, longitude=None, country=None,
-                   state=None, city=None, resolution_width=None, resolution_height=None, utc_offset=None,
-                   timezone_id=None, timezone_name=None, reference_logo=None, reference_url=None, port=None, brand=None,
-                   model=None, image_path=None, video_path=None):
+    def add_camera(self, camera_type, is_active_image, is_active_video, snapshot_url, m3u8_url,
+                   ip=None, legacy_cameraID=None, source=None, latitude=None, longitude=None,
+                   country=None, state=None, city=None, resolution_width=None,
+                   resolution_height=None, utc_offset=None, timezone_id=None, timezone_name=None,
+                   reference_logo=None, reference_url=None, port=None, brand=None, model=None,
+                   image_path=None, video_path=None):
 
         """add_camera initialization method.
 
@@ -403,6 +404,9 @@ class Client(object):
 
         if camera_type == 'ip':
             if ip is None:
+                response = self._check_token(requests.post(url, data=local_params,
+                                                           headers=self.header_builder()),
+                                             flag='POST', url=url, data=local_params)
                 raise FormatError('Must provide ip')
             local_params['retrieval'] = {
                 'ip': local_params.pop('ip'),
@@ -414,23 +418,30 @@ class Client(object):
             }
         elif camera_type == 'non-ip':
             if snapshot_url is None:
+                response = self._check_token(requests.post(url, data=local_params,
+                                                           headers=self.header_builder()),
+                                             flag='POST', url=url, data=local_params)
                 raise FormatError('Must provide snapshot_url')
+
             local_params['retrieval'] = {
                 'snapshot_url': local_params.pop('snapshot_url')
             }
         elif camera_type == 'stream':
             if m3u8_url is None:
-                raise FormatError('Must provid m3u8_url')
+                response = self._check_token(requests.post(url, data=local_params,
+                                                           headers=self.header_builder()),
+                                             flag='POST', url=url, data=local_params)
+                raise FormatError('Must provide m3u8_url')
             local_params['retrieval'] = {
                 'm3u8_url': local_params.pop('m3u8_url')
             }
         else:
-            raise FormatError('Must provide camera_type')
+            raise FormatError('Must provide a legal camera_type')
 
         # Change the given dict into an object for API
         local_params['retrieval'] = json.dumps(local_params['retrieval'])
 
-        response = self._check_token(requests.put(url, data=local_params,
+        response = self._check_token(requests.post(url, data=local_params,
                                      headers=self.header_builder()), flag='POST', url=url,
                                      data=local_params)
         if response.status_code != 201:
@@ -440,25 +451,14 @@ class Client(object):
                 raise FormatError(response.json()['message'])
             elif response.status_code == 409:
                 raise ResourceConflictError(response.json()['message'])
-            elif response.status_code == 500:
-                print(response.status_code)
-                raise InternalError()
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
-            if response.status_code == 401:
-                raise AuthenticationError(response.json()['message'])
-
-        print("start")
-        print(response.status_code)
-        print("end")
+            else:
+                raise InternalError()
 
         return response.json()['cameraID']
 
-    def update_camera(self, camera_type=None, is_active_image=None, is_active_video=None, snapshot_url=None,
-                      m3u8_url=None, ip=None, legacy_cameraID=None, source=None, lat=None, lng=None, country=None,
-                      state=None, city=None, resolution_width=None, resolution_height=None, utc_offset=None,
-                      timezone_id=None, timezone_name=None, reference_logo=None, reference_url=None, port=None,
-                      brand=None, model=None, image_path=None, video_path=None):
+    def update_camera(self):
         pass
 
     # TODO: get a camera
