@@ -4,7 +4,8 @@ Represents a CAM2 client application.
 import requests
 import json
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
-    InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError, ResourceConflictError
+    InvalidClientSecretError, ResourceNotFoundError,\
+    FormatError, AuthorizationError, ResourceConflictError
 from .camera import Camera
 
 
@@ -442,8 +443,8 @@ class Client(object):
         local_params['retrieval'] = json.dumps(local_params['retrieval'])
 
         response = self._check_token(requests.post(url, data=local_params,
-                                     headers=self.header_builder()), flag='POST', url=url,
-                                     data=local_params)
+                                                   headers=self.header_builder()), flag='POST',
+                                     url=url, data=local_params)
         if response.status_code != 201:
             if response.status_code == 403:
                 raise AuthenticationError(response.json()['message'])
