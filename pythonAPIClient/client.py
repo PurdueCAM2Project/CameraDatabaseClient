@@ -438,9 +438,6 @@ class Client(object):
                 raise FormatError(response.json()['message'])
             elif response.status_code == 409:
                 raise ResourceConflictError(response.json()['message'])
-            elif response.status_code == 401:
-                self.request_token()
-                response = requests.post(url, headers=self.header_builder(), data=local_params)
             elif response.status_code == 404:
                 raise ResourceNotFoundError(response.json()['message'])
             else:
