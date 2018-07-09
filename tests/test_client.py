@@ -162,8 +162,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultSecret, expected_clientSecret)
         self.assertEqual(2, mock_response.json.call_count)
 
-#-----------------------------------------------------------------------------------------------------------------------
-
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_add_camera_ip(self, mock_post):
         clientID = '0' * 96
@@ -503,8 +501,6 @@ class TestClient(unittest.TestCase):
                                      image_path='test_image_path', video_path='test_vid_path')
         mock_post.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'}, data=data)
         self.assertEqual(1, mock_response.json.call_count)
-
-    #-------------------------------------------------------------------------------------------------------------------
 
     @mock.patch('pythonAPIClient.client.requests.post')
     @mock.patch('pythonAPIClient.client.requests.get')
