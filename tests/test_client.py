@@ -1307,9 +1307,10 @@ class TestClient(unittest.TestCase):
                  'offset': None}
         headers = {'Authorization': 'Bearer ExpiredToken'}
         newheaders = {'Authorization': 'Bearer newToken'}
+        rparam = {'clientID': clientId, 'clientSecret': clientSecret}
+
         call_list = [mock.call(url, headers=headers, params=param),
-                     mock.call(self.base_URL + 'auth/?clientID=' + clientId +
-                               '&clientSecret=' + clientSecret),
+                     mock.call(self.base_URL + 'auth', params=rparam),
                      mock.call(url, headers=newheaders, params=param)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
@@ -1340,13 +1341,13 @@ class TestClient(unittest.TestCase):
                  'offset': None}
         headers = {'Authorization': 'Bearer ExpiredToken'}
         newheaders = {'Authorization': 'Bearer newToken'}
+        rparam = {'clientID': clientId, 'clientSecret': clientSecret}
+
         call_list = [
             mock.call(url, headers=headers, params=param),
-            mock.call(self.base_URL + 'auth/?clientID=' + clientId +
-                      '&clientSecret=' + clientSecret),
+            mock.call(self.base_URL + 'auth', params=rparam),
             mock.call(url, headers=newheaders, params=param),
-            mock.call(self.base_URL + 'auth/?clientID=' + clientId +
-                      '&clientSecret=' + clientSecret),
+            mock.call(self.base_URL + 'auth', params=rparam),
             mock.call(url, headers=newheaders, params=param)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
@@ -1376,7 +1377,7 @@ class TestClient(unittest.TestCase):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        client.token = 'CorrectToken'
+        # client.token = 'CorrectToken'
         mock_response = mock.Mock()
         mock_response.status_code = 404
         mock_response.json.return_value = {
@@ -1385,12 +1386,9 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response
         with self.assertRaises(ResourceNotFoundError):
             client.get_change_log()
-        url = Client.base_URL + 'apps/db-change'
-        headers = {'Authorization': 'Bearer CorrectToken'}
-        param = {'start': None,
-                 'end': None,
-                 'offset': None}
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+        url = Client.base_URL + 'auth'
+        param = {'clientID': clientId, 'clientSecret': clientSecret}
+        mock_get.assert_called_once_with(url, params=param)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_change_log_with_internal_error(self, mock_get):
