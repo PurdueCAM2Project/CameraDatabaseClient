@@ -6,6 +6,7 @@ import sys
 from os import path
 import mock
 from pythonAPIClient.client import Client
+from pythonAPIClient.camera import NonIPCamera
 from pythonAPIClient.error import AuthenticationError, InternalError, InvalidClientIdError,\
      InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
@@ -945,14 +946,14 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
 
         # without params user should get 1st 100 cameras
-        expected_dict = [{"legacy_cameraID":31280, "type":"non_ip", "source":"webcam_jp",
-                          "country":"JP", "state":None, "city":None, "resolution_width":1,
-                          "resolution_height":1, "is_active_image":True,
-                          "is_active_video":False, "utc_offset":32400, "timezone_id":None,
-                          "timezone_name":None, "reference_logo":"webtral.jpg",
-                          "reference_url":"http://some_url", "cameraID":"5b0e74213651360004edb426",
-                          "retrieval":{"snapshot_url":"http://images./preview/adf.jpg"},
-                          "latitude":35.8876, "longitude":136.098}] * 100
+        expected_dict = [{"legacy_cameraID": 31280, "type": "non_ip", "source": "webcam_jp",
+                          "country": "JP", "state": None, "city": None, "resolution_width": 1,
+                          "resolution_height": 1, "is_active_image": True,
+                          "is_active_video": False, "utc_offset": 32400, "timezone_id": None,
+                          "timezone_name": None, "reference_logo": "webtral.jpg",
+                          "reference_url": "http://some_url", "cameraID": "5b0e74213651360004edb426",
+                          "retrieval": {"snapshot_url": "http://images./preview/adf.jpg"},
+                          "latitude": 35.8876, "longitude": 136.098}] * 100
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
@@ -962,14 +963,14 @@ class TestClient(unittest.TestCase):
                                          params={})
         self.assertEqual(1, mock_get.call_count)
 
-        cam_entries = {"legacy_cameraID":31280, "camera_type":"non_ip", "source":"webcam_jp",
-                       "country":"JP", "state":None, "city":None, "resolution_width":1,
-                       "resolution_height":1, "is_active_image":True,
-                       "is_active_video":False, "utc_offset":32400, "timezone_id":None,
-                       "timezone_name":None, "reference_logo":"webtral.jpg",
-                       "reference_url":"http://some_url", "cameraID":"5b0e74213651360004edb426",
-                       "snapshot_url":"http://images./preview/adf.jpg",
-                       "latitude":35.8876, "longitude":136.098}
+        cam_entries = {"legacy_cameraID": 31280, "camera_type": "non_ip", "source": "webcam_jp",
+                       "country": "JP", "state": None, "city": None, "resolution_width": 1,
+                       "resolution_height": 1, "is_active_image": True,
+                       "is_active_video": False, "utc_offset": 32400, "timezone_id": None,
+                       "timezone_name": None, "reference_logo": "webtral.jpg",
+                       "reference_url": "http://some_url", "cameraID": "5b0e74213651360004edb426",
+                       "snapshot_url": "http://images./preview/adf.jpg",
+                       "latitude": 35.8876, "longitude": 136.098}
         cam = NonIPCamera(**cam_entries)
         actual_list = [cam] * 100
         for i in range(100):
