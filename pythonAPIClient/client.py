@@ -393,7 +393,7 @@ class Client(object):
                 Returns
                 -------
                 str
-                    The new camera ID for the successfully updated camera.
+                    The camera ID for the successfully updated camera.
         """
 
         local_params = dict(locals())
