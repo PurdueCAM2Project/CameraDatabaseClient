@@ -322,7 +322,7 @@ class Client(object):
                     (non_ip_camera) Url to retrieve snapshots from the camera.
                 m3u8_url : str
                     (stream_camera) Url to retrieve stream from the camera.
-                legacy_cameraID : num
+                legacy_cameraID : int
                     Original ID of the camera in SQL database.
                 source : str
                     Source of camera.
@@ -336,11 +336,11 @@ class Client(object):
                     State which the camera locates at.
                 city : str
                     City which the camera locates at.
-                resolution_width : num
+                resolution_width : int
                     Resolution width of the camera.
-                resolution_height : num
+                resolution_height : int
                     Resolution height of the camera.
-                utc_offset : num
+                utc_offset : int
                     Time difference between UTC and the camera location.
                 timezone_id : str
                     Time zone ID of the camera location.
@@ -397,11 +397,6 @@ class Client(object):
 
         local_params['type'] = local_params.pop('camera_type')
         del local_params['self']
-
-        if is_active_video is None:
-            raise FormatError('Must provide is_active_video')
-        if is_active_image is None:
-            raise FormatError('Must provide is_active_image')
 
         if camera_type == 'ip':
             if ip is None:
