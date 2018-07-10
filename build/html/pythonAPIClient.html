@@ -690,6 +690,37 @@ is false for this ip camera.</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="pythonAPIClient.client.Client.get_change_log">
+<code class="descname">get_change_log</code><span class="sig-paren">(</span><em>start=None</em>, <em>end=None</em>, <em>offset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.get_change_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.get_change_log" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>str</em><em>, </em><em>optional</em>) – Start time of the log user desires to query</li>
+<li><strong>end</strong> (<em>str</em><em>, </em><em>optional</em>) – End time of the log user desires to query</li>
+<li><strong>offset</strong> (<em>str</em><em>, </em><em>optional</em>) – How many logs to skip</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>list of dict of {str</strong> – A list of objects containing cameraID and creation time of the log.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str}</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">AuthenticationError</span></code> – If the client secret of this client object does not match the clientID.</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">InternalError</span></code> – If there is an API internal error.</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">FormatError</span></code> – If type of argument value is not expected for the given field.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
