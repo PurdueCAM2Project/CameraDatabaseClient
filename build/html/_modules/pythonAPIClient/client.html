@@ -145,9 +145,11 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Represents a CAM2 client application.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">.error</span> <span class="k">import</span> <span class="n">AuthenticationError</span><span class="p">,</span> <span class="n">InternalError</span><span class="p">,</span> <span class="n">InvalidClientIdError</span><span class="p">,</span> \
-    <span class="n">InvalidClientSecretError</span><span class="p">,</span> <span class="n">ResourceNotFoundError</span><span class="p">,</span> <span class="n">FormatError</span><span class="p">,</span> <span class="n">AuthorizationError</span>
+    <span class="n">InvalidClientSecretError</span><span class="p">,</span> <span class="n">ResourceNotFoundError</span><span class="p">,</span> <span class="n">FormatError</span><span class="p">,</span> \
+    <span class="n">AuthorizationError</span><span class="p">,</span> <span class="n">ResourceConflictError</span>
 <span class="kn">from</span> <span class="nn">.camera</span> <span class="k">import</span> <span class="n">Camera</span>
 
 
@@ -183,7 +185,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">base_URL</span> <span class="o">=</span> <span class="s1">&#39;https://cam2-api.herokuapp.com/&#39;</span>
-    <span class="sd">&quot;&quot;&quot;str: Static variable to store the base url.</span>
+
+    <span class="sd">&quot;&quot;&quot;str: Static variable to store the base URL.</span>
 
 <span class="sd">    This is the URL of CAM2 Database API. User is able to send API calls directly to this URL.</span>
 
@@ -208,7 +211,6 @@
 <div class="viewcode-block" id="Client.request_token"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.request_token">[docs]</a>    <span class="k">def</span> <span class="nf">request_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;A method to request an access token for the client application.</span>
-
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ResourceNotFoundError</span>
@@ -217,7 +219,6 @@
 <span class="sd">            If the client secret of this client object does not match the clientID.</span>
 <span class="sd">        InternalError</span>
 <span class="sd">            If there is an API internal error.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;auth&#39;</span>
@@ -441,13 +442,152 @@
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;api_usage&#39;</span><span class="p">]</span></div>
 
     <span class="c1"># TODO: add a camera to database</span>
-    <span class="k">def</span> <span class="nf">add_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camera</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="c1"># TODO: update a camera in database</span>
-    <span class="c1"># replace others with desired field names</span>
-    <span class="k">def</span> <span class="nf">update_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camID</span><span class="p">,</span> <span class="n">others</span><span class="p">):</span>
-        <span class="k">pass</span>
+<div class="viewcode-block" id="Client.update_camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.update_camera">[docs]</a>    <span class="k">def</span> <span class="nf">update_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cameraID</span><span class="p">,</span> <span class="n">camera_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_active_image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">is_active_video</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">snapshot_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">m3u8_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">legacy_cameraID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">country</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">city</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">resolution_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">utc_offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timezone_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">timezone_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reference_logo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reference_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">brand</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">video_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;update_camera initialization method.</span>
+
+<span class="sd">                Parameters</span>
+<span class="sd">                ----------</span>
+<span class="sd">                cameraID : str</span>
+<span class="sd">                    Required cameraID for the update camera</span>
+<span class="sd">                camera_type : str</span>
+<span class="sd">                    Type of camera.</span>
+<span class="sd">                    Allowed values: &#39;ip&#39;, &#39;non_ip&#39;, &#39;stream&#39;/</span>
+<span class="sd">                is_active_image : bool</span>
+<span class="sd">                    If the camera is active and can get images.</span>
+<span class="sd">                    This field can identify true/false case-insensitively and 0/1.</span>
+<span class="sd">                is_active_video : bool</span>
+<span class="sd">                    If the camera is active and can get video.</span>
+<span class="sd">                    This field can identify true/false case-insensitively and 0/1.</span>
+<span class="sd">                ip : str</span>
+<span class="sd">                    (ip_camera) IP address of the camera.</span>
+<span class="sd">                snapshot_url : str</span>
+<span class="sd">                    (non_ip_camera) Url to retrieve snapshots from the camera.</span>
+<span class="sd">                m3u8_url : str</span>
+<span class="sd">                    (stream_camera) Url to retrieve stream from the camera.</span>
+<span class="sd">                legacy_cameraID : num</span>
+<span class="sd">                    Original ID of the camera in SQL database.</span>
+<span class="sd">                source : str</span>
+<span class="sd">                    Source of camera.</span>
+<span class="sd">                latitude : str</span>
+<span class="sd">                    Latitude of the camera location.</span>
+<span class="sd">                longitude : str</span>
+<span class="sd">                    Longitude of the camera location.</span>
+<span class="sd">                country : str</span>
+<span class="sd">                    Country which the camera locates at.</span>
+<span class="sd">                state : str</span>
+<span class="sd">                    State which the camera locates at.</span>
+<span class="sd">                city : str</span>
+<span class="sd">                    City which the camera locates at.</span>
+<span class="sd">                resolution_width : num</span>
+<span class="sd">                    Resolution width of the camera.</span>
+<span class="sd">                resolution_height : num</span>
+<span class="sd">                    Resolution height of the camera.</span>
+<span class="sd">                utc_offset : num</span>
+<span class="sd">                    Time difference between UTC and the camera location.</span>
+<span class="sd">                timezone_id : str</span>
+<span class="sd">                    Time zone ID of the camera location.</span>
+<span class="sd">                timezone_name : str</span>
+<span class="sd">                    Time zone name of the camera location.</span>
+<span class="sd">                reference_logo : str</span>
+<span class="sd">                    Reference logo of the camera.</span>
+<span class="sd">                reference_url : str</span>
+<span class="sd">                    Reference url of the camera.</span>
+<span class="sd">                port : str</span>
+<span class="sd">                    (ip_camera) Port to connect to camera.</span>
+<span class="sd">                brand : str</span>
+<span class="sd">                    (ip_camera) Brand of the camera.</span>
+<span class="sd">                model : str</span>
+<span class="sd">                    (ip_camera) Model of the camera.</span>
+<span class="sd">                image_path : str</span>
+<span class="sd">                    (ip_camera) Path to retrieve images from the camera.</span>
+<span class="sd">                    if the camera is an ip camera and &#39;is_active_image&#39; is true,</span>
+<span class="sd">                    then it will always have a image_path.</span>
+<span class="sd">                    However, image_path can exist even if &#39;is_active_image&#39;</span>
+<span class="sd">                    is false for this ip camera.</span>
+<span class="sd">                video_path : str</span>
+<span class="sd">                    (ip_camera) Path to retrieve video from the camera.</span>
+<span class="sd">                    if the camera is an ip camera and &#39;is_active_video&#39; is true,</span>
+<span class="sd">                    then it will always have a video_path.</span>
+<span class="sd">                    However, video_path can exist even if &#39;is_active_video&#39;</span>
+<span class="sd">                    is false for this ip camera.</span>
+
+<span class="sd">                Raises</span>
+<span class="sd">                ------</span>
+<span class="sd">                    AuthenticationError</span>
+<span class="sd">                        If the client secret of this client object does not match the clientID.</span>
+<span class="sd">                    FormatError</span>
+<span class="sd">                        List of invalid attributes.</span>
+<span class="sd">                    ResourceConflictError</span>
+<span class="sd">                        The legacy_cameraID already exist in the database.</span>
+<span class="sd">                    InternalError</span>
+<span class="sd">                        If there is an API internal error.</span>
+<span class="sd">                    ResourceNotFoundError</span>
+<span class="sd">                        If no client app exists with the clientID of this client object.</span>
+
+<span class="sd">                Returns</span>
+<span class="sd">                -------</span>
+<span class="sd">                str</span>
+<span class="sd">                    cameraID: the new camera ID for the created camera</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">local_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;cameras/&#39;</span> <span class="o">+</span> <span class="n">cameraID</span>
+
+        <span class="n">local_params</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;camera_type&#39;</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">local_params</span><span class="p">[</span><span class="s1">&#39;self&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">camera_type</span> <span class="o">==</span> <span class="s1">&#39;ip&#39;</span><span class="p">:</span>
+
+            <span class="n">local_params</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;ip&#39;</span><span class="p">:</span> <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ip&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;brand&#39;</span><span class="p">:</span> <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;brand&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;image_path&#39;</span><span class="p">:</span> <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;image_path&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;video_path&#39;</span><span class="p">:</span> <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;video_path&#39;</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="n">camera_type</span> <span class="o">==</span> <span class="s1">&#39;non-ip&#39;</span><span class="p">:</span>
+            <span class="n">local_params</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;snapshot_url&#39;</span><span class="p">:</span> <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;snapshot_url&#39;</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="n">camera_type</span> <span class="o">==</span> <span class="s1">&#39;stream&#39;</span><span class="p">:</span>
+            <span class="n">local_params</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;m3u8_url&#39;</span><span class="p">:</span> <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;m3u8_url&#39;</span><span class="p">)</span>
+            <span class="p">}</span>
+
+        <span class="c1"># Change the given dict into an object for API</span>
+        <span class="n">local_params</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">local_params</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">])</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">local_params</span><span class="p">,</span>
+                                                  <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()),</span> <span class="n">flag</span><span class="o">=</span><span class="s1">&#39;PUT&#39;</span><span class="p">,</span>
+                                     <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">local_params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">201</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">AuthenticationError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ResourceConflictError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ResourceNotFoundError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;cameraID&#39;</span><span class="p">]</span></div>
 
     <span class="c1"># TODO: get a camera</span>
 <div class="viewcode-block" id="Client.camera_by_id"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.camera_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">camera_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cameraID</span><span class="p">):</span>
@@ -486,7 +626,7 @@
 
 <div class="viewcode-block" id="Client.search_camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.search_camera">[docs]</a>    <span class="k">def</span> <span class="nf">search_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">camera_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">city</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                      <span class="n">resolution_heigth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_active_image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_active_video</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">resolution_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_active_image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_active_video</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;A method to search camera by attributes and location.</span>

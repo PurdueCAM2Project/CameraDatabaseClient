@@ -149,8 +149,6 @@
 <div class="viewcode-block" id="Camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.Camera">[docs]</a><span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Class representing a general camera.</span>
-
-
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cameraID : str</span>
@@ -174,33 +172,26 @@
 <span class="sd">    timezone_name : str, optional</span>
 <span class="sd">    reference_logo : str, optional</span>
 <span class="sd">    reference_url : str, optional</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">dict_entries</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Client initialization method.</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        dict_entries: dict</span>
 <span class="sd">            Dictionary of all field values of a camera.</span>
-
 <span class="sd">        Note</span>
 <span class="sd">        ----</span>
-
 <span class="sd">            User should not construct any camera object on his/her own.</span>
-
 <span class="sd">            Camera should only be initialized by results returned from the API.</span>
-
 <span class="sd">            Documentation of camera constructor is for CAM2 API team only.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dict_entries</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Camera.process_json"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.Camera.process_json">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">process_json</span><span class="p">(</span><span class="o">**</span><span class="n">dict_entries</span><span class="p">):</span>
         <span class="n">dict_entries</span><span class="p">[</span><span class="s1">&#39;camera_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_entries</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
         <span class="n">dict_entries</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -211,13 +202,11 @@
             <span class="k">return</span> <span class="n">IPCamera</span><span class="p">(</span><span class="o">**</span><span class="n">dict_entries</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dict_entries</span><span class="p">[</span><span class="s1">&#39;camera_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;non_ip&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">NonIPCamera</span><span class="p">(</span><span class="o">**</span><span class="n">dict_entries</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">StreamCamera</span><span class="p">(</span><span class="o">**</span><span class="n">dict_entries</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">StreamCamera</span><span class="p">(</span><span class="o">**</span><span class="n">dict_entries</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="IPCamera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.IPCamera">[docs]</a><span class="k">class</span> <span class="nc">IPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represent a single ip camera.</span>
-
 <span class="sd">    This is a subclass of Camera.</span>
-
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    ip : str</span>
@@ -226,29 +215,22 @@
 <span class="sd">    model : str, optional</span>
 <span class="sd">    image_path : str, optional</span>
 <span class="sd">    video_path : str, optional</span>
-
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="NonIPCamera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.NonIPCamera">[docs]</a><span class="k">class</span> <span class="nc">NonIPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represent a single non-ip camera.</span>
-
 <span class="sd">    This is a subclass of Camera.</span>
-
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    snapshot_url : str</span>
-
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="StreamCamera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.StreamCamera">[docs]</a><span class="k">class</span> <span class="nc">StreamCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represent a single stream camera.</span>
-
 <span class="sd">    This is a subclass of Camera.</span>
-
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    m3u8_url : str</span>
-
 <span class="sd">    &quot;&quot;&quot;</span></div>
 </pre></div>
 
