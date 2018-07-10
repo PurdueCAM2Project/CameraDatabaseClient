@@ -315,62 +315,62 @@ class Client(object):
                 ----------
                 cameraID : str
                     Required cameraID for the update camera
-                camera_type : str
+                camera_type : str, optional
                     Type of camera.
                     Allowed values: 'ip', 'non_ip', 'stream'/
-                is_active_image : bool
+                is_active_image : bool, optional
                     If the camera is active and can get images.
                     This field can identify true/false case-insensitively and 0/1.
-                is_active_video : bool
+                is_active_video : bool, optional
                     If the camera is active and can get video.
                     This field can identify true/false case-insensitively and 0/1.
-                ip : str
-                    (ip_camera) IP address of the camera.
-                snapshot_url : str
-                    (non_ip_camera) Url to retrieve snapshots from the camera.
-                m3u8_url : str
-                    (stream_camera) Url to retrieve stream from the camera.
-                legacy_cameraID : num
+                legacy_cameraID : int, optional
                     Original ID of the camera in SQL database.
-                source : str
+                source : str, optional
                     Source of camera.
-                latitude : str
+                latitude : int or float, optional
                     Latitude of the camera location.
-                longitude : str
+                longitude : int or float, optional
                     Longitude of the camera location.
-                country : str
+                country : str, optional
                     Country which the camera locates at.
-                state : str
+                state : str, optional
                     State which the camera locates at.
-                city : str
+                city : str, optional
                     City which the camera locates at.
-                resolution_width : num
+                resolution_width : int, optional
                     Resolution width of the camera.
-                resolution_height : num
+                resolution_height : int, optional
                     Resolution height of the camera.
-                utc_offset : num
+                utc_offset : int, optional
                     Time difference between UTC and the camera location.
-                timezone_id : str
+                timezone_id : str, optional
                     Time zone ID of the camera location.
-                timezone_name : str
+                timezone_name : str, optional
                     Time zone name of the camera location.
-                reference_logo : str
+                reference_logo : str, optional
                     Reference logo of the camera.
-                reference_url : str
+                reference_url : str, optional
                     Reference url of the camera.
-                port : str
+                ip : str, optional
+                    (ip_camera) IP address of the camera.
+                port : str or int, optional
                     (ip_camera) Port to connect to camera.
-                brand : str
+                brand : str, optional
                     (ip_camera) Brand of the camera.
-                model : str
+                model : str, optional
                     (ip_camera) Model of the camera.
-                image_path : str
+                snapshot_url : str, optional
+                    (non_ip_camera) Url to retrieve snapshots from the camera.
+                m3u8_url : str, optional
+                    (stream_camera) Url to retrieve stream from the camera.
+                image_path : str, optional
                     (ip_camera) Path to retrieve images from the camera.
                     if the camera is an ip camera and 'is_active_image' is true,
                     then it will always have a image_path.
                     However, image_path can exist even if 'is_active_image'
                     is false for this ip camera.
-                video_path : str
+                video_path : str, optional
                     (ip_camera) Path to retrieve video from the camera.
                     if the camera is an ip camera and 'is_active_video' is true,
                     then it will always have a video_path.
@@ -393,7 +393,7 @@ class Client(object):
                 Returns
                 -------
                 str
-                    cameraID: the new camera ID for the created camera
+                    The new camera ID for the successfully updated camera.
         """
 
         local_params = dict(locals())
