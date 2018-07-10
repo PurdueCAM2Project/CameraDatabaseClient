@@ -5,8 +5,6 @@ Represents a camera.
 class Camera(object):
 
     """Class representing a general camera.
-
-
     Attributes
     ----------
     cameraID : str
@@ -30,26 +28,19 @@ class Camera(object):
     timezone_name : str, optional
     reference_logo : str, optional
     reference_url : str, optional
-
     """
 
     def __init__(self, **dict_entries):
         """Client initialization method.
-
         Parameters
         ----------
         dict_entries: dict
             Dictionary of all field values of a camera.
-
         Note
         ----
-
             User should not construct any camera object on his/her own.
-
             Camera should only be initialized by results returned from the API.
-
             Documentation of camera constructor is for CAM2 API team only.
-
         """
         self.__dict__.update(dict_entries)
 
@@ -71,9 +62,7 @@ class Camera(object):
 
 class IPCamera(Camera):
     """Represent a single ip camera.
-
     This is a subclass of Camera.
-
     Attributes
     ----------
     ip : str
@@ -82,27 +71,20 @@ class IPCamera(Camera):
     model : str, optional
     image_path : str, optional
     video_path : str, optional
-
     """
 
 class NonIPCamera(Camera):
     """Represent a single non-ip camera.
-
     This is a subclass of Camera.
-
     Attributes
     ----------
     snapshot_url : str
-
     """
 
 class StreamCamera(Camera):
     """Represent a single stream camera.
-
     This is a subclass of Camera.
-
     Attributes
     ----------
     m3u8_url : str
-
     """
