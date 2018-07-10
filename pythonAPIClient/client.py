@@ -559,3 +559,48 @@ class Client(object):
             camera_processed.append(Camera.process_json(**current_object))
 
         return camera_processed
+
+    def get_change_log(self, start=None, end=None, offset=None):
+        """
+        Parameters
+        ----------
+        start : str, optional
+            Start time of the log user desires to query
+        end : str, optional
+            End time of the log user desires to query
+        offset : str, optional
+            How many logs to skip
+
+        Returns
+        -------
+        list of dict of {str : str}
+            A list of objects containing cameraID and creation time of the log.
+
+        Raises
+        ------
+        AuthenticationError
+            If the client secret of this client object does not match the clientID.
+        InternalError
+            If there is an API internal error.
+        FormatError
+            If type of argument value is not expected for the given field.
+
+        """
+        url = Client.base_URL + 'apps/db-change'
+        if self.token is None:
+            self.request_token()
+        header = self.header_builder()
+        param = {'start': start,
+                 'end': end,
+                 'offset': offset}
+        response = self._check_token(response=requests.get(url, headers=header, params=param),
+                                     flag='GET', url=url, params=param)
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            else:
+                raise InternalError()
+
+        return response.json()
