@@ -562,38 +562,38 @@ Default permission level is ‘user’.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cameraID</strong> (<em>str</em>) – Required cameraID for the update camera</li>
-<li><strong>camera_type</strong> (<em>str</em>) – Type of camera.
+<li><strong>camera_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of camera.
 Allowed values: ‘ip’, ‘non_ip’, ‘stream’/</li>
-<li><strong>is_active_image</strong> (<em>bool</em>) – If the camera is active and can get images.
+<li><strong>is_active_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – If the camera is active and can get images.
 This field can identify true/false case-insensitively and 0/1.</li>
-<li><strong>is_active_video</strong> (<em>bool</em>) – If the camera is active and can get video.
+<li><strong>is_active_video</strong> (<em>bool</em><em>, </em><em>optional</em>) – If the camera is active and can get video.
 This field can identify true/false case-insensitively and 0/1.</li>
-<li><strong>ip</strong> (<em>str</em>) – (ip_camera) IP address of the camera.</li>
-<li><strong>snapshot_url</strong> (<em>str</em>) – (non_ip_camera) Url to retrieve snapshots from the camera.</li>
-<li><strong>m3u8_url</strong> (<em>str</em>) – (stream_camera) Url to retrieve stream from the camera.</li>
-<li><strong>legacy_cameraID</strong> (<em>num</em>) – Original ID of the camera in SQL database.</li>
-<li><strong>source</strong> (<em>str</em>) – Source of camera.</li>
-<li><strong>latitude</strong> (<em>str</em>) – Latitude of the camera location.</li>
-<li><strong>longitude</strong> (<em>str</em>) – Longitude of the camera location.</li>
-<li><strong>country</strong> (<em>str</em>) – Country which the camera locates at.</li>
-<li><strong>state</strong> (<em>str</em>) – State which the camera locates at.</li>
-<li><strong>city</strong> (<em>str</em>) – City which the camera locates at.</li>
-<li><strong>resolution_width</strong> (<em>num</em>) – Resolution width of the camera.</li>
-<li><strong>resolution_height</strong> (<em>num</em>) – Resolution height of the camera.</li>
-<li><strong>utc_offset</strong> (<em>num</em>) – Time difference between UTC and the camera location.</li>
-<li><strong>timezone_id</strong> (<em>str</em>) – Time zone ID of the camera location.</li>
-<li><strong>timezone_name</strong> (<em>str</em>) – Time zone name of the camera location.</li>
-<li><strong>reference_logo</strong> (<em>str</em>) – Reference logo of the camera.</li>
-<li><strong>reference_url</strong> (<em>str</em>) – Reference url of the camera.</li>
-<li><strong>port</strong> (<em>str</em>) – (ip_camera) Port to connect to camera.</li>
-<li><strong>brand</strong> (<em>str</em>) – (ip_camera) Brand of the camera.</li>
-<li><strong>model</strong> (<em>str</em>) – (ip_camera) Model of the camera.</li>
-<li><strong>image_path</strong> (<em>str</em>) – (ip_camera) Path to retrieve images from the camera.
+<li><strong>legacy_cameraID</strong> (<em>int</em><em>, </em><em>optional</em>) – Original ID of the camera in SQL database.</li>
+<li><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – Source of camera.</li>
+<li><strong>latitude</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>optional</em>) – Latitude of the camera location.</li>
+<li><strong>longitude</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>optional</em>) – Longitude of the camera location.</li>
+<li><strong>country</strong> (<em>str</em><em>, </em><em>optional</em>) – Country which the camera locates at.</li>
+<li><strong>state</strong> (<em>str</em><em>, </em><em>optional</em>) – State which the camera locates at.</li>
+<li><strong>city</strong> (<em>str</em><em>, </em><em>optional</em>) – City which the camera locates at.</li>
+<li><strong>resolution_width</strong> (<em>int</em><em>, </em><em>optional</em>) – Resolution width of the camera.</li>
+<li><strong>resolution_height</strong> (<em>int</em><em>, </em><em>optional</em>) – Resolution height of the camera.</li>
+<li><strong>utc_offset</strong> (<em>int</em><em>, </em><em>optional</em>) – Time difference between UTC and the camera location.</li>
+<li><strong>timezone_id</strong> (<em>str</em><em>, </em><em>optional</em>) – Time zone ID of the camera location.</li>
+<li><strong>timezone_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Time zone name of the camera location.</li>
+<li><strong>reference_logo</strong> (<em>str</em><em>, </em><em>optional</em>) – Reference logo of the camera.</li>
+<li><strong>reference_url</strong> (<em>str</em><em>, </em><em>optional</em>) – Reference url of the camera.</li>
+<li><strong>ip</strong> (<em>str</em><em>, </em><em>optional</em>) – (ip_camera) IP address of the camera.</li>
+<li><strong>port</strong> (<em>str</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – (ip_camera) Port to connect to camera.</li>
+<li><strong>brand</strong> (<em>str</em><em>, </em><em>optional</em>) – (ip_camera) Brand of the camera.</li>
+<li><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – (ip_camera) Model of the camera.</li>
+<li><strong>snapshot_url</strong> (<em>str</em><em>, </em><em>optional</em>) – (non_ip_camera) Url to retrieve snapshots from the camera.</li>
+<li><strong>m3u8_url</strong> (<em>str</em><em>, </em><em>optional</em>) – (stream_camera) Url to retrieve stream from the camera.</li>
+<li><strong>image_path</strong> (<em>str</em><em>, </em><em>optional</em>) – (ip_camera) Path to retrieve images from the camera.
 if the camera is an ip camera and ‘is_active_image’ is true,
 then it will always have a image_path.
 However, image_path can exist even if ‘is_active_image’
 is false for this ip camera.</li>
-<li><strong>video_path</strong> (<em>str</em>) – (ip_camera) Path to retrieve video from the camera.
+<li><strong>video_path</strong> (<em>str</em><em>, </em><em>optional</em>) – (ip_camera) Path to retrieve video from the camera.
 if the camera is an ip camera and ‘is_active_video’ is true,
 then it will always have a video_path.
 However, video_path can exist even if ‘is_active_video’
@@ -610,7 +610,7 @@ is false for this ip camera.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">cameraID: the new camera ID for the created camera</p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new camera ID for the successfully updated camera.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
