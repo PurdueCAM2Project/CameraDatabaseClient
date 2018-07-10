@@ -277,7 +277,7 @@ class TestClient(unittest.TestCase):
         # in request token function.
         # which will only be called:
         # 1: when no token exists for the client object
-        # 2: when previdous token expires
+        # 2: when previous token expires
 
         # this testcase test for the first scenario.
         # the function exits before makeing the register api call.
