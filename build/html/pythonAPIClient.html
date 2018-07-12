@@ -681,6 +681,60 @@ is false for this ip camera.</li>
 </li>
 <li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AuthenticationError</span></code> – If the client secret of this client object does not match the clientID.</p>
 </li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ResourceNotFoundError</span></code> – If the client id of this client object does not match any client
+in the database.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InternalError</span></code> – If there is an API internal error.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pythonAPIClient.client.Client.check_cam_exist">
+<code class="descname">check_cam_exist</code><span class="sig-paren">(</span><em>camera_type</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.check_cam_exist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.check_cam_exist" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to get one or more camera object that has the given retrieval method
+in the database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>camera_type</strong> (<em>str</em>) – Type of the camera. Type can only be ‘ip’, ‘non_ip’, or ‘stream’.</li>
+<li><strong>ip</strong> (<em>str</em><em>, </em><em>optional</em>) – [for IP camera] Ip address of the camera. Although marked as optional,
+this field is required when the camera type is ‘ip’.</li>
+<li><strong>port</strong> (<em>Int</em><em>, </em><em>optional</em>) – [for IP camera] Port of the camera. If no port provided, it will be set to default 80.</li>
+<li><strong>image_path</strong> (<em>str</em><em>, </em><em>optional</em>) – [for IP camera] Path to retrieve images from the camera.</li>
+<li><strong>video_path</strong> (<em>str</em><em>, </em><em>optinal</em>) – [for IP camera] Path to retrievae vidoe from the camera.</li>
+<li><strong>snapshot_url</strong> (<em>str</em><em>, </em><em>optional</em>) – [for non_IP camera] Url to retrieval image frames from the camera.
+Although marked as optional, this field is required when the camera type is ‘non_ip’.</li>
+<li><strong>m3u8_url</strong> (<em>str</em><em>, </em><em>optional</em>) – [for stream camera] Url to retrieval video stream from the camera.
+Although marked as optional, this field is required when the camera type is ‘stream’.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of camera objects that has the given retrieval method. If there ar eno cameras
+matches the provided retrieval information, an empty list will be returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Camera</span></code></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">FormatError</span></code> – If camera type is not valid.</p>
+<p>or camera type is not provided.</p>
+<p>or ip is not provided when the camera type is ‘ip’.</p>
+<p>or snapshot_url is not provided when the camera type is ‘non_ip’.</p>
+<p>or m3u8_url is not provided whe nthe camera ytpe is ‘stream’.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AuthenticationError</span></code> – If the client secret of this client object does not match the clientID.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ResourceNotFoundError</span></code> – If the client id of this client object does not match any client
+in the database.</p>
+</li>
 <li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InternalError</span></code> – If there is an API internal error.</p>
 </li>
 </ul>

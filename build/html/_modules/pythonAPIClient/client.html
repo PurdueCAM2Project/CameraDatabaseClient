@@ -298,8 +298,6 @@
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">AuthenticationError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
-            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ResourceNotFoundError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
             <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
@@ -396,8 +394,6 @@
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">AuthenticationError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
-            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ResourceNotFoundError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
         <span class="n">clientObject</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
@@ -668,6 +664,9 @@
 
 <span class="sd">        AuthenticationError</span>
 <span class="sd">            If the client secret of this client object does not match the clientID.</span>
+<span class="sd">        ResourceNotFoundError</span>
+<span class="sd">            If the client id of this client object does not match any client</span>
+<span class="sd">            in the database.</span>
 <span class="sd">        InternalError</span>
 <span class="sd">            If there is an API internal error.</span>
 
@@ -690,8 +689,6 @@
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">AuthenticationError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
-            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ResourceNotFoundError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
             <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
@@ -702,6 +699,81 @@
         <span class="k">for</span> <span class="n">current_object</span> <span class="ow">in</span> <span class="n">camera_response_array</span><span class="p">:</span>
             <span class="n">camera_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Camera</span><span class="o">.</span><span class="n">process_json</span><span class="p">(</span><span class="o">**</span><span class="n">current_object</span><span class="p">))</span>
 
+        <span class="k">return</span> <span class="n">camera_processed</span></div>
+
+<div class="viewcode-block" id="Client.check_cam_exist"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.check_cam_exist">[docs]</a>    <span class="k">def</span> <span class="nf">check_cam_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camera_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A method to get one or more camera object that has the given retrieval method</span>
+<span class="sd">        in the database.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        camera_type : str</span>
+<span class="sd">            Type of the camera. Type can only be &#39;ip&#39;, &#39;non_ip&#39;, or &#39;stream&#39;.</span>
+<span class="sd">        ip : str, optional</span>
+<span class="sd">            [for IP camera] Ip address of the camera. Although marked as optional,</span>
+<span class="sd">            this field is required when the camera type is &#39;ip&#39;.</span>
+<span class="sd">        port : Int, optional</span>
+<span class="sd">            [for IP camera] Port of the camera. If no port provided, it will be set to default 80.</span>
+<span class="sd">        image_path : str, optional</span>
+<span class="sd">            [for IP camera] Path to retrieve images from the camera.</span>
+<span class="sd">        video_path : str, optinal</span>
+<span class="sd">            [for IP camera] Path to retrievae vidoe from the camera.</span>
+<span class="sd">        snapshot_url : str, optional</span>
+<span class="sd">            [for non_IP camera] Url to retrieval image frames from the camera.</span>
+<span class="sd">            Although marked as optional, this field is required when the camera type is &#39;non_ip&#39;.</span>
+<span class="sd">        m3u8_url : str, optional</span>
+<span class="sd">            [for stream camera] Url to retrieval video stream from the camera.</span>
+<span class="sd">            Although marked as optional, this field is required when the camera type is &#39;stream&#39;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :obj:`list` of :obj:`Camera`</span>
+<span class="sd">            List of camera objects that has the given retrieval method. If there ar eno cameras</span>
+<span class="sd">            matches the provided retrieval information, an empty list will be returned.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        FormatError</span>
+<span class="sd">            If camera type is not valid.</span>
+
+<span class="sd">            or camera type is not provided.</span>
+
+<span class="sd">            or ip is not provided when the camera type is &#39;ip&#39;.</span>
+
+<span class="sd">            or snapshot_url is not provided when the camera type is &#39;non_ip&#39;.</span>
+
+<span class="sd">            or m3u8_url is not provided whe nthe camera ytpe is &#39;stream&#39;.</span>
+
+<span class="sd">        AuthenticationError</span>
+<span class="sd">            If the client secret of this client object does not match the clientID.</span>
+<span class="sd">        ResourceNotFoundError</span>
+<span class="sd">            If the client id of this client object does not match any client</span>
+<span class="sd">            in the database.</span>
+<span class="sd">        InternalError</span>
+<span class="sd">            If there is an API internal error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s2">&quot;cameras/exist&quot;</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">camera_type</span>
+
+        <span class="c1"># validate parameter names here.</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">kwargs</span><span class="p">),</span>
+                                     <span class="n">flag</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">AuthenticationError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
+        <span class="n">camera_response_array</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">camera_processed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">current_object</span> <span class="ow">in</span> <span class="n">camera_response_array</span><span class="p">:</span>
+            <span class="n">camera_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Camera</span><span class="o">.</span><span class="n">process_json</span><span class="p">(</span><span class="o">**</span><span class="n">current_object</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">camera_processed</span></div>
 
 <div class="viewcode-block" id="Client.get_change_log"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.get_change_log">[docs]</a>    <span class="k">def</span> <span class="nf">get_change_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
