@@ -269,28 +269,32 @@ class TestClient(unittest.TestCase):
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
-    def test_register_incorrect_clientID(self, mock_post):
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_register_incorrect_clientID(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientID, clientSecret)
-        # provide token for building header
-        client.token = "correctToken"
-        # manipulate request.post's result
+
+        # incorrect clientID in this case can only cause 404 error
+        # in request token function.
+        # which will only be called:
+        # 1: when no token exists for the client object
+        # 2: when previous token expires
+
+        # this testcase test for the first scenario.
+        # the function exits before makeing the register api call.
+
         mock_response = mock.Mock()
         mock_response.status_code = 404
         mock_response.json.return_value = {
             "message": "No app exists with given clientID"
         }
-        mock_post.return_value = mock_response
-        # validate result
-        url = Client.base_URL + 'apps/register'
-        data = {'owner': 'testowner', 'permissionLevel': 'user'}
-        header = {'Authorization': 'Bearer correctToken'}
+        mock_get.return_value = mock_response
 
         with self.assertRaises(ResourceNotFoundError):
             client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header, data=data)
+        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
+        mock_get.assert_called_once_with(self.token_url, params=token_params)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
@@ -425,12 +429,11 @@ class TestClient(unittest.TestCase):
             'message': 'No app exists with given clientID'
         }
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/by-owner'
-        param = {'owner': 'testowner'}
-        headers = {'Authorization': 'Bearer correctToken'}
+
         with self.assertRaises(ResourceNotFoundError):
-            client.client_ids_by_owner('testowner')
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+            client.request_token()
+        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
+        mock_get.assert_called_once_with(self.token_url, params=token_params)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
@@ -1230,7 +1233,265 @@ class TestClient(unittest.TestCase):
                        "latitude":35.8876, "longitude":136.098}
         self.assertEqual(response_list[0].__dict__, actual_dict,
                          'Returned json is not tranlated correctly')
-        return response_list
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_cam_exist_all_correct_cam_list(self, mock_get):
+        clientID = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientID, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+
+        expected_dict = [{"legacy_cameraID":31280, "type":"non_ip", "source":"webcam_jp",
+                          "country":"JP", "state":None, "city":None, "resolution_width":1,
+                          "resolution_height":1, "is_active_image":True,
+                          "is_active_video":False, "utc_offset":32400, "timezone_id":None,
+                          "timezone_name":None, "reference_logo":"webtral.jpg",
+                          "reference_url":"http://some_url", "cameraID":"5b0e74213651360004edb426",
+                          "retrieval":{"snapshot_url":"/preview/adf.jpg"},
+                          "latitude":35.8876, "longitude":136.098}] * 2
+        mock_response.json.return_value = expected_dict
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+        response_list = client.check_cam_exist(
+            camera_type='non_ip',
+            snapshot_url='/preview/adf.jpg')
+        url = self.base_URL + 'cameras/exist'
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         params={
+                                             'type': 'non_ip',
+                                             'snapshot_url': '/preview/adf.jpg'
+                                             })
+        self.assertEqual(1, mock_get.call_count)
+
+        cam_entries = {"legacy_cameraID":31280, "camera_type":"non_ip", "source":"webcam_jp",
+                       "country":"JP", "state":None, "city":None, "resolution_width":1,
+                       "resolution_height":1, "is_active_image":True,
+                       "is_active_video":False, "utc_offset":32400, "timezone_id":None,
+                       "timezone_name":None, "reference_logo":"webtral.jpg",
+                       "reference_url":"http://some_url", "cameraID":"5b0e74213651360004edb426",
+                       "snapshot_url":"/preview/adf.jpg",
+                       "latitude":35.8876, "longitude":136.098}
+        cam = NonIPCamera(**cam_entries)
+        actual_list = [cam] * 2
+        for i in range(2):
+            self.assertEqual(response_list[i].__dict__, actual_list[i].__dict__)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_exist_all_correct_empty(self, mock_get):
+        clientID = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientID, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_dict = []
+        mock_response.json.return_value = mock_dict
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+        response_list = client.check_cam_exist(camera_type='stream', m3u8_url='test_url')
+        url = self.base_URL + 'cameras/exist'
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         params={'type': 'stream', 'm3u8_url': 'test_url'})
+        actual_dict = []
+        self.assertEqual(response_list, actual_dict, 'Returned json is not tranlated correctly')
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_eixst_expired_token_success(self, mock_get):
+        clientID = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientID, clientSecret)
+        client.token = 'ExpiredToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            "token": "newToken"
+        }
+        mock_response3 = mock.Mock()
+        mock_response3.status_code = 200
+        expected_dict = []
+        mock_dict = []
+        mock_response3.json.return_value = mock_dict
+        mock_get.side_effect = [mock_response, mock_response2, mock_response3]
+        self.assertEqual(
+            client.check_cam_exist(camera_type='stream', m3u8_url='test_url'),
+            expected_dict
+        )
+        self.assertEqual(3, mock_get.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        new_headers = {'Authorization': 'Bearer newToken'}
+        match_params = {'type': 'stream', 'm3u8_url': 'test_url'}
+        match_url = self.base_URL + 'cameras/exist'
+        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
+        call_list = [mock.call(match_url, headers=headers, params=match_params),
+                     mock.call(self.token_url, params=token_params),
+                     mock.call(match_url, headers=new_headers, params=match_params)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_exist_Expired_Token_failure(self, mock_get):
+        clientID = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientID, clientSecret)
+        client.token = 'ExpiredToken'
+        # set result for first search camera
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        # set result for request_token()
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken'
+        }
+        mock_get.side_effect = [mock_response, mock_response2, mock_response,
+                                mock_response2, mock_response]
+        with self.assertRaises(AuthenticationError):
+            client.check_cam_exist(camera_type='stream', m3u8_url='test_url')
+
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        new_headers = {'Authorization': 'Bearer newToken'}
+        match_params = {'type': 'stream', 'm3u8_url': 'test_url'}
+        match_url = self.base_URL + 'cameras/exist'
+        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
+        call_list = [mock.call(match_url, headers=headers, params=match_params),
+                     mock.call(self.token_url, params=token_params),
+                     mock.call(match_url, headers=new_headers, params=match_params),
+                     mock.call(self.token_url, params=token_params),
+                     mock.call(match_url, headers=new_headers, params=match_params)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_exist_Expired_Token_format_error(self, mock_get):
+        clientID = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientID, clientSecret)
+        client.token = 'ExpiredToken'
+        # set result for first search camera
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        # set result for request_token()
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken'
+        }
+        # set result for second search camera
+        mock_response3 = mock.Mock()
+        mock_response3.status_code = 422
+        expected_dict = {
+            "message": "Format Error Messages"
+        }
+        mock_response3.json.return_value = expected_dict
+        mock_get.side_effect = [mock_response, mock_response2, mock_response3]
+        with self.assertRaises(FormatError):
+            client.check_cam_exist(camera_type='ip')
+        self.assertEqual(3, mock_get.call_count)
+        self.assertEqual(1, mock_response3.json.call_count)
+
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        new_headers = {'Authorization': 'Bearer newToken'}
+        match_params = {'type': 'ip'}
+        match_url = self.base_URL + 'cameras/exist'
+        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
+        call_list = [mock.call(match_url, headers=headers, params=match_params),
+                     mock.call(self.token_url, params=token_params),
+                     mock.call(match_url, headers=new_headers, params=match_params)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_exist_Expired_Token_internal_error(self, mock_get):
+        clientID = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientID, clientSecret)
+        client.token = 'ExpiredToken'
+        # set result for first search camera
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        # set result for request_token()
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken'
+        }
+        # set result for second search camera
+        mock_response3 = mock.Mock()
+        mock_response3.status_code = 500
+        expected_dict = {
+            "message": "Internal error"
+        }
+        mock_response3.json.return_value = expected_dict
+        mock_get.side_effect = [mock_response, mock_response2, mock_response3]
+        with self.assertRaises(InternalError):
+            client.check_cam_exist(camera_type='ip', image_path='test_url')
+        self.assertEqual(3, mock_get.call_count)
+        self.assertEqual(0, mock_response3.json.call_count)
+
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        new_headers = {'Authorization': 'Bearer newToken'}
+        match_params = {'type': 'ip', 'image_path': 'test_url'}
+        match_url = self.base_URL + 'cameras/exist'
+        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
+        call_list = [mock.call(match_url, headers=headers, params=match_params),
+                     mock.call(self.token_url, params=token_params),
+                     mock.call(match_url, headers=new_headers, params=match_params)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_exist_all_correct_Internal_Error(self, mock_get):
+        clientID = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientID, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+        url = self.base_URL + 'cameras/exist'
+        with self.assertRaises(InternalError):
+            client.check_cam_exist(camera_type='ip', image_path='test_url', video_path='test_url')
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         params={
+                                             'type': 'ip',
+                                             'image_path': 'test_url',
+                                             'video_path': 'test_url'
+                                             })
+        self.assertEqual(0, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_camera_exist_Format_Error(self, mock_get):
+        clientID = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientID, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        expected_dict = {
+            "message": "Format Error Messages"
+        }
+        mock_response.json.return_value = expected_dict
+        mock_response.status_code = 422
+        mock_get.return_value = mock_response
+        url = self.base_URL + 'cameras/exist'
+        with self.assertRaises(FormatError):
+            client.check_cam_exist(camera_type='iip', image_path='test_url', video_path='test_url')
+        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         params={
+                                             'type': 'iip',
+                                             'image_path': 'test_url',
+                                             'video_path': 'test_url'
+                                             })
+        self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_change_log_all_correct(self, mock_get):
