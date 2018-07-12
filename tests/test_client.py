@@ -78,7 +78,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, params=params)
         self.assertEqual(1, mock_response.json.call_count)
         return mock_http_error_handler
-
+    
     @mock.patch('pythonAPIClient.error.AuthenticationError')
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_token_incorrect_Secret(self, mock_get, mock_http_error_handler):
