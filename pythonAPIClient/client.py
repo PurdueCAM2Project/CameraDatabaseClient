@@ -297,7 +297,7 @@ class Client(object):
         return response.json()['api_usage']
 
     def add_camera(self, camera_type, is_active_image, is_active_video, snapshot_url, m3u8_url,
-                   ip=None, legacy_cameraID=None, source=None, latitude=None, longitude=None,
+                   ip, legacy_cameraID=None, source=None, latitude=None, longitude=None,
                    country=None, state=None, city=None, resolution_width=None,
                    resolution_height=None, utc_offset=None, timezone_id=None, timezone_name=None,
                    reference_logo=None, reference_url=None, port=None, brand=None, model=None,
@@ -399,43 +399,28 @@ class Client(object):
         del local_params['self']
 
         if camera_type == 'ip':
-            if ip is None:
-                response = self._check_token(requests.post(url, data=local_params,
-                                                           headers=self.header_builder()),
-                                             flag='POST', url=url, data=local_params)
-                raise FormatError('Must provide ip')
-            local_params['retrieval'] = {
-                'ip': local_params.pop('ip'),
-                'port': local_params.pop('port'),
-                'brand': local_params.pop('brand'),
-                'model': local_params.pop('model'),
-                'image_path': local_params.pop('image_path'),
-                'video_path': local_params.pop('video_path')
-            }
+            if ip is not None:
+                local_params['retrieval'] = {
+                    'ip': local_params.pop('ip'),
+                    'port': local_params.pop('port'),
+                    'brand': local_params.pop('brand'),
+                    'model': local_params.pop('model'),
+                    'image_path': local_params.pop('image_path'),
+                    'video_path': local_params.pop('video_path')
+                }
+                local_params['retrieval'] = json.dumps(local_params['retrieval'])
         elif camera_type == 'non-ip':
-            if snapshot_url is None:
-                response = self._check_token(requests.post(url, data=local_params,
-                                                           headers=self.header_builder()),
-                                             flag='POST', url=url, data=local_params)
-                raise FormatError('Must provide snapshot_url')
-
-            local_params['retrieval'] = {
-                'snapshot_url': local_params.pop('snapshot_url')
-            }
+            if snapshot_url is not None:
+                local_params['retrieval'] = {
+                    'snapshot_url': local_params.pop('snapshot_url')
+                }
+                local_params['retrieval'] = json.dumps(local_params['retrieval'])
         elif camera_type == 'stream':
-            if m3u8_url is None:
-                response = self._check_token(requests.post(url, data=local_params,
-                                                           headers=self.header_builder()),
-                                             flag='POST', url=url, data=local_params)
-                raise FormatError('Must provide m3u8_url')
-            local_params['retrieval'] = {
-                'm3u8_url': local_params.pop('m3u8_url')
-            }
-        else:
-            raise FormatError('Must provide a legal camera_type')
-
-        # Change the given dict into an object for API
-        local_params['retrieval'] = json.dumps(local_params['retrieval'])
+            if m3u8_url is not None:
+                local_params['retrieval'] = {
+                    'm3u8_url': local_params.pop('m3u8_url')
+                }
+                local_params['retrieval'] = json.dumps(local_params['retrieval'])
 
         response = self._check_token(requests.post(url, data=local_params,
                                                    headers=self.header_builder()), flag='POST',

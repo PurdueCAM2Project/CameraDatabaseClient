@@ -211,14 +211,15 @@ class TestClient(unittest.TestCase):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        # provide token for building header
-        client.token = "correctToken"
-        # manipulate request.post's result
+        client.token = 'CorrectToken'
         mock_response = mock.Mock()
+        expected_dict = {
+            "message": "Format Error Messages"
+        }
+        mock_response.json.return_value = expected_dict
         mock_response.status_code = 422
         mock_post.return_value = mock_response
-        # validate result
-        url = Client.base_URL + 'cameras/create'
+        url = self.base_URL + 'cameras/create'
         data = {'video_path': 'test_vid_path', 'image_path': 'test_image_path',
                 'model': 'test_model', 'brand': 'test_brand', 'port': '8080',
                 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
@@ -228,8 +229,6 @@ class TestClient(unittest.TestCase):
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'ip': None,
                 'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
                 'is_active_image': False, 'type': 'ip'}
-        header = {'Authorization': 'Bearer correctToken'}
-
         with self.assertRaises(FormatError):
             client.add_camera(camera_type='ip', is_active_image=False, is_active_video=True,
                               ip=None, snapshot_url=None, m3u8_url=None,
@@ -240,8 +239,10 @@ class TestClient(unittest.TestCase):
                               reference_logo='test_ref_logo', reference_url='test_ref_url',
                               port='8080', brand='test_brand', model='test_model',
                               image_path='test_image_path', video_path='test_vid_path')
-        mock_post.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(0, mock_response.json.call_count)
+        mock_post.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                          data=data)
+        self.assertEqual(1, mock_response.json.call_count)
+
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_add_camera_non_ip(self, mock_post):
@@ -273,7 +274,7 @@ class TestClient(unittest.TestCase):
 
         resultID = client.add_camera(camera_type='non-ip', is_active_image=False,
                                      is_active_video=True, snapshot_url='test_snapshot',
-                                     m3u8_url=None, legacy_cameraID=000000000,
+                                     ip=None, m3u8_url=None, legacy_cameraID=000000000,
                                      source='test_source', latitude='test_lad',
                                      longitude='test_long', country='USA',
                                      state='Indiana', city='West Lafayette',
@@ -289,28 +290,28 @@ class TestClient(unittest.TestCase):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        # provide token for building header
-        client.token = "correctToken"
-        # manipulate request.post's result
+        client.token = 'CorrectToken'
         mock_response = mock.Mock()
+        expected_dict = {
+            "message": "Format Error Messages"
+        }
+        mock_response.json.return_value = expected_dict
         mock_response.status_code = 422
         mock_post.return_value = mock_response
-        # validate result
-        url = Client.base_URL + 'cameras/create'
+        url = self.base_URL + 'cameras/create'
         data = {'video_path': 'test_vid_path', 'image_path': 'test_image_path',
                 'model': 'test_model', 'brand': 'test_brand', 'port': '8080',
                 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                'ip': '127.0.0.2', 'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                'is_active_image': False, 'type': 'non-ip'}
-        header = {'Authorization': 'Bearer correctToken'}
-
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id',
+                'utc_offset': 3, 'resolution_height': 480, 'resolution_width': 720,
+                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA',
+                'longitude': 'test_long', 'latitude': 'test_lad', 'source': 'test_source',
+                'legacy_cameraID': 0, 'ip': '127.0.0.1', 'm3u8_url': 'url/m3u8',
+                'snapshot_url': None, 'is_active_video': True, 'is_active_image': False,
+                'type': 'non-ip'}
         with self.assertRaises(FormatError):
             client.add_camera(camera_type='non-ip', is_active_image=False, is_active_video=True,
-                              ip='127.0.0.2', snapshot_url=None, m3u8_url=None,
+                              ip='127.0.0.1', snapshot_url=None, m3u8_url='url/m3u8',
                               legacy_cameraID=000000000, source='test_source', latitude='test_lad',
                               longitude='test_long', country='USA', state='Indiana',
                               city='West Lafayette', resolution_width=720, resolution_height=480,
@@ -318,8 +319,9 @@ class TestClient(unittest.TestCase):
                               reference_logo='test_ref_logo', reference_url='test_ref_url',
                               port='8080', brand='test_brand', model='test_model',
                               image_path='test_image_path', video_path='test_vid_path')
-        mock_post.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(0, mock_response.json.call_count)
+        mock_post.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                          data=data)
+        self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     def test_add_camera_stream(self, mock_post):
@@ -348,7 +350,7 @@ class TestClient(unittest.TestCase):
                 'snapshot_url': None, 'is_active_video': True, 'is_active_image': False,
                 'type': 'stream', 'retrieval': '{"m3u8_url": "test_m3u8"}'}
 
-        resultID = client.add_camera(camera_type='stream', is_active_image=False,
+        resultID = client.add_camera(camera_type='stream', is_active_image=False, ip=None,
                                      is_active_video=True, snapshot_url=None, m3u8_url='test_m3u8',
                                      legacy_cameraID=000000000, source='test_source',
                                      latitude='test_lad', longitude='test_long', country='USA',
@@ -365,39 +367,38 @@ class TestClient(unittest.TestCase):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
-        # provide token for building header
-        client.token = "correctToken"
-        # manipulate request.post's result
+        client.token = 'CorrectToken'
         mock_response = mock.Mock()
+        expected_dict = {
+            "message": "Format Error Messages"
+        }
+        mock_response.json.return_value = expected_dict
         mock_response.status_code = 422
         mock_post.return_value = mock_response
-        # validate result
-        url = Client.base_URL + 'cameras/create'
+        url = self.base_URL + 'cameras/create'
         data = {'video_path': 'test_vid_path', 'image_path': 'test_image_path',
                 'model': 'test_model', 'brand': 'test_brand', 'port': '8080',
                 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                'ip': '127.0.0.2', 'm3u8_url': None,
-                'snapshot_url': None, 'is_active_video': True,
-                'is_active_image': False, 'type': 'stream'}
-        header = {'Authorization': 'Bearer correctToken'}
-
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id',
+                'utc_offset': 3, 'resolution_height': 480, 'resolution_width': 720,
+                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA',
+                'longitude': 'test_long', 'latitude': 'test_lad', 'source': 'test_source',
+                'legacy_cameraID': 0, 'ip': '127.0.0.1', 'm3u8_url': None,
+                'snapshot_url': 'url/snapshot', 'is_active_video': True, 'is_active_image': False,
+                'type': 'stream'}
         with self.assertRaises(FormatError):
             client.add_camera(camera_type='stream', is_active_image=False, is_active_video=True,
-                              ip='127.0.0.2', snapshot_url=None, m3u8_url=None,
+                              ip='127.0.0.1', snapshot_url='url/snapshot', m3u8_url=None,
                               legacy_cameraID=000000000, source='test_source', latitude='test_lad',
                               longitude='test_long', country='USA', state='Indiana',
-                              city='West Lafayette', resolution_width=720,
-                              resolution_height=480, utc_offset=3, timezone_id='test_t_id',
-                              timezone_name='test_t_name', reference_logo='test_ref_logo',
-                              reference_url='test_ref_url', port='8080', brand='test_brand',
-                              model='test_model', image_path='test_image_path',
-                              video_path='test_vid_path')
-        mock_post.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(0, mock_response.json.call_count)
+                              city='West Lafayette', resolution_width=720, resolution_height=480,
+                              utc_offset=3, timezone_id='test_t_id', timezone_name='test_t_name',
+                              reference_logo='test_ref_logo', reference_url='test_ref_url',
+                              port='8080', brand='test_brand', model='test_model',
+                              image_path='test_image_path', video_path='test_vid_path')
+        mock_post.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                          data=data)
+        self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
     @mock.patch('pythonAPIClient.client.requests.get')
