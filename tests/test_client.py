@@ -11,9 +11,12 @@ from pythonAPIClient.error import AuthenticationError, InternalError, InvalidCli
      InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
+
 class TestClient(unittest.TestCase):
     """
-    This class contains test cases for client class methods
+    Test all requests from
+    with different scenarios
+    https://purduecam2project.github.io/CameraDatabaseAPI/#api-cameras-camCreate
     """
     def setUp(self):
         self.base_URL = 'https://cam2-api.herokuapp.com/'
@@ -25,7 +28,6 @@ class TestClient(unittest.TestCase):
             return client
 
     def test_client_init_wrong_Client_Secret_Length(self):
-
         # client secret shorter than 71
         with self.assertRaises(InvalidClientSecretError):
             client = Client('0' * 96, 'dummySecret')
@@ -41,7 +43,7 @@ class TestClient(unittest.TestCase):
                          'Secret not stored in the client object.')
         self.assertIs(client.token, None, 'Token not set to default')
 
-        #client secret longer than 71
+        # client secret longer than 71
         clientSecret2 = '0' * 80
         client2 = Client(clientID, clientSecret2)
         self.assertTrue(isinstance(client2, Client))
@@ -1182,7 +1184,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.camera_by_id('12345').__dict__, expected_dict)
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
 
-
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_camera_id_expired_token_success(self, mock_get):
         clientID = '0' * 96
@@ -1322,14 +1323,15 @@ class TestClient(unittest.TestCase):
         mock_response = mock.Mock()
 
         # without params user should get 1st 100 cameras
-        expected_dict = [{"legacy_cameraID":31280, "type":"non_ip", "source":"webcam_jp",
-                          "country":"JP", "state":None, "city":None, "resolution_width":1,
-                          "resolution_height":1, "is_active_image":True,
-                          "is_active_video":False, "utc_offset":32400, "timezone_id":None,
-                          "timezone_name":None, "reference_logo":"webtral.jpg",
-                          "reference_url":"http://some_url", "cameraID":"5b0e74213651360004edb426",
-                          "retrieval":{"snapshot_url":"http://images./preview/adf.jpg"},
-                          "latitude":35.8876, "longitude":136.098}] * 100
+        expected_dict = [{"legacy_cameraID": 31280, "type": "non_ip", "source": "webcam_jp",
+                          "country": "JP", "state": None, "city": None, "resolution_width": 1,
+                          "resolution_height": 1, "is_active_image": True,
+                          "is_active_video": False, "utc_offset": 32400, "timezone_id": None,
+                          "timezone_name": None, "reference_logo": "webtral.jpg",
+                          "reference_url": "http://some_url",
+                          "cameraID": "5b0e74213651360004edb426",
+                          "retrieval": {"snapshot_url": "http://images./preview/adf.jpg"},
+                          "latitude": 35.8876, "longitude": 136.098}] * 100
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
@@ -1339,14 +1341,14 @@ class TestClient(unittest.TestCase):
                                          params={})
         self.assertEqual(1, mock_get.call_count)
 
-        cam_entries = {"legacy_cameraID":31280, "camera_type":"non_ip", "source":"webcam_jp",
-                       "country":"JP", "state":None, "city":None, "resolution_width":1,
-                       "resolution_height":1, "is_active_image":True,
-                       "is_active_video":False, "utc_offset":32400, "timezone_id":None,
-                       "timezone_name":None, "reference_logo":"webtral.jpg",
-                       "reference_url":"http://some_url", "cameraID":"5b0e74213651360004edb426",
-                       "snapshot_url":"http://images./preview/adf.jpg",
-                       "latitude":35.8876, "longitude":136.098}
+        cam_entries = {"legacy_cameraID": 31280, "camera_type": "non_ip", "source": "webcam_jp",
+                       "country": "JP", "state": None, "city": None, "resolution_width": 1,
+                       "resolution_height": 1, "is_active_image": True,
+                       "is_active_video": False, "utc_offset": 32400, "timezone_id": None,
+                       "timezone_name": None, "reference_logo": "webtral.jpg",
+                       "reference_url": "http://some_url", "cameraID": "5b0e74213651360004edb426",
+                       "snapshot_url": "http://images./preview/adf.jpg",
+                       "latitude": 35.8876, "longitude": 136.098}
         cam = NonIPCamera(**cam_entries)
         actual_list = [cam] * 100
         for i in range(100):
@@ -1603,6 +1605,501 @@ class TestClient(unittest.TestCase):
         self.assertEqual(response_list[0].__dict__, actual_dict,
                          'Returned json is not tranlated correctly')
         return response_list
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_all_correct(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = "CorrectToken"
+        mock_response = mock.Mock()
+        mock_response.status_code = 200
+        clientObject = [
+            {
+                'cameraID': '5ae0ecbd336359291be74c12',
+                'timestamp': '2018-07-04T19:52:52.337Z',
+            },
+            {
+                'cameraID': '5ae0ecbd336312391be74c12',
+                'timestamp': '2018-07-04T20:52:52.337Z',
+            },
+            {
+                'cameraID': '5ae0ecbd336354291be74c12',
+                'timestamp': '2018-07-04T21:52:52.337Z',
+            },
+        ]
+        mock_response.json.return_value = clientObject
+        mock_get.return_value = mock_response
+
+        headers = {'Authorization': 'Bearer CorrectToken'}
+        url = Client.base_URL + 'apps/db-change'
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        self.assertEqual(client.get_change_log(), clientObject)
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_expired_token_success(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'ExpiredToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            "token": "newToken"
+        }
+        mock_response3 = mock.Mock()
+        mock_response3.status_code = 200
+        clientObject = [
+            {
+                'cameraID': '5ae0ecbd336359291be74c12',
+                'timestamp': '2018-07-04T19:52:52.337Z',
+            },
+            {
+                'cameraID': '5ae0ecbd336312391be74c12',
+                'timestamp': '2018-07-04T20:52:52.337Z',
+            },
+            {
+                'cameraID': '5ae0ecbd336354291be74c12',
+                'timestamp': '2018-07-04T21:52:52.337Z',
+            },
+        ]
+        mock_response3.json.return_value = clientObject
+        mock_get.side_effect = [mock_response, mock_response2, mock_response3]
+
+        self.assertEqual(client.get_change_log(), clientObject)
+        self.assertEqual(3, mock_get.call_count)
+        url = Client.base_URL + 'apps/db-change'
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        rparam = {'clientID': clientId, 'clientSecret': clientSecret}
+
+        call_list = [mock.call(url, headers=headers, params=param),
+                     mock.call(self.base_URL + 'auth', params=rparam),
+                     mock.call(url, headers=newheaders, params=param)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_expired_token_failure(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'ExpiredToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired"
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            "token": "newToken"
+        }
+        mock_get.side_effect = [mock_response, mock_response2, mock_response,
+                                mock_response2, mock_response]
+        with self.assertRaises(AuthenticationError):
+            client.get_change_log()
+
+        url = Client.base_URL + 'apps/db-change'
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        rparam = {'clientID': clientId, 'clientSecret': clientSecret}
+
+        call_list = [
+            mock.call(url, headers=headers, params=param),
+            mock.call(self.base_URL + 'auth', params=rparam),
+            mock.call(url, headers=newheaders, params=param),
+            mock.call(self.base_URL + 'auth', params=rparam),
+            mock.call(url, headers=newheaders, params=param)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_format_error(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 422
+        mock_response.json.return_value = {
+            "message": "Format Error"
+        }
+        mock_get.return_value = mock_response
+        with self.assertRaises(FormatError):
+            client.get_change_log()
+        url = Client.base_URL + 'apps/db-change'
+        headers = {'Authorization': 'Bearer CorrectToken'}
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_resource_not_found_error(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        # client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 404
+        mock_response.json.return_value = {
+            "message": "Resource Not Found Error"
+        }
+        mock_get.return_value = mock_response
+        with self.assertRaises(ResourceNotFoundError):
+            client.get_change_log()
+        url = Client.base_URL + 'auth'
+        param = {'clientID': clientId, 'clientSecret': clientSecret}
+        mock_get.assert_called_once_with(url, params=param)
+
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_get_change_log_with_internal_error(self, mock_get):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = "CorrectToken"
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+        with self.assertRaises(InternalError):
+            client.get_change_log()
+
+        url = Client.base_URL + 'apps/db-change'
+        param = {'start': None,
+                 'end': None,
+                 'offset': None}
+        headers = {'Authorization': 'Bearer CorrectToken'}
+        mock_get.assert_called_once_with(url, headers=headers, params=param)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_camera_ip(self, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        # provide token for building header
+        client.token = "correctToken"
+        # manipulate request.post's result
+        mock_response = mock.Mock()
+        mock_response.status_code = 201
+        mock_response.json.return_value = {
+            "cameraID": "5ae0ecbd336359291be74c12"
+        }
+
+        mock_put.return_value = mock_response
+        # validate result
+        expected_cameraID = '5ae0ecbd336359291be74c12'
+        url = Client.base_URL + 'cameras/' + expected_cameraID
+        header = {'Authorization': 'Bearer correctToken'}
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", '
+                             '"model": "test_model", "image_path": "test_image_path", '
+                             '"video_path": "test_vid_path"}'}
+
+        resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='ip',
+                                        is_active_image=False, is_active_video=True,
+                                        legacy_cameraID=000000000, source='test_source',
+                                        latitude='test_lad', longitude='test_long', country='USA',
+                                        state='Indiana', city='West Lafayette',
+                                        resolution_width=720, resolution_height=480, utc_offset=3,
+                                        timezone_id='test_t_id', timezone_name='test_t_name',
+                                        reference_logo='test_ref_logo',
+                                        reference_url='test_ref_url', port='8080',
+                                        brand='test_brand', model='test_model',
+                                        image_path='test_image_path', video_path='test_vid_path')
+        mock_put.assert_called_once_with(url, headers=header, data=data)
+        self.assertEqual(resultID, expected_cameraID)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_camera_non_ip(self, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        # provide token for building header
+        client.token = "correctToken"
+        # manipulate request.post's result
+        mock_response = mock.Mock()
+        mock_response.status_code = 201
+        mock_response.json.return_value = {
+            "cameraID": "5ae0ecbd336359291be74c12"
+        }
+        mock_put.return_value = mock_response
+        # validate result
+        expected_cameraID = '5ae0ecbd336359291be74c12'
+        url = Client.base_URL + 'cameras/' + expected_cameraID
+        header = {'Authorization': 'Bearer correctToken'}
+        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
+                'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'ip': None, 'is_active_video': True, 'is_active_image': False,
+                'cameraID': '5ae0ecbd336359291be74c12', 'type': 'non-ip',
+                'retrieval': '{"snapshot_url": "test_snapshot"}'}
+
+        resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='non-ip',
+                                        is_active_image=False, is_active_video=True,
+                                        snapshot_url='test_snapshot', m3u8_url=None,
+                                        legacy_cameraID=000000000, source='test_source',
+                                        latitude='test_lad', longitude='test_long', country='USA',
+                                        state='Indiana', city='West Lafayette',
+                                        resolution_width=720, resolution_height=480, utc_offset=3,
+                                        timezone_id='test_t_id', timezone_name='test_t_name',
+                                        reference_logo='test_ref_logo',
+                                        reference_url='test_ref_url')
+        mock_put.assert_called_once_with(url, headers=header, data=data)
+        self.assertEqual(resultID, expected_cameraID)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_camera_stream(self, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        # provide token for building header
+        client.token = "correctToken"
+        # manipulate request.post's result
+        mock_response = mock.Mock()
+        mock_response.status_code = 201
+        mock_response.json.return_value = {
+            "cameraID": "5ae0ecbd336359291be74c12"
+        }
+        mock_put.return_value = mock_response
+        # validate result
+        expected_cameraID = '5ae0ecbd336359291be74c12'
+        url = Client.base_URL + 'cameras/' + expected_cameraID
+        header = {'Authorization': 'Bearer correctToken'}
+        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
+                'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'snapshot_url': None, 'ip': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12',
+                'type': 'stream', 'retrieval': '{"m3u8_url": "test_m3u8"}'}
+
+        resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='stream',
+                                        is_active_image=False, is_active_video=True,
+                                        snapshot_url=None, m3u8_url='test_m3u8',
+                                        legacy_cameraID=000000000, source='test_source',
+                                        latitude='test_lad', longitude='test_long', country='USA',
+                                        state='Indiana', city='West Lafayette',
+                                        resolution_width=720, resolution_height=480,
+                                        utc_offset=3, timezone_id='test_t_id',
+                                        timezone_name='test_t_name',
+                                        reference_logo='test_ref_logo',
+                                        reference_url='test_ref_url')
+        mock_put.assert_called_once_with(url, headers=header, data=data)
+        self.assertEqual(resultID, expected_cameraID)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_update_camera_expired_token_success(self, mock_get, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'ExpiredToken'
+        # set first request.post's result
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Token expired'
+        }
+        # set second request.post's result
+        testCamID = '5ae0ecbd336359291be74c12'
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 201
+        mock_response2.json.return_value = {
+            'cameraID': '5ae0ecbd336359291be74c12'
+        }
+        mock_put.side_effect = [mock_response, mock_response2]
+        # set request_token()'s result
+        mock_get_response = mock.Mock()
+        mock_get_response.status_code = 200
+        mock_get_response.json.return_value = {
+            'token': 'newToken'
+        }
+        mock_get.return_value = mock_get_response
+        # run the test
+        resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='ip',
+                                        is_active_image=False, is_active_video=True,
+                                        legacy_cameraID=000000000, source='test_source',
+                                        latitude='test_lad', longitude='test_long', country='USA',
+                                        state='Indiana', city='West Lafayette',
+                                        resolution_width=720, resolution_height=480, utc_offset=3,
+                                        timezone_id='test_t_id', timezone_name='test_t_name',
+                                        reference_logo='test_ref_logo',
+                                        reference_url='test_ref_url', port='8080',
+                                        brand='test_brand', model='test_model',
+                                        image_path='test_image_path', video_path='test_vid_path')
+        self.assertEqual(resultID, testCamID)
+        params = {
+            'clientID': clientId,
+            'clientSecret': clientSecret
+        }
+        mock_get.assert_called_with(self.base_URL + 'auth', params=params)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", '
+                             '"model": "test_model", "image_path": "test_image_path", '
+                             '"video_path": "test_vid_path"}'}
+        call_list = [mock.call(self.base_URL + 'cameras/' + testCamID, headers=headers,
+                               data=data),
+                     mock.call(self.base_URL + 'cameras/' + testCamID, headers=newheaders,
+                               data=data)]
+        self.assertEqual(mock_put.call_args_list, call_list)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_camera_internal_error(self, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        # provide token for building header
+        client.token = "correctToken"
+        # manipulate request.post's result
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_put.return_value = mock_response
+        # validate result
+        testCamID = '5ae0ecbd336359291be74c12'
+        url = Client.base_URL + 'cameras/' + testCamID
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", '
+                             '"model": "test_model", "image_path": "test_image_path", '
+                             '"video_path": "test_vid_path"}'}
+        header = {'Authorization': 'Bearer correctToken'}
+
+        with self.assertRaises(InternalError):
+            client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='ip',
+                                 is_active_image=False, is_active_video=True,
+                                 legacy_cameraID=000000000, source='test_source',
+                                 latitude='test_lad', longitude='test_long', country='USA',
+                                 state='Indiana', city='West Lafayette',
+                                 resolution_width=720, resolution_height=480, utc_offset=3,
+                                 timezone_id='test_t_id', timezone_name='test_t_name',
+                                 reference_logo='test_ref_logo',
+                                 reference_url='test_ref_url', port='8080',
+                                 brand='test_brand', model='test_model',
+                                 image_path='test_image_path', video_path='test_vid_path')
+        mock_put.assert_called_once_with(url, headers=header, data=data)
+        self.assertEqual(0, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_camera_all_correct_Format_Error(self, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+        mock_response = mock.Mock()
+        expected_dict = {
+            "message": "Format Error Messages"
+        }
+        mock_response.json.return_value = expected_dict
+        mock_response.status_code = 422
+        mock_put.return_value = mock_response
+        testCamID = '5ae0ecbd336359291be74c12'
+        url = self.base_URL + 'cameras/' + testCamID
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", '
+                             '"model": "test_model", "image_path": "test_image_path", '
+                             '"video_path": "test_vid_path"}'}
+        with self.assertRaises(FormatError):
+            client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='ip',
+                                 is_active_image=False, is_active_video=True,
+                                 legacy_cameraID=000000000, source='test_source',
+                                 latitude='test_lad', longitude='test_long', country='USA',
+                                 state='Indiana', city='West Lafayette',
+                                 resolution_width=720, resolution_height=480, utc_offset=3,
+                                 timezone_id='test_t_id', timezone_name='test_t_name',
+                                 reference_logo='test_ref_logo',
+                                 reference_url='test_ref_url', port='8080',
+                                 brand='test_brand', model='test_model',
+                                 image_path='test_image_path', video_path='test_vid_path')
+        mock_put.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+                                         data=data)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_update_camera_invalid_clientID(self, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = "correctToken"
+        mock_response = mock.Mock()
+        mock_response.status_code = 404
+        mock_response.json.return_value = {
+            'message': 'No app exists with given client id.'
+        }
+        mock_put.return_value = mock_response
+        testCamID = '5ae0ecbd336359291be74c12'
+        url = self.base_URL + 'cameras/' + testCamID
+        headers = {'Authorization': 'Bearer correctToken'}
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
+                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
+                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
+                'is_active_image': False, 'cameraID': '5ae0ecbd336359291be74c12', 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "test_brand", '
+                             '"model": "test_model", "image_path": "test_image_path", '
+                             '"video_path": "test_vid_path"}'}
+        with self.assertRaises(ResourceNotFoundError):
+            client.update_camera(cameraID='5ae0ecbd336359291be74c12', camera_type='ip',
+                                 is_active_image=False, is_active_video=True,
+                                 legacy_cameraID=000000000, source='test_source',
+                                 latitude='test_lad', longitude='test_long', country='USA',
+                                 state='Indiana', city='West Lafayette',
+                                 resolution_width=720, resolution_height=480, utc_offset=3,
+                                 timezone_id='test_t_id', timezone_name='test_t_name',
+                                 reference_logo='test_ref_logo',
+                                 reference_url='test_ref_url', port='8080',
+                                 brand='test_brand', model='test_model',
+                                 image_path='test_image_path', video_path='test_vid_path')
+        mock_put.assert_called_once_with(url, headers=headers, data=data)
+        self.assertEqual(1, mock_response.json.call_count)
 
 if __name__ == '__main__':
     unittest.main()
