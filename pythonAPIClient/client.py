@@ -233,7 +233,7 @@ class Client(object):
         Parameters
         ----------
 
-        cliendID: str
+        clientID: str
             Client Id of the application.
 
         Returns
