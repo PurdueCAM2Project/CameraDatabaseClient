@@ -293,9 +293,148 @@ class Client(object):
                 raise InternalError()
         return response.json()['api_usage']
 
-    # TODO: add a camera to database
-    def add_camera(self):
-        pass
+    def add_camera(self, camera_type, is_active_image, is_active_video, snapshot_url, m3u8_url,
+                   ip, legacy_cameraID=None, source=None, latitude=None, longitude=None,
+                   country=None, state=None, city=None, resolution_width=None,
+                   resolution_height=None, utc_offset=None, timezone_id=None, timezone_name=None,
+                   reference_logo=None, reference_url=None, port=None, brand=None, model=None,
+                   image_path=None, video_path=None):
+
+        """add_camera initialization method.
+
+                Parameters
+                ----------
+                camera_type : str
+                    Type of camera.
+                    Allowed values: 'ip', 'non_ip', 'stream'/
+                is_active_image : bool
+                    If the camera is active and can get images.
+                    This field can identify true/false case-insensitively and 0/1.
+                is_active_video : bool
+                    If the camera is active and can get video.
+                    This field can identify true/false case-insensitively and 0/1.
+                legacy_cameraID : int, optional
+                    Original ID of the camera in SQL database.
+                source : str, optional
+                    Source of camera.
+                latitude : int or float, optional
+                    Latitude of the camera location.
+                longitude : int or float, optional
+                    Longitude of the camera location.
+                country : str, optional
+                    Country which the camera locates at.
+                state : str, optional
+                    State which the camera locates at.
+                city : str, optional
+                    City which the camera locates at.
+                resolution_width : int, optional
+                    Resolution width of the camera.
+                resolution_height : int, optional
+                    Resolution height of the camera.
+                utc_offset : int, optional
+                    Time difference between UTC and the camera location.
+                timezone_id : str, optional
+                    Time zone ID of the camera location.
+                timezone_name : str, optional
+                    Time zone name of the camera location.
+                reference_logo : str, optional
+                    Reference logo of the camera.
+                reference_url : str, optional
+                    Reference url of the camera.
+                ip : str, optional
+                    (ip_camera) IP address of the camera.
+                port : str or int, optional
+                    (ip_camera) Port to connect to camera.
+                brand : str, optional
+                    (ip_camera) Brand of the camera.
+                model : str, optional
+                    (ip_camera) Model of the camera.
+                snapshot_url : str, optional
+                    (non_ip_camera) Url to retrieve snapshots from the camera.
+                m3u8_url : str, optional
+                    (stream_camera) Url to retrieve stream from the camera.
+                image_path : str, optional
+                    (ip_camera) Path to retrieve images from the camera.
+                    if the camera is an ip camera and 'is_active_image' is true,
+                    then it will always have a image_path.
+                    However, image_path can exist even if 'is_active_image'
+                    is false for this ip camera.
+                video_path : str, optional
+                    (ip_camera) Path to retrieve video from the camera.
+                    if the camera is an ip camera and 'is_active_video' is true,
+                    then it will always have a video_path.
+                    However, video_path can exist even if 'is_active_video'
+                    is false for this ip camera.
+
+                Raises
+                ------
+                    AuthenticationError
+                        If the client secret of this client object does not match the clientID.
+                    FormatError
+                        List of invalid attributes.
+                    ResourceConflictError
+                        The legacy_cameraID already exist in the database.
+                    InternalError
+                        If there is an API internal error.
+                    ResourceNotFoundError
+                        If no client app exists with the clientID of this client object.
+
+                Returns
+                -------
+                str
+                    The new camera ID for the successfully updated camera.
+        """
+
+        local_params = dict(locals())
+
+        if self.token is None:
+            self.request_token()
+
+        url = Client.base_URL + 'cameras/create'
+
+        local_params['type'] = local_params.pop('camera_type')
+        del local_params['self']
+
+        if camera_type == 'ip':
+            if ip is not None:
+                local_params['retrieval'] = {
+                    'ip': local_params.pop('ip'),
+                    'port': local_params.pop('port'),
+                    'brand': local_params.pop('brand'),
+                    'model': local_params.pop('model'),
+                    'image_path': local_params.pop('image_path'),
+                    'video_path': local_params.pop('video_path')
+                }
+                local_params['retrieval'] = json.dumps(local_params['retrieval'])
+        elif camera_type == 'non-ip':
+            if snapshot_url is not None:
+                local_params['retrieval'] = {
+                    'snapshot_url': local_params.pop('snapshot_url')
+                }
+                local_params['retrieval'] = json.dumps(local_params['retrieval'])
+        elif camera_type == 'stream':
+            if m3u8_url is not None:
+                local_params['retrieval'] = {
+                    'm3u8_url': local_params.pop('m3u8_url')
+                }
+                local_params['retrieval'] = json.dumps(local_params['retrieval'])
+
+        response = self._check_token(requests.post(url, data=local_params,
+                                                   headers=self.header_builder()), flag='POST',
+                                     url=url, data=local_params)
+        if response.status_code != 201:
+            if response.status_code == 403:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            elif response.status_code == 409:
+                raise ResourceConflictError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            else:
+                raise InternalError()
+
+        return response.json()['cameraID']
 
     def update_camera(self, cameraID, camera_type=None, is_active_image=None,
                       is_active_video=None, ip=None, snapshot_url=None, m3u8_url=None,
