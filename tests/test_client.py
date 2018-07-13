@@ -1157,6 +1157,105 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_reset_secret(self, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = "correctToken"
+        mock_response = mock.Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            'clientSecret': 'test_clientSecret'
+        }
+        mock_put.return_value = mock_response
+        url = Client.base_URL + 'apps/1/secret'
+        headers = {'Authorization': 'Bearer correctToken'}
+        self.assertEqual(client.reset_secret('1'), 'test_clientSecret')
+        mock_put.assert_called_once_with(url, headers=headers, data=None)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    def test_reset_secret_invalid_clientid(self, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = "correctToken"
+        mock_response = mock.Mock()
+        mock_response.status_code = 404
+        mock_response.json.return_value = {
+            'message': 'No app exists with given client id.'
+        }
+        mock_put.return_value = mock_response
+        url = Client.base_URL + 'apps/1/secret'
+        headers = {'Authorization': 'Bearer correctToken'}
+        with self.assertRaises(ResourceNotFoundError):
+            client.reset_secret('1')
+        mock_put.assert_called_once_with(url, headers=headers, data=None)
+        self.assertEqual(1, mock_response.json.call_count)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_reset_secret_expired_token_success(self, mock_get, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = "ExpiredToken"
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Token expired'
+        }
+        mock_response3 = mock.Mock()
+        mock_response3.status_code = 200
+        mock_response3.json.return_value = {
+            'clientSecret': 'test_clientSecret'
+        }
+        mock_put.side_effect = [mock_response, mock_response3]
+
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken'
+        }
+        mock_get.return_value = mock_response2
+        self.assertEqual('test_clientSecret', client.reset_secret('1'))
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        call_list = [mock.call(self.base_URL + 'apps/1/secret', headers=headers, data=None),
+                     mock.call(self.base_URL + 'apps/1/secret', headers=newheaders, data=None)]
+        self.assertEqual(mock_put.call_args_list, call_list)
+
+    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('pythonAPIClient.client.requests.get')
+    def test_reset_secret_expired_token_failure(self, mock_get, mock_put):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = "ExpiredToken"
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            'message': 'Token expired'
+        }
+        mock_put.return_value = mock_response
+
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            'token': 'newToken',
+        }
+        mock_get.return_value = mock_response2
+        with self.assertRaises(AuthenticationError):
+            client.reset_secret('1')
+        self.assertEqual(3, mock_put.call_count)
+        self.assertEqual(2, mock_get.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        newheaders = {'Authorization': 'Bearer newToken'}
+        call_list = [mock.call(self.base_URL + 'apps/1/secret', headers=headers, data=None),
+                     mock.call(self.base_URL + 'apps/1/secret', headers=newheaders, data=None),
+                     mock.call(self.base_URL + 'apps/1/secret', headers=newheaders, data=None)]
+        self.assertEqual(mock_put.call_args_list, call_list)
+
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_camera_id_all_correct(self, mock_get):
         clientID = '0' * 96
