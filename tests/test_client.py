@@ -2210,9 +2210,9 @@ class TestClient(unittest.TestCase):
                 'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
                 'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
                 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                'ip': None, 'm3u8_url': None, 'is_active_video': True, 'is_active_image': False,
-                'type': 'non-ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'ip': None,
+                'm3u8_url': None, 'is_active_video': True, 'is_active_image': False,
+                'type': 'non-ip', 'snapshot_url': 'test_snapshot'}
         kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
                   'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
                   'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
