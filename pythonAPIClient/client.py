@@ -48,7 +48,7 @@ class Client(object):
 
     """
 
-    def _check_args(kwargs=None, required_args=None):
+    def _check_args(required_args=None, **kwargs):
         args_not_found = required_args - kwargs.keys()
         if args_not_found:
             raise FormatError('Required keywords such as ' + str(args_not_found) +
@@ -423,7 +423,7 @@ class Client(object):
         required_args = ('type', 'is_active_image', 'is_active_video',
                          'snapshot_url', 'm3u8_url', 'ip')
 
-        self._check_args(kwargs=kwargs, required_args=required_args)
+        self._check_args(required_args=required_args, kwargs=kwargs)
 
         if self.token is None:
             self.request_token()
