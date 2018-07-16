@@ -576,7 +576,7 @@ class Client(object):
                 'video_path': kwargs.pop('video_path', None)
             }
             kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-        elif kwargs.get('type') == 'non-ip':
+        elif kwargs.get('type') == 'non_ip':
             kwargs['retrieval'] = {
                 'snapshot_url': kwargs.pop('snapshot_url', None)
             }
