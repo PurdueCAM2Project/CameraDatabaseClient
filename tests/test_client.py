@@ -2149,14 +2149,14 @@ class TestClient(unittest.TestCase):
         header = {'Authorization': 'Bearer correctToken'}
         data = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo', 'timezone_name': 'Test',
                 'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
-                'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
-                'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
-                'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
-                'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
-                'is_active_image': True, 'type': 'ip', 'ip': None, 'port': '8080',
-                'brand': 'Some Brand', 'model': 'Some model', 'image_path': 'path/image',
-                'video_path': 'path/video'}
-
+                'resolution_width': 123, 'city': 'WL', 'state': 'IN',
+                'country': 'USA', 'longitude': '100.21323', 'latitude': '-44.9281',
+                'source': 'source', 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
+                'snapshot_url': 'sample.com/snapshot_url',
+                'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                'retrieval': '{"ip": null, "port": "8080", "brand": "Some Brand",'
+                             ' "model": "Some model", "image_path": "path/image",'
+                             ' "video_path": "path/video"}'}
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
                   'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
@@ -2233,12 +2233,12 @@ class TestClient(unittest.TestCase):
         data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None, 'port': None,
                 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
                 'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'ip': None,
-                'm3u8_url': None, 'is_active_video': True, 'is_active_image': False,
-                'type': 'non-ip', 'snapshot_url': None}
-
+                'resolution_height': 480, 'resolution_width': 720,
+                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA',
+                'longitude': 'test_long', 'latitude': 'test_lad', 'source': 'test_source',
+                'legacy_cameraID': 0, 'ip': None, 'm3u8_url': None, 'is_active_video': True,
+                'is_active_image': False, 'type': 'non-ip',
+                'retrieval': '{"snapshot_url": null}'}
         kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
                   'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
                   'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
@@ -2316,10 +2316,9 @@ class TestClient(unittest.TestCase):
                 'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
                 'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
                 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                'ip': None, 'snapshot_url': None, 'is_active_video': True,
-                'is_active_image': False, 'type': 'stream', 'm3u8_url': None}
-
+                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'ip': None,
+                'snapshot_url': None, 'is_active_video': True, 'is_active_image': False,
+                'type': 'stream', 'retrieval': '{"m3u8_url": null}'}
         kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
                   'port': None, 'reference_url': 'test_ref_url',
                   'reference_logo': 'test_ref_logo', 'timezone_name': 'test_t_name',
