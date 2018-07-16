@@ -431,8 +431,7 @@ class Client(object):
         url = Client.base_URL + 'cameras/create'
 
         if kwargs.get('type') == 'ip':
-            if kwargs.get('ip') is not None:
-                kwargs['retrieval'] = {
+            kwargs['retrieval'] = {
                     'ip': kwargs.pop('ip', None),
                     'port': kwargs.pop('port', None),
                     'brand': kwargs.pop('brand', None),
@@ -440,19 +439,13 @@ class Client(object):
                     'image_path': kwargs.pop('image_path', None),
                     'video_path': kwargs.pop('video_path', None)
                 }
-                kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
+            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
         elif kwargs.get('type') == 'non-ip':
-            if kwargs.get('snapshot_url') is not None:
-                kwargs['retrieval'] = {
-                    'snapshot_url': kwargs.pop('snapshot_url', None)
-                }
-                kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
+            kwargs['retrieval'] = {'snapshot_url' : kwargs.pop('snapshot_url', None)}
+            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
         elif kwargs.get('type') == 'stream':
-            if kwargs.get('m3u8_url') is not None:
-                kwargs['retrieval'] = {
-                    'm3u8_url': kwargs.pop('m3u8_url', None)
-                }
-                kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
+            kwargs['retrieval'] = {'m3u8_url': kwargs.pop('m3u8_url', None)}
+            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
 
         response = self._check_token(requests.post(url, data=kwargs,
                                                    headers=self.header_builder()), flag='POST',
