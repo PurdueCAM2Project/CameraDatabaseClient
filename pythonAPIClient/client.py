@@ -48,7 +48,7 @@ class Client(object):
 
     """
 
-    def _check_args(self, kwargs=None, required_args=None):
+    def _check_args(kwargs=None, required_args=None):
         args_not_found = required_args - kwargs.keys()
         if args_not_found:
             raise FormatError('Required keywords such as ' + str(args_not_found) +
