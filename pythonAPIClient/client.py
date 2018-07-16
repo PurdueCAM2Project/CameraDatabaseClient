@@ -568,22 +568,22 @@ class Client(object):
         if kwargs.get('type') == 'ip':
 
             kwargs['retrieval'] = {
-                'ip': kwargs.pop('ip'),
-                'port': kwargs.pop('port'),
-                'brand': kwargs.pop('brand'),
-                'model': kwargs.pop('model'),
-                'image_path': kwargs.pop('image_path'),
-                'video_path': kwargs.pop('video_path')
+                'ip': kwargs.pop('ip', None),
+                'port': kwargs.pop('port', None),
+                'brand': kwargs.pop('brand', None),
+                'model': kwargs.pop('model', None),
+                'image_path': kwargs.pop('image_path', None),
+                'video_path': kwargs.pop('video_path', None)
             }
             kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
         elif kwargs.get('type') == 'non-ip':
             kwargs['retrieval'] = {
-                'snapshot_url': kwargs.pop('snapshot_url')
+                'snapshot_url': kwargs.pop('snapshot_url', None)
             }
             kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
         elif kwargs.get('type') == 'stream':
             kwargs['retrieval'] = {
-                'm3u8_url': kwargs.pop('m3u8_url')
+                'm3u8_url': kwargs.pop('m3u8_url', None)
             }
             kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
 
