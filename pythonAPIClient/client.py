@@ -421,8 +421,7 @@ class Client(object):
                     The new camera ID for the successfully updated camera.
         """
 
-        required_args = ('type', 'is_active_image', 'is_active_video',
-                         'snapshot_url', 'm3u8_url', 'ip')
+        required_args = ('type', 'is_active_image', 'is_active_video')
 
         self._check_args(kwargs=kwargs, required_args=required_args)
 
