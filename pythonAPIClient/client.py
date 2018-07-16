@@ -47,7 +47,7 @@ class Client(object):
     This is the URL of CAM2 Database API. User is able to send API calls directly to this URL.
 
     """
-    
+
     @staticmethod
     def _check_args(kwargs=None, required_args=None):
         args_not_found = required_args - kwargs.keys()
@@ -434,24 +434,24 @@ class Client(object):
         if kwargs.get('type') == 'ip':
             if kwargs.get('ip') is not None:
                 kwargs['retrieval'] = {
-                    'ip': kwargs.pop('ip'),
-                    'port': kwargs.pop('port'),
-                    'brand': kwargs.pop('brand'),
-                    'model': kwargs.pop('model'),
-                    'image_path': kwargs.pop('image_path'),
-                    'video_path': kwargs.pop('video_path')
+                    'ip': kwargs.pop('ip', None),
+                    'port': kwargs.pop('port', None),
+                    'brand': kwargs.pop('brand', None),
+                    'model': kwargs.pop('model', None),
+                    'image_path': kwargs.pop('image_path', None),
+                    'video_path': kwargs.pop('video_path', None)
                 }
                 kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
         elif kwargs.get('type') == 'non-ip':
             if kwargs.get('snapshot_url') is not None:
                 kwargs['retrieval'] = {
-                    'snapshot_url': kwargs.pop('snapshot_url')
+                    'snapshot_url': kwargs.pop('snapshot_url', None)
                 }
                 kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
         elif kwargs.get('type') == 'stream':
             if kwargs.get('m3u8_url') is not None:
                 kwargs['retrieval'] = {
-                    'm3u8_url': kwargs.pop('m3u8_url')
+                    'm3u8_url': kwargs.pop('m3u8_url', None)
                 }
                 kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
 
