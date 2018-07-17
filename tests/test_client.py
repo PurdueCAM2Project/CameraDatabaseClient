@@ -1795,8 +1795,8 @@ class TestClient(unittest.TestCase):
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
@@ -1952,8 +1952,8 @@ class TestClient(unittest.TestCase):
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
 
         call_list = [mock.call(self.base_URL + 'cameras/' + testCamID, headers=headers,
@@ -1983,8 +1983,8 @@ class TestClient(unittest.TestCase):
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
@@ -2024,8 +2024,8 @@ class TestClient(unittest.TestCase):
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
@@ -2064,8 +2064,8 @@ class TestClient(unittest.TestCase):
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
@@ -2108,8 +2108,8 @@ class TestClient(unittest.TestCase):
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
@@ -2150,8 +2150,8 @@ class TestClient(unittest.TestCase):
                 'source': 'source', 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url',
                 'is_active_video': False, 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": null, "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": null, "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
@@ -2385,8 +2385,8 @@ class TestClient(unittest.TestCase):
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                 'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
                 'is_active_image': False, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "test_brand",'
-                             ' "model": "test_model", "image_path": "test_image_path",'
+                'retrieval': '{"brand": "test_brand", "image_path": "test_image_path",'
+                             ' "ip": "127.0.0.2", "model": "test_model", "port": "8080",'
                              ' "video_path": "test_vid_path"}'}
         call_list = [mock.call(self.base_URL + 'cameras/create', headers=headers, data=data),
                      mock.call(self.base_URL + 'cameras/create', headers=newheaders, data=data)]
@@ -2412,8 +2412,8 @@ class TestClient(unittest.TestCase):
                 'longitude': 'test_long', 'latitude': 'test_lad', 'source': 'test_source',
                 'legacy_cameraID': 0, 'm3u8_url': None, 'snapshot_url': None,
                 'is_active_video': True, 'is_active_image': False, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "test_brand",'
-                             ' "model": "test_model", "image_path": "test_image_path",'
+                'retrieval': '{"brand": "test_brand", "image_path": "test_image_path",'
+                             ' "ip": "127.0.0.2", "model": "test_model", "port": "8080",'
                              ' "video_path": "test_vid_path"}'}
         header = {'Authorization': 'Bearer correctToken'}
 
@@ -2452,8 +2452,8 @@ class TestClient(unittest.TestCase):
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                 'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
                 'is_active_image': False, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "test_brand",'
-                             ' "model": "test_model", "image_path": "test_image_path",'
+                'retrieval': '{"brand": "test_brand", "image_path": "test_image_path",'
+                             ' "ip": "127.0.0.2", "model": "test_model", "port": "8080",'
                              ' "video_path": "test_vid_path"}'}
 
         kwargs = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',

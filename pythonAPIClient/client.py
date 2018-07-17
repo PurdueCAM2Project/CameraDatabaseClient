@@ -50,7 +50,7 @@ class Client(object):
 
     @staticmethod
     def _check_args(kwargs=None, required_args=None):
-        args_not_found = required_args - kwargs.keys()
+        args_not_found = required_args - set(kwargs.keys())
         if args_not_found:
             raise FormatError('Required keywords such as ' + str(args_not_found) +
                               ' are not found')
@@ -421,7 +421,7 @@ class Client(object):
                     The new camera ID for the successfully updated camera.
         """
 
-        required_args = ('type', 'is_active_image', 'is_active_video')
+        required_args = set(['type', 'is_active_image', 'is_active_video'])
 
         self._check_args(kwargs=kwargs, required_args=required_args)
 
@@ -439,7 +439,7 @@ class Client(object):
                 'image_path': kwargs.pop('image_path', None),
                 'video_path': kwargs.pop('video_path', None)
             }
-            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
+            kwargs['retrieval'] = json.dumps(kwargs['retrieval'], sort_keys=True)
         elif kwargs.get('type') == 'non-ip':
             kwargs['retrieval'] = {
                 'snapshot_url': kwargs.pop('snapshot_url', None)
@@ -572,7 +572,7 @@ class Client(object):
                 'image_path': kwargs.pop('image_path', None),
                 'video_path': kwargs.pop('video_path', None)
             }
-            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
+            kwargs['retrieval'] = json.dumps(kwargs['retrieval'], sort_keys=True)
         elif kwargs.get('type') == 'non_ip':
             kwargs['retrieval'] = {
                 'snapshot_url': kwargs.pop('snapshot_url', None)
