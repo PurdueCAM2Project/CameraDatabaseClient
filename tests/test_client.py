@@ -1804,7 +1804,7 @@ class TestClient(unittest.TestCase):
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
         header = {'Authorization': 'Bearer correctToken'}
@@ -1838,7 +1838,7 @@ class TestClient(unittest.TestCase):
                 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'ip': None,
                 'm3u8_url': None, 'is_active_video': True, 'is_active_image': False,
-                'type': 'non-ip', 'snapshot_url': 'test_snapshot'}
+                'type': 'non_ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
         kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
                   'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
                   'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
@@ -1846,7 +1846,7 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'non-ip',
+                  'is_active_image': False, 'camera_type': 'non_ip',
                   'snapshot_url': 'test_snapshot'}
         header = {'Authorization': 'Bearer correctToken'}
 
@@ -1887,7 +1887,7 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'stream', 'm3u8_url': 'test_m3u8'}
+                  'is_active_image': False, 'camera_type': 'stream', 'm3u8_url': 'test_m3u8'}
         header = {'Authorization': 'Bearer correctToken'}
 
         resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', **kwargs)
@@ -1931,7 +1931,7 @@ class TestClient(unittest.TestCase):
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
 
@@ -1992,7 +1992,7 @@ class TestClient(unittest.TestCase):
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
         header = {'Authorization': 'Bearer correctToken'}
@@ -2033,7 +2033,7 @@ class TestClient(unittest.TestCase):
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
 
@@ -2073,7 +2073,7 @@ class TestClient(unittest.TestCase):
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
         headers = {'Authorization': 'Bearer correctToken'}
@@ -2117,7 +2117,7 @@ class TestClient(unittest.TestCase):
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
         resultID = client.add_camera(**kwargs)
@@ -2159,8 +2159,8 @@ class TestClient(unittest.TestCase):
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip', 'ip': None,
-                  'port': '8080', 'brand': 'Some Brand', 'model': 'Some model',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
+                  'ip': None, 'port': '8080', 'brand': 'Some Brand', 'model': 'Some model',
                   'image_path': 'path/image', 'video_path': 'path/video'}
         resultID = client.add_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
@@ -2192,7 +2192,7 @@ class TestClient(unittest.TestCase):
                 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                 'ip': None, 'm3u8_url': None, 'is_active_video': True, 'is_active_image': False,
-                'type': 'non-ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
+                'type': 'non_ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
 
         kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
                   'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
@@ -2201,7 +2201,7 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'non-ip',
+                  'is_active_image': False, 'camera_type': 'non_ip',
                   'snapshot_url': 'test_snapshot'}
         resultID = client.add_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
@@ -2233,7 +2233,7 @@ class TestClient(unittest.TestCase):
                 'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA',
                 'longitude': 'test_long', 'latitude': 'test_lad', 'source': 'test_source',
                 'legacy_cameraID': 0, 'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                'is_active_image': False, 'type': 'non-ip',
+                'is_active_image': False, 'type': 'non_ip',
                 'retrieval': '{"snapshot_url": null}'}
         kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
                   'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
@@ -2242,7 +2242,7 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'non-ip',
+                  'is_active_image': False, 'camera_type': 'non_ip',
                   'snapshot_url': None}
         resultID = client.add_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
@@ -2283,7 +2283,7 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'stream', 'm3u8_url': 'test_m3u8'}
+                  'is_active_image': False, 'camera_type': 'stream', 'm3u8_url': 'test_m3u8'}
         resultID = client.add_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_camID)
@@ -2323,7 +2323,7 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'stream', 'm3u8_url': None}
+                  'is_active_image': False, 'camera_type': 'stream', 'm3u8_url': None}
         resultID = client.add_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_camID)
@@ -2364,7 +2364,7 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
+                  'is_active_image': False, 'camera_type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
                   'brand': 'test_brand', 'model': 'test_model', 'image_path': 'test_image_path',
                   'video_path': 'test_vid_path'}
 
@@ -2423,7 +2423,7 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
+                  'is_active_image': False, 'camera_type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
                   'brand': 'test_brand', 'model': 'test_model', 'image_path': 'test_image_path',
                   'video_path': 'test_vid_path'}
         with self.assertRaises(InternalError):
@@ -2462,7 +2462,7 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
+                  'is_active_image': False, 'camera_type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
                   'brand': 'test_brand', 'model': 'test_model', 'image_path': 'test_image_path',
                   'video_path': 'test_vid_path'}
 
