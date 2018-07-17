@@ -48,12 +48,18 @@ class Client(object):
 
     """
 
+    _camera_fields = set(['reference_url', 'reference_logo', 'timezone_name', 'timezone_id',
+                          'utc_offset', 'resolution_height', 'resolution_width', 'city',
+                          'state', 'country', 'longitude', 'latitude', 'source',
+                          'legacy_cameraID', 'm3u8_url', 'snapshot_url', 'is_active_video',
+                          'is_active_image', 'camera_type', 'ip', 'port', 'brand', 'model',
+                          'image_path', 'video_path'])
+
     @staticmethod
-    def _check_args(kwargs=None, required_args=None):
-        args_not_found = required_args - set(kwargs.keys())
-        if args_not_found:
-            raise FormatError('Required keywords such as ' + str(args_not_found) +
-                              ' are not found')
+    def _check_args(kwargs, legal_args):
+        illegal_args = set(kwargs.keys()) - legal_args
+        if illegal_args:
+            raise FormatError('Keywords ' + str(illegal_args) + ' are not defined.')
 
     def _check_token(self, response, flag, url, data=None, params=None):
         counter = 0
@@ -278,6 +284,7 @@ class Client(object):
 
         Returns
         -------
+        list of str
             A list of client's ID owned by the user.
 
         """
@@ -334,101 +341,116 @@ class Client(object):
                 raise InternalError()
         return response.json()['api_usage']
 
-    def add_camera(self, **kwargs):
+    def write_camera(self, **kwargs):
 
-        """add_camera initialization method.
+        """
+        add or update camera in the database.
 
-                Parameters
-                ----------
-                camera_type : str
-                    Type of camera.
-                    Allowed values: 'ip', 'non_ip', 'stream'/
-                is_active_image : bool
-                    If the camera is active and can get images.
-                    This field can identify true/false case-insensitively and 0/1.
-                is_active_video : bool
-                    If the camera is active and can get video.
-                    This field can identify true/false case-insensitively and 0/1.
-                legacy_cameraID : int, optional
-                    Original ID of the camera in SQL database.
-                source : str, optional
-                    Source of camera.
-                latitude : int or float, optional
-                    Latitude of the camera location.
-                longitude : int or float, optional
-                    Longitude of the camera location.
-                country : str, optional
-                    Country which the camera locates at.
-                state : str, optional
-                    State which the camera locates at.
-                city : str, optional
-                    City which the camera locates at.
-                resolution_width : int, optional
-                    Resolution width of the camera.
-                resolution_height : int, optional
-                    Resolution height of the camera.
-                utc_offset : int, optional
-                    Time difference between UTC and the camera location.
-                timezone_id : str, optional
-                    Time zone ID of the camera location.
-                timezone_name : str, optional
-                    Time zone name of the camera location.
-                reference_logo : str, optional
-                    Reference logo of the camera.
-                reference_url : str, optional
-                    Reference url of the camera.
-                ip : str, optional
-                    (ip_camera) IP address of the camera.
-                port : str or int, optional
-                    (ip_camera) Port to connect to camera.
-                brand : str, optional
-                    (ip_camera) Brand of the camera.
-                model : str, optional
-                    (ip_camera) Model of the camera.
-                snapshot_url : str, optional
-                    (non_ip_camera) Url to retrieve snapshots from the camera.
-                m3u8_url : str, optional
-                    (stream_camera) Url to retrieve stream from the camera.
-                image_path : str, optional
-                    (ip_camera) Path to retrieve images from the camera.
-                    if the camera is an ip camera and 'is_active_image' is true,
-                    then it will always have a image_path.
-                    However, image_path can exist even if 'is_active_image'
-                    is false for this ip camera.
-                video_path : str, optional
-                    (ip_camera) Path to retrieve video from the camera.
-                    if the camera is an ip camera and 'is_active_video' is true,
-                    then it will always have a video_path.
-                    However, video_path can exist even if 'is_active_video'
-                    is false for this ip camera.
+        Required Params to Add A Camera
+        --------------------------------
 
-                Raises
-                ------
-                    AuthenticationError
-                        If the client secret of this client object does not match the clientID.
-                    FormatError
-                        List of invalid attributes.
-                    ResourceConflictError
-                        The legacy_cameraID already exist in the database.
-                    InternalError
-                        If there is an API internal error.
-                    ResourceNotFoundError
-                        If no client app exists with the clientID of this client object.
+            camera_type : str
+                Type of camera.
+                Allowed values: 'ip', 'non_ip', 'stream'
+            is_active_image : bool
+                If the camera is active and can get images.
+                This field can identify true/false case-insensitively and 0/1.
+            is_active_video : bool
+                If the camera is active and can get video.
+                This field can identify true/false case-insensitively and 0/1.
+            ip : str
+                (ip_camera only) IP address of the camera.
+            snapshot_url : str
+                (non_ip_camera only) Url to retrieve snapshots from the camera.
+            m3u8_url : str
+                (stream_camera only) Url to retrieve stream from the camera.
 
-                Returns
-                -------
-                str
-                    The new camera ID for the successfully updated camera.
+        Required Params to Update A Camera
+        ----------------------------------
+
+            cameraID : str
+                CameraID of the camera to be updated.
+
+        Note
+        ----
+
+            For adding camera to database, besides supplying the required parameters,
+            you can also include any number of optional parameters defined below.
+            You must not supply cameraID when you want to add a new camera to the database.
+            A new cameraID will be generated and returned when the camera is successfully added.
+
+            For updating existing camera, besides cameraID, you can also
+            supply any number of parameters from required parameters to add a camera
+            and optional parameters defined below.
+
+
+        Optional Params
+        ---------------
+
+            legacy_cameraID : int, optional
+                Original ID of the camera in SQL database.
+            source : str, optional
+                Source of camera.
+            latitude : int or float, optional
+                Latitude of the camera location.
+            longitude : int or float, optional
+                Longitude of the camera location.
+            country : str, optional
+                Country which the camera locates at.
+            state : str, optional
+                State which the camera locates at.
+            city : str, optional
+                City which the camera locates at.
+            resolution_width : int, optional
+                Resolution width of the camera.
+            resolution_height : int, optional
+                Resolution height of the camera.
+            utc_offset : int, optional
+                Time difference between UTC and the camera location.
+            timezone_id : str, optional
+                Time zone ID of the camera location.
+            timezone_name : str, optional
+                Time zone name of the camera location.
+            reference_logo : str, optional
+                Reference logo of the camera.
+            reference_url : str, optional
+                Reference url of the camera.
+            port : str or int, optional
+                (ip_camera only) Port to connect to camera.
+            brand : str, optional
+                (ip_camera only) Brand of the camera.
+            model : str, optional
+                (ip_camera only) Model of the camera.
+            image_path : str, optional
+                (ip_camera only) Path to retrieve images from the camera.
+            video_path : str, optional
+                (ip_camera only) Path to retrieve video from the camera.
+
+        Raises
+        ------
+            AuthenticationError
+                If the client secret of this client object does not match the clientID.
+            FormatError
+                List of invalid attributes.
+            ResourceConflictError
+                The legacy_cameraID already exist in the database.
+            InternalError
+                If there is an API internal error.
+            ResourceNotFoundError
+                If no client app exists with the clientID of this client object.
+
+        Returns
+        -------
+        str
+            The camera ID for the successfully added or updated camera.
         """
 
-        required_args = set(['camera_type', 'is_active_image', 'is_active_video'])
-
-        self._check_args(kwargs=kwargs, required_args=required_args)
+        self._check_args(kwargs=kwargs, legal_args=self._camera_fields)
 
         if self.token is None:
             self._request_token()
 
-        url = Client.base_URL + 'cameras/create'
+        operation = 'POST' if kwargs.get('cameraID') is None else 'PUT'
 
         if kwargs.get('camera_type') == 'ip':
             kwargs['retrieval'] = {
@@ -440,6 +462,7 @@ class Client(object):
                 'video_path': kwargs.pop('video_path', None)
             }
             kwargs['retrieval'] = json.dumps(kwargs['retrieval'], sort_keys=True)
+
         elif kwargs.get('camera_type') == 'non_ip':
             kwargs['retrieval'] = {
                 'snapshot_url': kwargs.pop('snapshot_url', None)
@@ -451,10 +474,17 @@ class Client(object):
             }
             kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
         kwargs['type'] = kwargs.pop('camera_type', None)
-        response = self._check_token(requests.post(url, data=kwargs,
-                                                   headers=self.header_builder()), flag='POST',
-                                     url=url, data=kwargs)
-        if response.status_code != 201:
+
+        if operation == 'POST':
+            url = Client.base_URL + 'cameras/create'
+            temp_response = requests.post(url, data=kwargs, headers=self.header_builder())
+        else:
+            url = Client.base_URL + 'cameras/' + kwargs.pop('cameraID')
+            temp_response = requests.put(url, data=kwargs, headers=self.header_builder())
+
+        response = self._check_token(temp_response, flag=operation, url=url, data=kwargs)
+
+        if response.status_code != 201 or response.status_code != 200:
             if response.status_code == 403:
                 raise AuthenticationError(response.json()['message'])
             elif response.status_code == 422:
