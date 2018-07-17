@@ -76,7 +76,7 @@ class TestClient(unittest.TestCase):
         url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         with self.assertRaises(ResourceNotFoundError):
-            client.request_token()
+            client._request_token()
         mock_get.assert_called_once_with(url, params=params)
         self.assertEqual(1, mock_response.json.call_count)
         return mock_http_error_handler
@@ -97,7 +97,7 @@ class TestClient(unittest.TestCase):
         url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         with self.assertRaises(AuthenticationError):
-            client.request_token()
+            client._request_token()
         mock_get.assert_called_once_with(url, params=params)
         self.assertEqual(1, mock_response.json.call_count)
         return mock_http_error_handler
@@ -114,7 +114,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        response_dict = client.request_token()
+        response_dict = client._request_token()
         url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         mock_get.assert_called_once_with(url, params=params)
@@ -133,7 +133,7 @@ class TestClient(unittest.TestCase):
         url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         with self.assertRaises(InternalError):
-            client.request_token()
+            client._request_token()
         mock_get.assert_called_once_with(url, params=params)
         self.assertEqual(0, mock_response.json.call_count)
 
@@ -185,7 +185,7 @@ class TestClient(unittest.TestCase):
             'clientSecret': 'test_clientSecret'
         }
         mock_post.side_effect = [mock_response, mock_response2]
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
@@ -222,7 +222,7 @@ class TestClient(unittest.TestCase):
             'message': 'Token expired',
         }
         mock_post.return_value = mock_response
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
@@ -351,7 +351,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             'message': 'Token expired',
         }
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_response1 = mock.Mock()
         mock_response1.status_code = 200
         mock_response1.json.return_value = {
@@ -392,7 +392,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             'message': 'Token expired',
         }
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -431,7 +431,7 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response
 
         with self.assertRaises(ResourceNotFoundError):
-            client.request_token()
+            client._request_token()
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         mock_get.assert_called_once_with(self.token_url, params=token_params)
         self.assertEqual(1, mock_response.json.call_count)
@@ -1114,7 +1114,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1149,7 +1149,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1188,7 +1188,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1229,7 +1229,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1443,7 +1443,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1478,7 +1478,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1519,7 +1519,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1916,7 +1916,7 @@ class TestClient(unittest.TestCase):
             'cameraID': '5ae0ecbd336359291be74c12'
         }
         mock_put.side_effect = [mock_response, mock_response2]
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
@@ -2349,7 +2349,7 @@ class TestClient(unittest.TestCase):
             'cameraID': 'test_cameraID'
         }
         mock_post.side_effect = [mock_response, mock_response2]
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {

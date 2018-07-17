@@ -34,7 +34,7 @@ class Client(object):
         at https://www.cam2project.net/.
 
         For each methods except internal method like _check_token(),
-        those methods will rerun request_token() to get a new token if token expires.
+        those methods will rerun _request_token() to get a new token if token expires.
         But if the requests get status code of 401 for more than 2 times,
         we raise an Authentication error.
 
@@ -59,7 +59,7 @@ class Client(object):
         counter = 0
         while response.status_code == 401 and \
                 response.json()['message'] == 'Token expired' and counter < 2:
-            self.request_token()
+            self._request_token()
             header = self.header_builder()
             if flag == 'GET':
                 response = requests.get(url, headers=header, params=params)
@@ -70,7 +70,7 @@ class Client(object):
             counter += 1
         return response
 
-    def request_token(self):
+    def _request_token(self):
 
         """A method to request an access token for the client application.
         Raises
@@ -152,7 +152,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/register'
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         data = {'owner': owner, 'permissionLevel': permissionLevel}
         response = self._check_token(response=requests.post(url, headers=header, data=data),
@@ -186,7 +186,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/' + clientID
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         data = {'owner': owner}
         response = self._check_token(response=requests.put(url, headers=header, data=data),
@@ -219,7 +219,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/' + clientID
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         data = {'permissionLevel': permissionLevel}
         response = self._check_token(response=requests.put(url, headers=header, data=data),
@@ -250,7 +250,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/' + clientID + '/secret'
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.put(url, headers=header, data=None),
                                      flag='PUT', url=url, data=None)
@@ -284,7 +284,7 @@ class Client(object):
         url = Client.base_URL + 'apps/by-owner'
         param = {'owner': owner}
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header, params=param),
                                      flag='GET', url=url, params=param)
@@ -319,7 +319,7 @@ class Client(object):
         url = Client.base_URL + "apps/" + clientID + "/usage"
         param = {'owner': owner}
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header, params=param),
                                      flag='GET', url=url, params=param)
@@ -426,7 +426,7 @@ class Client(object):
         self._check_args(kwargs=kwargs, required_args=required_args)
 
         if self.token is None:
-            self.request_token()
+            self._request_token()
 
         url = Client.base_URL + 'cameras/create'
 
@@ -558,7 +558,7 @@ class Client(object):
         """
 
         if self.token is None:
-            self.request_token()
+            self._request_token()
 
         url = Client.base_URL + 'cameras/' + cameraID
 
@@ -617,7 +617,7 @@ class Client(object):
 
         """
         if self.token is None:
-            self.request_token()
+            self._request_token()
         url = Client.base_URL + "cameras/" + cameraID
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header),
@@ -688,7 +688,7 @@ class Client(object):
 
         """
         if self.token is None:
-            self.request_token()
+            self._request_token()
         local_params = dict(locals())
         local_params.pop('self', None)
         local_params['type'] = local_params.pop('camera_type', None)
@@ -775,7 +775,7 @@ class Client(object):
         # validate parameter names here.
 
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header, params=kwargs),
                                      flag='GET', url=url, params=kwargs)
@@ -820,7 +820,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/db-change'
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         param = {'start': start,
                  'end': end,
