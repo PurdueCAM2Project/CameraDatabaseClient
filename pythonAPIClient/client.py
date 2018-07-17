@@ -48,6 +48,12 @@ class Client(object):
 
     """
 
+    @staticmethod
+    def _check_args(kwargs=None, required_args=None):
+        args_not_found = required_args - kwargs.keys()
+        if args_not_found:
+            raise FormatError('Required keywords such as ' + str(args_not_found) +
+                              ' are not found')
 
     def _check_token(self, response, flag, url, data=None, params=None):
         counter = 0
@@ -328,12 +334,7 @@ class Client(object):
                 raise InternalError()
         return response.json()['api_usage']
 
-    def add_camera(self, camera_type, is_active_image, is_active_video, snapshot_url, m3u8_url,
-                   ip, legacy_cameraID=None, source=None, latitude=None, longitude=None,
-                   country=None, state=None, city=None, resolution_width=None,
-                   resolution_height=None, utc_offset=None, timezone_id=None, timezone_name=None,
-                   reference_logo=None, reference_url=None, port=None, brand=None, model=None,
-                   image_path=None, video_path=None):
+    def add_camera(self, **kwargs):
 
         """add_camera initialization method.
 
@@ -420,43 +421,39 @@ class Client(object):
                     The new camera ID for the successfully updated camera.
         """
 
-        local_params = dict(locals())
+        required_args = ('type', 'is_active_image', 'is_active_video')
+
+        self._check_args(kwargs=kwargs, required_args=required_args)
 
         if self.token is None:
             self.request_token()
 
         url = Client.base_URL + 'cameras/create'
 
-        local_params['type'] = local_params.pop('camera_type')
-        del local_params['self']
+        if kwargs.get('type') == 'ip':
+            kwargs['retrieval'] = {
+                'ip': kwargs.pop('ip', None),
+                'port': kwargs.pop('port', None),
+                'brand': kwargs.pop('brand', None),
+                'model': kwargs.pop('model', None),
+                'image_path': kwargs.pop('image_path', None),
+                'video_path': kwargs.pop('video_path', None)
+            }
+            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
+        elif kwargs.get('type') == 'non-ip':
+            kwargs['retrieval'] = {
+                'snapshot_url': kwargs.pop('snapshot_url', None)
+            }
+            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
+        elif kwargs.get('type') == 'stream':
+            kwargs['retrieval'] = {
+                'm3u8_url': kwargs.pop('m3u8_url', None)
+            }
+            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
 
-        if camera_type == 'ip':
-            if ip is not None:
-                local_params['retrieval'] = {
-                    'ip': local_params.pop('ip'),
-                    'port': local_params.pop('port'),
-                    'brand': local_params.pop('brand'),
-                    'model': local_params.pop('model'),
-                    'image_path': local_params.pop('image_path'),
-                    'video_path': local_params.pop('video_path')
-                }
-                local_params['retrieval'] = json.dumps(local_params['retrieval'])
-        elif camera_type == 'non-ip':
-            if snapshot_url is not None:
-                local_params['retrieval'] = {
-                    'snapshot_url': local_params.pop('snapshot_url')
-                }
-                local_params['retrieval'] = json.dumps(local_params['retrieval'])
-        elif camera_type == 'stream':
-            if m3u8_url is not None:
-                local_params['retrieval'] = {
-                    'm3u8_url': local_params.pop('m3u8_url')
-                }
-                local_params['retrieval'] = json.dumps(local_params['retrieval'])
-
-        response = self._check_token(requests.post(url, data=local_params,
+        response = self._check_token(requests.post(url, data=kwargs,
                                                    headers=self.header_builder()), flag='POST',
-                                     url=url, data=local_params)
+                                     url=url, data=kwargs)
         if response.status_code != 201:
             if response.status_code == 403:
                 raise AuthenticationError(response.json()['message'])
