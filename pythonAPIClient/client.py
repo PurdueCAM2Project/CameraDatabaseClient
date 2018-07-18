@@ -76,6 +76,7 @@ class Client(object):
 
     @staticmethod
     def _check_args(kwargs, legal_args):
+
         illegal_args = set(kwargs.keys()) - legal_args
         if illegal_args:
             raise FormatError('Keywords ' + str(list(illegal_args)) + ' are not defined.')
@@ -710,10 +711,11 @@ class Client(object):
         InternalError
             If there is an API internal error.
         """
-        url = Client.base_URL + "cameras/exist"
-        kwargs['type'] = camera_type
 
         self._check_args(kwargs, self._retrieval_fields)
+
+        url = Client.base_URL + "cameras/exist"
+        kwargs['type'] = camera_type
 
         if self.token is None:
             self._request_token()
