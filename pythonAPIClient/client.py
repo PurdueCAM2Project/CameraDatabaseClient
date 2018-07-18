@@ -34,7 +34,7 @@ class Client(object):
         at https://www.cam2project.net/.
 
         For each methods except internal method like _check_token(),
-        those methods will rerun request_token() to get a new token if token expires.
+        those methods will rerun _request_token() to get a new token if token expires.
         But if the requests get status code of 401 for more than 2 times,
         we raise an Authentication error.
 
@@ -48,18 +48,43 @@ class Client(object):
 
     """
 
+    _camera_fields = set(['reference_url', 'reference_logo', 'timezone_name', 'timezone_id',
+                          'utc_offset', 'resolution_height', 'resolution_width', 'city',
+                          'state', 'country', 'longitude', 'latitude', 'source',
+                          'legacy_cameraID', 'm3u8_url', 'snapshot_url', 'is_active_video',
+                          'is_active_image', 'camera_type', 'ip', 'port', 'brand', 'model',
+                          'image_path', 'video_path', 'cameraID'])
+
+    """
+    set: Static private variable to store all legal keywords for adding or updating a camera.
+    """
+
+    _search_fields = set(['resolution_height', 'resolution_width', 'city', 'is_active_video',
+                          'state', 'country', 'longitude', 'latitude', 'source', 'camera_type',
+                          'is_active_image', 'radius', 'offset'])
+
+    """
+    set: Static private variable to store all legal keywords for searching cameras.
+    """
+
+    _retrieval_fields = set(['ip', 'port', 'image_path', 'video_path', 'snapshot_url', 'm3u8_url'])
+
+    """
+    set: Static private variable to store all legal keywords in kwargs in check camera
+         existence function.
+    """
+
     @staticmethod
-    def _check_args(kwargs=None, required_args=None):
-        args_not_found = required_args - kwargs.keys()
-        if args_not_found:
-            raise FormatError('Required keywords such as ' + str(args_not_found) +
-                              ' are not found')
+    def _check_args(kwargs, legal_args):
+        illegal_args = set(kwargs.keys()) - legal_args
+        if illegal_args:
+            raise FormatError('Keywords ' + str(list(illegal_args)) + ' are not defined.')
 
     def _check_token(self, response, flag, url, data=None, params=None):
         counter = 0
         while response.status_code == 401 and \
                 response.json()['message'] == 'Token expired' and counter < 2:
-            self.request_token()
+            self._request_token()
             header = self.header_builder()
             if flag == 'GET':
                 response = requests.get(url, headers=header, params=params)
@@ -70,7 +95,7 @@ class Client(object):
             counter += 1
         return response
 
-    def request_token(self):
+    def _request_token(self):
 
         """A method to request an access token for the client application.
         Raises
@@ -152,7 +177,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/register'
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         data = {'owner': owner, 'permissionLevel': permissionLevel}
         response = self._check_token(response=requests.post(url, headers=header, data=data),
@@ -166,8 +191,6 @@ class Client(object):
                 raise InternalError()
         return response.json()['clientID'], response.json()['clientSecret']
 
-
-    # TODO: update client's owner
     def update_owner(self, clientID, owner):
         """
         Parameters
@@ -186,7 +209,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/' + clientID
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         data = {'owner': owner}
         response = self._check_token(response=requests.put(url, headers=header, data=data),
@@ -200,7 +223,6 @@ class Client(object):
                 raise InternalError()
         return response.json()['message']
 
-    # TODO: update client's permissionLevel
     def update_permission(self, clientID, permissionLevel):
         """
         Parameters
@@ -219,7 +241,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/' + clientID
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         data = {'permissionLevel': permissionLevel}
         response = self._check_token(response=requests.put(url, headers=header, data=data),
@@ -233,7 +255,6 @@ class Client(object):
                 raise InternalError()
         return response.json()['message']
 
-    # TODO : reset Secret
     def reset_secret(self, clientID):
         """
         Parameters
@@ -250,7 +271,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/' + clientID + '/secret'
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.put(url, headers=header, data=None),
                                      flag='PUT', url=url, data=None)
@@ -268,7 +289,6 @@ class Client(object):
 
         return response.json()['clientSecret']
 
-    # TODO: get clientID by owner
     def client_ids_by_owner(self, owner):
         """
         Parameters
@@ -278,13 +298,14 @@ class Client(object):
 
         Returns
         -------
+        list of str
             A list of client's ID owned by the user.
 
         """
         url = Client.base_URL + 'apps/by-owner'
         param = {'owner': owner}
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header, params=param),
                                      flag='GET', url=url, params=param)
@@ -299,7 +320,6 @@ class Client(object):
             clientIDs.append(ct['clientID'])
         return clientIDs
 
-    # TODO: get api usage count by client
     def usage_by_client(self, clientID, owner):
         """
         Parameters
@@ -319,7 +339,7 @@ class Client(object):
         url = Client.base_URL + "apps/" + clientID + "/usage"
         param = {'owner': owner}
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header, params=param),
                                      flag='GET', url=url, params=param)
@@ -334,103 +354,118 @@ class Client(object):
                 raise InternalError()
         return response.json()['api_usage']
 
-    def add_camera(self, **kwargs):
+    def write_camera(self, **kwargs):
 
-        """add_camera initialization method.
+        """
+        add or update camera in the database.
 
-                Parameters
-                ----------
-                camera_type : str
-                    Type of camera.
-                    Allowed values: 'ip', 'non_ip', 'stream'/
-                is_active_image : bool
-                    If the camera is active and can get images.
-                    This field can identify true/false case-insensitively and 0/1.
-                is_active_video : bool
-                    If the camera is active and can get video.
-                    This field can identify true/false case-insensitively and 0/1.
-                legacy_cameraID : int, optional
-                    Original ID of the camera in SQL database.
-                source : str, optional
-                    Source of camera.
-                latitude : int or float, optional
-                    Latitude of the camera location.
-                longitude : int or float, optional
-                    Longitude of the camera location.
-                country : str, optional
-                    Country which the camera locates at.
-                state : str, optional
-                    State which the camera locates at.
-                city : str, optional
-                    City which the camera locates at.
-                resolution_width : int, optional
-                    Resolution width of the camera.
-                resolution_height : int, optional
-                    Resolution height of the camera.
-                utc_offset : int, optional
-                    Time difference between UTC and the camera location.
-                timezone_id : str, optional
-                    Time zone ID of the camera location.
-                timezone_name : str, optional
-                    Time zone name of the camera location.
-                reference_logo : str, optional
-                    Reference logo of the camera.
-                reference_url : str, optional
-                    Reference url of the camera.
-                ip : str, optional
-                    (ip_camera) IP address of the camera.
-                port : str or int, optional
-                    (ip_camera) Port to connect to camera.
-                brand : str, optional
-                    (ip_camera) Brand of the camera.
-                model : str, optional
-                    (ip_camera) Model of the camera.
-                snapshot_url : str, optional
-                    (non_ip_camera) Url to retrieve snapshots from the camera.
-                m3u8_url : str, optional
-                    (stream_camera) Url to retrieve stream from the camera.
-                image_path : str, optional
-                    (ip_camera) Path to retrieve images from the camera.
-                    if the camera is an ip camera and 'is_active_image' is true,
-                    then it will always have a image_path.
-                    However, image_path can exist even if 'is_active_image'
-                    is false for this ip camera.
-                video_path : str, optional
-                    (ip_camera) Path to retrieve video from the camera.
-                    if the camera is an ip camera and 'is_active_video' is true,
-                    then it will always have a video_path.
-                    However, video_path can exist even if 'is_active_video'
-                    is false for this ip camera.
+        Required Params to Add A Camera
+        --------------------------------
 
-                Raises
-                ------
-                    AuthenticationError
-                        If the client secret of this client object does not match the clientID.
-                    FormatError
-                        List of invalid attributes.
-                    ResourceConflictError
-                        The legacy_cameraID already exist in the database.
-                    InternalError
-                        If there is an API internal error.
-                    ResourceNotFoundError
-                        If no client app exists with the clientID of this client object.
+            camera_type : str
+                Type of camera.
+                Allowed values: 'ip', 'non_ip', 'stream'.
+            is_active_image : bool
+                If the camera is active and can get images.
+                This field can identify true/false case-insensitively and 0/1.
+            is_active_video : bool
+                If the camera is active and can get video.
+                This field can identify true/false case-insensitively and 0/1.
+            ip : str
+                (ip_camera only) IP address of the camera.
+            snapshot_url : str
+                (non_ip_camera only) Url to retrieve snapshots from the camera.
+            m3u8_url : str
+                (stream_camera only) Url to retrieve stream from the camera.
 
-                Returns
-                -------
-                str
-                    The new camera ID for the successfully updated camera.
+        Required Params to Update A Camera
+        ----------------------------------
+
+            cameraID : str
+                CameraID of the camera to be updated.
+
+        Note
+        ----
+
+            For adding camera to database, besides supplying the required parameters,
+            you can also include any number of optional parameters defined below.
+            You must not supply cameraID when you want to add a new camera to the database.
+            A new cameraID will be generated and returned when the camera is successfully added.
+
+            For updating existing camera, besides cameraID, you can also
+            supply any number of parameters from required parameters to add a camera
+            and optional parameters defined below.
+
+
+        Optional Params
+        ---------------
+
+            legacy_cameraID : int, optional
+                Original ID of the camera in SQL database.
+            source : str, optional
+                Source of camera.
+            latitude : int or float, optional
+                Latitude of the camera location.
+            longitude : int or float, optional
+                Longitude of the camera location.
+            country : str, optional
+                Country which the camera locates at.
+            state : str, optional
+                State which the camera locates at.
+            city : str, optional
+                City which the camera locates at.
+            resolution_width : int, optional
+                Resolution width of the camera. It has to be positive.
+            resolution_height : int, optional
+                Resolution height of the camera.
+            utc_offset : int, optional
+                Time difference between UTC and the camera location.
+            timezone_id : str, optional
+                Time zone ID of the camera location.
+            timezone_name : str, optional
+                Time zone name of the camera location.
+            reference_logo : str, optional
+                Reference logo of the camera.
+            reference_url : str, optional
+                Reference url of the camera.
+            port : str or int, optional
+                (ip_camera only) Port to connect to camera.
+            brand : str, optional
+                (ip_camera only) Brand of the camera.
+            model : str, optional
+                (ip_camera only) Model of the camera.
+            image_path : str, optional
+                (ip_camera only) Path to retrieve images from the camera.
+            video_path : str, optional
+                (ip_camera only) Path to retrieve video from the camera.
+
+        Raises
+        ------
+            AuthenticationError
+                If the client secret of this client object does not match the clientID.
+            FormatError
+                List of invalid attributes.
+            ResourceConflictError
+                The legacy_cameraID already exist in the database.
+            InternalError
+                If there is an API internal error.
+            ResourceNotFoundError
+                If no client app exists with the clientID of this client object.
+
+        Returns
+        -------
+        str
+            The camera ID for the successfully added or updated camera.
         """
 
-        required_args = ('type', 'is_active_image', 'is_active_video')
-
-        self._check_args(kwargs=kwargs, required_args=required_args)
+        self._check_args(kwargs=kwargs, legal_args=self._camera_fields)
 
         if self.token is None:
-            self.request_token()
+            self._request_token()
 
-        url = Client.base_URL + 'cameras/create'
+        operation = 'POST' if kwargs.get('cameraID') is None else 'PUT'
 
-        if kwargs.get('type') == 'ip':
+        if kwargs.get('camera_type') == 'ip':
             kwargs['retrieval'] = {
                 'ip': kwargs.pop('ip', None),
                 'port': kwargs.pop('port', None),
@@ -439,22 +474,30 @@ class Client(object):
                 'image_path': kwargs.pop('image_path', None),
                 'video_path': kwargs.pop('video_path', None)
             }
-            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-        elif kwargs.get('type') == 'non-ip':
+            kwargs['retrieval'] = json.dumps(kwargs['retrieval'], sort_keys=True)
+
+        elif kwargs.get('camera_type') == 'non_ip':
             kwargs['retrieval'] = {
                 'snapshot_url': kwargs.pop('snapshot_url', None)
             }
             kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-        elif kwargs.get('type') == 'stream':
+        elif kwargs.get('camera_type') == 'stream':
             kwargs['retrieval'] = {
                 'm3u8_url': kwargs.pop('m3u8_url', None)
             }
             kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
+        kwargs['type'] = kwargs.pop('camera_type', None)
 
-        response = self._check_token(requests.post(url, data=kwargs,
-                                                   headers=self.header_builder()), flag='POST',
-                                     url=url, data=kwargs)
-        if response.status_code != 201:
+        if operation == 'POST':
+            url = Client.base_URL + 'cameras/create'
+            temp_response = requests.post(url, data=kwargs, headers=self.header_builder())
+        else:
+            url = Client.base_URL + 'cameras/' + kwargs.pop('cameraID')
+            temp_response = requests.put(url, data=kwargs, headers=self.header_builder())
+
+        response = self._check_token(temp_response, flag=operation, url=url, data=kwargs)
+
+        if response.status_code != 201 and response.status_code != 200:
             if response.status_code == 403:
                 raise AuthenticationError(response.json()['message'])
             elif response.status_code == 422:
@@ -468,140 +511,6 @@ class Client(object):
 
         return response.json()['cameraID']
 
-    def update_camera(self, cameraID, **kwargs):
-
-        """update_camera initialization method.
-
-                Parameters
-                ----------
-                cameraID : str
-                    Required cameraID for the update camera
-                camera_type : str, optional
-                    Type of camera.
-                    Allowed values: 'ip', 'non_ip', 'stream'/
-                is_active_image : bool, optional
-                    If the camera is active and can get images.
-                    This field can identify true/false case-insensitively and 0/1.
-                is_active_video : bool, optional
-                    If the camera is active and can get video.
-                    This field can identify true/false case-insensitively and 0/1.
-                legacy_cameraID : int, optional
-                    Original ID of the camera in SQL database.
-                source : str, optional
-                    Source of camera.
-                latitude : int or float, optional
-                    Latitude of the camera location.
-                longitude : int or float, optional
-                    Longitude of the camera location.
-                country : str, optional
-                    Country which the camera locates at.
-                state : str, optional
-                    State which the camera locates at.
-                city : str, optional
-                    City which the camera locates at.
-                resolution_width : int, optional
-                    Resolution width of the camera.
-                resolution_height : int, optional
-                    Resolution height of the camera.
-                utc_offset : int, optional
-                    Time difference between UTC and the camera location.
-                timezone_id : str, optional
-                    Time zone ID of the camera location.
-                timezone_name : str, optional
-                    Time zone name of the camera location.
-                reference_logo : str, optional
-                    Reference logo of the camera.
-                reference_url : str, optional
-                    Reference url of the camera.
-                ip : str, optional
-                    (ip_camera) IP address of the camera.
-                port : str or int, optional
-                    (ip_camera) Port to connect to camera.
-                brand : str, optional
-                    (ip_camera) Brand of the camera.
-                model : str, optional
-                    (ip_camera) Model of the camera.
-                snapshot_url : str, optional
-                    (non_ip_camera) Url to retrieve snapshots from the camera.
-                m3u8_url : str, optional
-                    (stream_camera) Url to retrieve stream from the camera.
-                image_path : str, optional
-                    (ip_camera) Path to retrieve images from the camera.
-                    if the camera is an ip camera and 'is_active_image' is true,
-                    then it will always have a image_path.
-                    However, image_path can exist even if 'is_active_image'
-                    is false for this ip camera.
-                video_path : str, optional
-                    (ip_camera) Path to retrieve video from the camera.
-                    if the camera is an ip camera and 'is_active_video' is true,
-                    then it will always have a video_path.
-                    However, video_path can exist even if 'is_active_video'
-                    is false for this ip camera.
-
-                Raises
-                ------
-                    AuthenticationError
-                        If the client secret of this client object does not match the clientID.
-                    FormatError
-                        List of invalid attributes.
-                    ResourceConflictError
-                        The legacy_cameraID already exist in the database.
-                    InternalError
-                        If there is an API internal error.
-                    ResourceNotFoundError
-                        If no client app exists with the clientID of this client object.
-
-                Returns
-                -------
-                str
-                    The camera ID for the successfully updated camera.
-        """
-
-        if self.token is None:
-            self.request_token()
-
-        url = Client.base_URL + 'cameras/' + cameraID
-
-        if kwargs.get('type') == 'ip':
-
-            kwargs['retrieval'] = {
-                'ip': kwargs.pop('ip', None),
-                'port': kwargs.pop('port', None),
-                'brand': kwargs.pop('brand', None),
-                'model': kwargs.pop('model', None),
-                'image_path': kwargs.pop('image_path', None),
-                'video_path': kwargs.pop('video_path', None)
-            }
-            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-        elif kwargs.get('type') == 'non_ip':
-            kwargs['retrieval'] = {
-                'snapshot_url': kwargs.pop('snapshot_url', None)
-            }
-            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-        elif kwargs.get('type') == 'stream':
-            kwargs['retrieval'] = {
-                'm3u8_url': kwargs.pop('m3u8_url', None)
-            }
-            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-
-        response = self._check_token(requests.put(url, data=kwargs,
-                                                  headers=self.header_builder()), flag='PUT',
-                                     url=url, data=kwargs)
-        if response.status_code != 201:
-            if response.status_code == 403:
-                raise AuthenticationError(response.json()['message'])
-            elif response.status_code == 422:
-                raise FormatError(response.json()['message'])
-            elif response.status_code == 409:
-                raise ResourceConflictError(response.json()['message'])
-            elif response.status_code == 404:
-                raise ResourceNotFoundError(response.json()['message'])
-            else:
-                raise InternalError()
-
-        return response.json()['cameraID']
-
-    # TODO: get a camera
     def camera_by_id(self, cameraID):
         """
         A method to get a camera object by using camera's ID
@@ -617,7 +526,7 @@ class Client(object):
 
         """
         if self.token is None:
-            self.request_token()
+            self._request_token()
         url = Client.base_URL + "cameras/" + cameraID
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header),
@@ -636,31 +545,57 @@ class Client(object):
                 raise InternalError()
         return Camera.process_json(**response.json())
 
-    def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None,
-                      source=None, country=None, state=None, city=None, resolution_width=None,
-                      resolution_height=None, is_active_image=None, is_active_video=None,
-                      offset=None):
+    def search_camera(self, **kwargs):
 
         """A method to search camera by attributes and location.
 
         Searching by location requires user to provide coordiantes for a desired center point
-         and a radius in meters. The search will carry out in the area bounded by the circle.
+        and a radius in meters. The search will carry out in the area bounded by the circle.
+        Each time, this function can return a maximum of 100 cameras. Getting more cameras can
+        be achieved by calling this function multiple times with offest parameter.
 
         Parameters
         ----------
+
         latitude : float, optional
+            Latitude of the center of the circle area to be searched.
+            Latitude ranges between +90 and -90.
+
+            NOTE: please specify longitude and radius if this parameter value is provided.
         longitude : float, optional
+            Longitude of the center of the circle area to be searched.
+            Longitude ranges between +180 and -180.
+
+            NOTE: please specify latitude and radius if this parameter value is provided.
         radius : float, optional
+            Radius in km of the circle area to be searched. Radius should be positive
+
+            NOTE: please specify latitude and longitude if this parameter value is provided.
         offset : int, optional
+            Number of cameras skipped. Since each time this function can return max 100 cameras,
+            calling this function the second time adding `offset=100` will get the second 100 cameras
+            beyond the first list of 100 cameras.
         camera_type : str, optional
+            Type of camera.
+            Allowed values: 'ip', 'non_ip', 'stream'.
         source : str, optional
+            Source of the camera.
         country : str, optional
+            Country which the camera locates at.
         state : str, optional
+            State which the camera locates at.
         city : str, optional
+            City which the camera locates at.
         resolution_width : int, optional
+            Resolution width of the camera. It has to be positive.
         resolution_height : int, optional
+            Resolution height of the camera. It has to be positive.
         is_active_image : bool, optional
+            If the camera is active and can get images.
+            This field can identify true/false case-insensitively and 0/1.
         is_active_video : bool, optional
+            If the camera is active and can get video.
+            This field can identify true/false case-insensitively and 0/1.
 
         Returns
         -------
@@ -670,7 +605,10 @@ class Client(object):
         Raises
         ------
         FormatError
+        
             If type of argument value is not expected for the given field.
+
+            Or there are unexpected keywords in kwargs.
 
             Or radius cannot is less than 0.
 
@@ -688,13 +626,14 @@ class Client(object):
 
         """
         if self.token is None:
-            self.request_token()
-        local_params = dict(locals())
-        local_params.pop('self', None)
-        local_params['type'] = local_params.pop('camera_type', None)
+            self._request_token()
+
+        self._check_args(kwargs, self._search_fields)
+
+        kwargs['type'] = kwargs.pop('camera_type', None)
 
         # filter out those parameters with value None, change true/false
-        search_params = {k: v for k, v in local_params.items() if v is not None}
+        search_params = {k: v for k, v in kwargs.items() if v is not None}
 
         url = Client.base_URL + 'cameras/search'
         header = self.header_builder()
@@ -753,13 +692,15 @@ class Client(object):
         FormatError
             If camera type is not valid.
 
-            or camera type is not provided.
+            Or camera type is not provided.
 
-            or ip is not provided when the camera type is 'ip'.
+            Or ip is not provided when the camera type is 'ip'.
 
-            or snapshot_url is not provided when the camera type is 'non_ip'.
+            Or snapshot_url is not provided when the camera type is 'non_ip'.
 
-            or m3u8_url is not provided whe nthe camera ytpe is 'stream'.
+            Or m3u8_url is not provided when the camera ytpe is 'stream'.
+
+            Or there are unexpected keywords in kwargs.
 
         AuthenticationError
             If the client secret of this client object does not match the clientID.
@@ -772,10 +713,10 @@ class Client(object):
         url = Client.base_URL + "cameras/exist"
         kwargs['type'] = camera_type
 
-        # validate parameter names here.
+        self._check_args(kwargs, self._retrieval_fields)
 
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header, params=kwargs),
                                      flag='GET', url=url, params=kwargs)
@@ -820,7 +761,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/db-change'
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         param = {'start': start,
                  'end': end,
