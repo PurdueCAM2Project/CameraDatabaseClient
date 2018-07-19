@@ -34,7 +34,7 @@ class Client(object):
         at https://www.cam2project.net/.
 
         For each methods except internal method like _check_token(),
-        those methods will rerun request_token() to get a new token if token expires.
+        those methods will rerun _request_token() to get a new token if token expires.
         But if the requests get status code of 401 for more than 2 times,
         we raise an Authentication error.
 
@@ -48,18 +48,24 @@ class Client(object):
 
     """
 
+    _camera_fields = set(['reference_url', 'reference_logo', 'timezone_name', 'timezone_id',
+                          'utc_offset', 'resolution_height', 'resolution_width', 'city',
+                          'state', 'country', 'longitude', 'latitude', 'source',
+                          'legacy_cameraID', 'm3u8_url', 'snapshot_url', 'is_active_video',
+                          'is_active_image', 'camera_type', 'ip', 'port', 'brand', 'model',
+                          'image_path', 'video_path', 'cameraID'])
+
     @staticmethod
-    def _check_args(kwargs=None, required_args=None):
-        args_not_found = required_args - kwargs.keys()
-        if args_not_found:
-            raise FormatError('Required keywords such as ' + str(args_not_found) +
-                              ' are not found')
+    def _check_args(kwargs, legal_args):
+        illegal_args = set(kwargs.keys()) - legal_args
+        if illegal_args:
+            raise FormatError('Keywords ' + str(list(illegal_args)) + ' are not defined.')
 
     def _check_token(self, response, flag, url, data=None, params=None):
         counter = 0
         while response.status_code == 401 and \
                 response.json()['message'] == 'Token expired' and counter < 2:
-            self.request_token()
+            self._request_token()
             header = self.header_builder()
             if flag == 'GET':
                 response = requests.get(url, headers=header, params=params)
@@ -70,7 +76,7 @@ class Client(object):
             counter += 1
         return response
 
-    def request_token(self):
+    def _request_token(self):
 
         """A method to request an access token for the client application.
         Raises
@@ -152,7 +158,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/register'
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         data = {'owner': owner, 'permissionLevel': permissionLevel}
         response = self._check_token(response=requests.post(url, headers=header, data=data),
@@ -167,7 +173,6 @@ class Client(object):
         return response.json()['clientID'], response.json()['clientSecret']
 
 
-    # TODO: update client's owner
     def update_owner(self, clientID, owner):
         """
         Parameters
@@ -186,7 +191,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/' + clientID
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         data = {'owner': owner}
         response = self._check_token(response=requests.put(url, headers=header, data=data),
@@ -200,7 +205,6 @@ class Client(object):
                 raise InternalError()
         return response.json()['message']
 
-    # TODO: update client's permissionLevel
     def update_permission(self, clientID, permissionLevel):
         """
         Parameters
@@ -219,7 +223,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/' + clientID
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         data = {'permissionLevel': permissionLevel}
         response = self._check_token(response=requests.put(url, headers=header, data=data),
@@ -233,7 +237,6 @@ class Client(object):
                 raise InternalError()
         return response.json()['message']
 
-    # TODO : reset Secret
     def reset_secret(self, clientID):
         """
         Parameters
@@ -250,7 +253,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/' + clientID + '/secret'
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.put(url, headers=header, data=None),
                                      flag='PUT', url=url, data=None)
@@ -268,7 +271,6 @@ class Client(object):
 
         return response.json()['clientSecret']
 
-    # TODO: get clientID by owner
     def client_ids_by_owner(self, owner):
         """
         Parameters
@@ -278,13 +280,14 @@ class Client(object):
 
         Returns
         -------
+        list of str
             A list of client's ID owned by the user.
 
         """
         url = Client.base_URL + 'apps/by-owner'
         param = {'owner': owner}
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header, params=param),
                                      flag='GET', url=url, params=param)
@@ -299,7 +302,6 @@ class Client(object):
             clientIDs.append(ct['clientID'])
         return clientIDs
 
-    # TODO: get api usage count by client
     def usage_by_client(self, clientID, owner):
         """
         Parameters
@@ -319,7 +321,7 @@ class Client(object):
         url = Client.base_URL + "apps/" + clientID + "/usage"
         param = {'owner': owner}
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header, params=param),
                                      flag='GET', url=url, params=param)
@@ -334,103 +336,128 @@ class Client(object):
                 raise InternalError()
         return response.json()['api_usage']
 
-    def add_camera(self, **kwargs):
+    def write_camera(self, **kwargs):
 
-        """add_camera initialization method.
+        """
+        add or update camera in the database.
 
-                Parameters
-                ----------
-                camera_type : str
-                    Type of camera.
-                    Allowed values: 'ip', 'non_ip', 'stream'/
-                is_active_image : bool
-                    If the camera is active and can get images.
-                    This field can identify true/false case-insensitively and 0/1.
-                is_active_video : bool
-                    If the camera is active and can get video.
-                    This field can identify true/false case-insensitively and 0/1.
-                legacy_cameraID : int, optional
-                    Original ID of the camera in SQL database.
-                source : str, optional
-                    Source of camera.
-                latitude : int or float, optional
-                    Latitude of the camera location.
-                longitude : int or float, optional
-                    Longitude of the camera location.
-                country : str, optional
-                    Country which the camera locates at.
-                state : str, optional
-                    State which the camera locates at.
-                city : str, optional
-                    City which the camera locates at.
-                resolution_width : int, optional
-                    Resolution width of the camera.
-                resolution_height : int, optional
-                    Resolution height of the camera.
-                utc_offset : int, optional
-                    Time difference between UTC and the camera location.
-                timezone_id : str, optional
-                    Time zone ID of the camera location.
-                timezone_name : str, optional
-                    Time zone name of the camera location.
-                reference_logo : str, optional
-                    Reference logo of the camera.
-                reference_url : str, optional
-                    Reference url of the camera.
-                ip : str, optional
-                    (ip_camera) IP address of the camera.
-                port : str or int, optional
-                    (ip_camera) Port to connect to camera.
-                brand : str, optional
-                    (ip_camera) Brand of the camera.
-                model : str, optional
-                    (ip_camera) Model of the camera.
-                snapshot_url : str, optional
-                    (non_ip_camera) Url to retrieve snapshots from the camera.
-                m3u8_url : str, optional
-                    (stream_camera) Url to retrieve stream from the camera.
-                image_path : str, optional
-                    (ip_camera) Path to retrieve images from the camera.
-                    if the camera is an ip camera and 'is_active_image' is true,
-                    then it will always have a image_path.
-                    However, image_path can exist even if 'is_active_image'
-                    is false for this ip camera.
-                video_path : str, optional
-                    (ip_camera) Path to retrieve video from the camera.
-                    if the camera is an ip camera and 'is_active_video' is true,
-                    then it will always have a video_path.
-                    However, video_path can exist even if 'is_active_video'
-                    is false for this ip camera.
+        Parameters
+        ----------
+            camera_type : str
+                Type of camera.
+                Allowed values: 'ip', 'non_ip', 'stream'.
+                | This parameter is required for adding camera.
+            is_active_image : bool
+                Whether the camera is active and can get images.
+                This field can identify true/false case-insensitively and 0/1.
+                | This parameter is required for adding camera.
+            is_active_video : bool
+                Whether the camera is active and can get video.
+                This field can identify true/false case-insensitively and 0/1.
+                | This parameter is required for adding camera.
+            ip : str
+                (IP camera only) IP address of the camera.
+                | This parameter is required for adding an IP camera.
+            snapshot_url : str
+                (non-IP camera only) Url to retrieve snapshots from the camera.
+                | This parameter is required for adding a non-IP camera.
+            m3u8_url : str
+                (Stream camera only) Url to retrieve stream from the camera.
+                | This parameter is required for adding a stream camera.
+            cameraID : str
+                CameraID of the camera to be updated.
+                | This parameter is required for updating camera.
 
-                Raises
-                ------
-                    AuthenticationError
-                        If the client secret of this client object does not match the clientID.
-                    FormatError
-                        List of invalid attributes.
-                    ResourceConflictError
-                        The legacy_cameraID already exist in the database.
-                    InternalError
-                        If there is an API internal error.
-                    ResourceNotFoundError
-                        If no client app exists with the clientID of this client object.
+        Note
+        ----
+            When adding or updating a camera you must supply the corresponding required parameters
+            and may also include any number of the optional parameters defined below in 'Other Parameters. 
 
-                Returns
-                -------
-                str
-                    The new camera ID for the successfully updated camera.
+            When Adding a new camera: Do not include any cameraID when adding new cameras to the database.
+            When the camera is added to the database a new cameraID will be assigned and returned to the user. 
+
+            When updating an existing camera in the database you must include the corresponding cameraID
+            and any fields you wish to update. If in any occasion you need to change an existing camera to
+            a different type, you must include the corresponding retrieval method data.
+            (i.e. To change an IP camera to non-ip you must include the snapshot_url and camera_type)
+            Updating field in retrieval method requires you to also specify the type camera.
+            (i.e. To change the image_path of an IP camera, you should specify the camera_type and
+            image_path)
+
+        Warning
+        -------
+            Including a cameraID in your write_camera request will update and overwrite the corresponding
+            camera information in the database. Please ensure that the updated information is correct. 
+
+
+        Other Parameters
+        ----------------
+            legacy_cameraID : int, optional
+                Original ID of the camera in SQL database.
+            source : str, optional
+                Source of camera.
+            latitude : int or float, optional
+                Latitude of the camera location.
+            longitude : int or float, optional
+                Longitude of the camera location.
+            country : str, optional
+                Country which the camera locates at.
+            state : str, optional
+                State which the camera locates at.
+            city : str, optional
+                City which the camera locates at.
+            resolution_width : int, optional
+                Resolution width of the camera.
+            resolution_height : int, optional
+                Resolution height of the camera.
+            utc_offset : int, optional
+                Time difference between UTC and the camera location.
+            timezone_id : str, optional
+                Time zone ID of the camera location.
+            timezone_name : str, optional
+                Time zone name of the camera location.
+            reference_logo : str, optional
+                Reference logo of the camera.
+            reference_url : str, optional
+                Reference url of the camera.
+            port : str or int, optional
+                (ip_camera only) Port to connect to camera.
+            brand : str, optional
+                (ip_camera only) Brand of the camera.
+            model : str, optional
+                (ip_camera only) Model of the camera.
+            image_path : str, optional
+                (ip_camera only) Path to retrieve images from the camera.
+            video_path : str, optional
+                (ip_camera only) Path to retrieve video from the camera.
+
+        Raises
+        ------
+            AuthenticationError
+                If the client secret of this client object does not match the clientID.
+            FormatError
+                Informartion of invalid parameter or unexpected paramters.
+            ResourceConflictError
+                The legacy_cameraID already exist in the database.
+            InternalError
+                If there is an API internal error.
+            ResourceNotFoundError
+                If no client app exists with the clientID of this client object.
+
+        Returns
+        -------
+        str
+            The camera ID for the successfully added or updated camera.
         """
 
-        required_args = ('type', 'is_active_image', 'is_active_video')
-
-        self._check_args(kwargs=kwargs, required_args=required_args)
+        self._check_args(kwargs=kwargs, legal_args=self._camera_fields)
 
         if self.token is None:
-            self.request_token()
+            self._request_token()
 
-        url = Client.base_URL + 'cameras/create'
+        operation = 'POST' if kwargs.get('cameraID') is None else 'PUT'
 
-        if kwargs.get('type') == 'ip':
+        if kwargs.get('camera_type') == 'ip':
             kwargs['retrieval'] = {
                 'ip': kwargs.pop('ip', None),
                 'port': kwargs.pop('port', None),
@@ -439,22 +466,30 @@ class Client(object):
                 'image_path': kwargs.pop('image_path', None),
                 'video_path': kwargs.pop('video_path', None)
             }
-            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-        elif kwargs.get('type') == 'non-ip':
+            kwargs['retrieval'] = json.dumps(kwargs['retrieval'], sort_keys=True)
+
+        elif kwargs.get('camera_type') == 'non_ip':
             kwargs['retrieval'] = {
                 'snapshot_url': kwargs.pop('snapshot_url', None)
             }
             kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-        elif kwargs.get('type') == 'stream':
+        elif kwargs.get('camera_type') == 'stream':
             kwargs['retrieval'] = {
                 'm3u8_url': kwargs.pop('m3u8_url', None)
             }
             kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
+        kwargs['type'] = kwargs.pop('camera_type', None)
 
-        response = self._check_token(requests.post(url, data=kwargs,
-                                                   headers=self.header_builder()), flag='POST',
-                                     url=url, data=kwargs)
-        if response.status_code != 201:
+        if operation == 'POST':
+            url = Client.base_URL + 'cameras/create'
+            temp_response = requests.post(url, data=kwargs, headers=self.header_builder())
+        else:
+            url = Client.base_URL + 'cameras/' + kwargs.pop('cameraID')
+            temp_response = requests.put(url, data=kwargs, headers=self.header_builder())
+
+        response = self._check_token(temp_response, flag=operation, url=url, data=kwargs)
+
+        if response.status_code != 201 and response.status_code != 200:
             if response.status_code == 403:
                 raise AuthenticationError(response.json()['message'])
             elif response.status_code == 422:
@@ -468,140 +503,6 @@ class Client(object):
 
         return response.json()['cameraID']
 
-    def update_camera(self, cameraID, **kwargs):
-
-        """update_camera initialization method.
-
-                Parameters
-                ----------
-                cameraID : str
-                    Required cameraID for the update camera
-                camera_type : str, optional
-                    Type of camera.
-                    Allowed values: 'ip', 'non_ip', 'stream'/
-                is_active_image : bool, optional
-                    If the camera is active and can get images.
-                    This field can identify true/false case-insensitively and 0/1.
-                is_active_video : bool, optional
-                    If the camera is active and can get video.
-                    This field can identify true/false case-insensitively and 0/1.
-                legacy_cameraID : int, optional
-                    Original ID of the camera in SQL database.
-                source : str, optional
-                    Source of camera.
-                latitude : int or float, optional
-                    Latitude of the camera location.
-                longitude : int or float, optional
-                    Longitude of the camera location.
-                country : str, optional
-                    Country which the camera locates at.
-                state : str, optional
-                    State which the camera locates at.
-                city : str, optional
-                    City which the camera locates at.
-                resolution_width : int, optional
-                    Resolution width of the camera.
-                resolution_height : int, optional
-                    Resolution height of the camera.
-                utc_offset : int, optional
-                    Time difference between UTC and the camera location.
-                timezone_id : str, optional
-                    Time zone ID of the camera location.
-                timezone_name : str, optional
-                    Time zone name of the camera location.
-                reference_logo : str, optional
-                    Reference logo of the camera.
-                reference_url : str, optional
-                    Reference url of the camera.
-                ip : str, optional
-                    (ip_camera) IP address of the camera.
-                port : str or int, optional
-                    (ip_camera) Port to connect to camera.
-                brand : str, optional
-                    (ip_camera) Brand of the camera.
-                model : str, optional
-                    (ip_camera) Model of the camera.
-                snapshot_url : str, optional
-                    (non_ip_camera) Url to retrieve snapshots from the camera.
-                m3u8_url : str, optional
-                    (stream_camera) Url to retrieve stream from the camera.
-                image_path : str, optional
-                    (ip_camera) Path to retrieve images from the camera.
-                    if the camera is an ip camera and 'is_active_image' is true,
-                    then it will always have a image_path.
-                    However, image_path can exist even if 'is_active_image'
-                    is false for this ip camera.
-                video_path : str, optional
-                    (ip_camera) Path to retrieve video from the camera.
-                    if the camera is an ip camera and 'is_active_video' is true,
-                    then it will always have a video_path.
-                    However, video_path can exist even if 'is_active_video'
-                    is false for this ip camera.
-
-                Raises
-                ------
-                    AuthenticationError
-                        If the client secret of this client object does not match the clientID.
-                    FormatError
-                        List of invalid attributes.
-                    ResourceConflictError
-                        The legacy_cameraID already exist in the database.
-                    InternalError
-                        If there is an API internal error.
-                    ResourceNotFoundError
-                        If no client app exists with the clientID of this client object.
-
-                Returns
-                -------
-                str
-                    The camera ID for the successfully updated camera.
-        """
-
-        if self.token is None:
-            self.request_token()
-
-        url = Client.base_URL + 'cameras/' + cameraID
-
-        if kwargs.get('type') == 'ip':
-
-            kwargs['retrieval'] = {
-                'ip': kwargs.pop('ip', None),
-                'port': kwargs.pop('port', None),
-                'brand': kwargs.pop('brand', None),
-                'model': kwargs.pop('model', None),
-                'image_path': kwargs.pop('image_path', None),
-                'video_path': kwargs.pop('video_path', None)
-            }
-            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-        elif kwargs.get('type') == 'non_ip':
-            kwargs['retrieval'] = {
-                'snapshot_url': kwargs.pop('snapshot_url', None)
-            }
-            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-        elif kwargs.get('type') == 'stream':
-            kwargs['retrieval'] = {
-                'm3u8_url': kwargs.pop('m3u8_url', None)
-            }
-            kwargs['retrieval'] = json.dumps(kwargs['retrieval'])
-
-        response = self._check_token(requests.put(url, data=kwargs,
-                                                  headers=self.header_builder()), flag='PUT',
-                                     url=url, data=kwargs)
-        if response.status_code != 201:
-            if response.status_code == 403:
-                raise AuthenticationError(response.json()['message'])
-            elif response.status_code == 422:
-                raise FormatError(response.json()['message'])
-            elif response.status_code == 409:
-                raise ResourceConflictError(response.json()['message'])
-            elif response.status_code == 404:
-                raise ResourceNotFoundError(response.json()['message'])
-            else:
-                raise InternalError()
-
-        return response.json()['cameraID']
-
-    # TODO: get a camera
     def camera_by_id(self, cameraID):
         """
         A method to get a camera object by using camera's ID
@@ -617,7 +518,7 @@ class Client(object):
 
         """
         if self.token is None:
-            self.request_token()
+            self._request_token()
         url = Client.base_URL + "cameras/" + cameraID
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header),
@@ -688,7 +589,7 @@ class Client(object):
 
         """
         if self.token is None:
-            self.request_token()
+            self._request_token()
         local_params = dict(locals())
         local_params.pop('self', None)
         local_params['type'] = local_params.pop('camera_type', None)
@@ -775,7 +676,7 @@ class Client(object):
         # validate parameter names here.
 
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         response = self._check_token(response=requests.get(url, headers=header, params=kwargs),
                                      flag='GET', url=url, params=kwargs)
@@ -820,7 +721,7 @@ class Client(object):
         """
         url = Client.base_URL + 'apps/db-change'
         if self.token is None:
-            self.request_token()
+            self._request_token()
         header = self.header_builder()
         param = {'start': start,
                  'end': end,
