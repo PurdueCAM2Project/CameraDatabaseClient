@@ -341,34 +341,35 @@ class Client(object):
         """
         add or update camera in the database.
 
-        Required Params to Add A Camera
-        --------------------------------
-
+        Parameters
+        ----------
             camera_type : str
                 Type of camera.
-                Allowed values: 'ip', 'non_ip', 'stream'
+                Allowed values: 'ip', 'non_ip', 'stream'.
+                | This parameter is required for adding camera.
             is_active_image : bool
-                If the camera is active and can get images.
+                Whether the camera is active and can get images.
                 This field can identify true/false case-insensitively and 0/1.
+                | This parameter is required for adding camera.
             is_active_video : bool
-                If the camera is active and can get video.
+                Whether the camera is active and can get video.
                 This field can identify true/false case-insensitively and 0/1.
+                | This parameter is required for adding camera.
             ip : str
-                (ip_camera only) IP address of the camera.
+                (IP camera only) IP address of the camera.
+                | This parameter is required for adding an IP camera.
             snapshot_url : str
-                (non_ip_camera only) Url to retrieve snapshots from the camera.
+                (non-IP camera only) Url to retrieve snapshots from the camera.
+                | This parameter is required for adding a non-IP camera.
             m3u8_url : str
-                (stream_camera only) Url to retrieve stream from the camera.
-
-        Required Params to Update A Camera
-        ----------------------------------
-
+                (Stream camera only) Url to retrieve stream from the camera.
+                | This parameter is required for adding a stream camera.
             cameraID : str
                 CameraID of the camera to be updated.
+                | This parameter is required for updating camera.
 
         Note
         ----
-
             For adding camera to database, besides supplying the required parameters,
             you can also include any number of optional parameters defined below.
             You must not supply cameraID when you want to add a new camera to the database.
@@ -378,10 +379,25 @@ class Client(object):
             supply any number of parameters from required parameters to add a camera
             and optional parameters defined below.
 
+            When adding or updating a camera you must supply the corresponding required parameters
+            and may also include any number of the optional parameters defined below in 'Other Parameters. 
 
-        Optional Params
-        ---------------
+            When Adding a new camera: Do not include any cameraID when adding new cameras to the database.
+            When the camera is added to the database a new cameraID will be assigned and returned to the user. 
 
+            When updating an existing camera in the database you must include the corresponding cameraID
+            and any fields you wish to update. If in any occasion you need to change an existing camera to
+            a different type, you must include the corresponding retrieval method data.
+            (i.e. To change an IP camera to non-ip you must include the snapshot_url and camera_type)
+
+        Warning
+        -------
+            Including a cameraID in your write_camera request will update and overwrite the corresponding
+            camera information in the database. Please ensure that the updated information is correct. 
+
+
+        Other Parameters
+        ----------------
             legacy_cameraID : int, optional
                 Original ID of the camera in SQL database.
             source : str, optional
