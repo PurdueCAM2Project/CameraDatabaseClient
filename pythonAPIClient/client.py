@@ -370,15 +370,6 @@ class Client(object):
 
         Note
         ----
-            For adding camera to database, besides supplying the required parameters,
-            you can also include any number of optional parameters defined below.
-            You must not supply cameraID when you want to add a new camera to the database.
-            A new cameraID will be generated and returned when the camera is successfully added.
-
-            For updating existing camera, besides cameraID, you can also
-            supply any number of parameters from required parameters to add a camera
-            and optional parameters defined below.
-
             When adding or updating a camera you must supply the corresponding required parameters
             and may also include any number of the optional parameters defined below in 'Other Parameters. 
 
@@ -389,6 +380,9 @@ class Client(object):
             and any fields you wish to update. If in any occasion you need to change an existing camera to
             a different type, you must include the corresponding retrieval method data.
             (i.e. To change an IP camera to non-ip you must include the snapshot_url and camera_type)
+            Updating field in retrieval method requires you to also specify the type camera.
+            (i.e. To change the image_path of an IP camera, you should specify the camera_type and
+            image_path)
 
         Warning
         -------
@@ -442,7 +436,7 @@ class Client(object):
             AuthenticationError
                 If the client secret of this client object does not match the clientID.
             FormatError
-                List of invalid attributes.
+                Informartion of invalid parameter or unexpected paramters.
             ResourceConflictError
                 The legacy_cameraID already exist in the database.
             InternalError
