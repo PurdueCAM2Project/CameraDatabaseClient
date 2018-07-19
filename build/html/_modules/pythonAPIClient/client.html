@@ -178,7 +178,7 @@
 <span class="sd">        at https://www.cam2project.net/.</span>
 
 <span class="sd">        For each methods except internal method like _check_token(),</span>
-<span class="sd">        those methods will rerun request_token() to get a new token if token expires.</span>
+<span class="sd">        those methods will rerun _request_token() to get a new token if token expires.</span>
 <span class="sd">        But if the requests get status code of 401 for more than 2 times,</span>
 <span class="sd">        we raise an Authentication error.</span>
 
@@ -192,18 +192,24 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">_camera_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;reference_url&#39;</span><span class="p">,</span> <span class="s1">&#39;reference_logo&#39;</span><span class="p">,</span> <span class="s1">&#39;timezone_name&#39;</span><span class="p">,</span> <span class="s1">&#39;timezone_id&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;utc_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;resolution_height&#39;</span><span class="p">,</span> <span class="s1">&#39;resolution_width&#39;</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;legacy_cameraID&#39;</span><span class="p">,</span> <span class="s1">&#39;m3u8_url&#39;</span><span class="p">,</span> <span class="s1">&#39;snapshot_url&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active_video&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;is_active_image&#39;</span><span class="p">,</span> <span class="s1">&#39;camera_type&#39;</span><span class="p">,</span> <span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">,</span> <span class="s1">&#39;brand&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;image_path&#39;</span><span class="p">,</span> <span class="s1">&#39;video_path&#39;</span><span class="p">,</span> <span class="s1">&#39;cameraID&#39;</span><span class="p">])</span>
+
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_check_args</span><span class="p">(</span><span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">required_args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">args_not_found</span> <span class="o">=</span> <span class="n">required_args</span> <span class="o">-</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">args_not_found</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="s1">&#39;Required keywords such as &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">args_not_found</span><span class="p">)</span> <span class="o">+</span>
-                              <span class="s1">&#39; are not found&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_check_args</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">legal_args</span><span class="p">):</span>
+        <span class="n">illegal_args</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">-</span> <span class="n">legal_args</span>
+        <span class="k">if</span> <span class="n">illegal_args</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="s1">&#39;Keywords &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">illegal_args</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39; are not defined.&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_check_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span> <span class="ow">and</span> \
                 <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Token expired&#39;</span> <span class="ow">and</span> <span class="n">counter</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
             <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">flag</span> <span class="o">==</span> <span class="s1">&#39;GET&#39;</span><span class="p">:</span>
                 <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
@@ -214,7 +220,7 @@
             <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">response</span>
 
-<div class="viewcode-block" id="Client.request_token"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.request_token">[docs]</a>    <span class="k">def</span> <span class="nf">request_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_request_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;A method to request an access token for the client application.</span>
 <span class="sd">        Raises</span>
@@ -237,7 +243,7 @@
         <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">AuthenticationError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span></div>
+            <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">header_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">head</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">)}</span>
@@ -296,7 +302,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/register&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
         <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;owner&#39;</span><span class="p">:</span> <span class="n">owner</span><span class="p">,</span> <span class="s1">&#39;permissionLevel&#39;</span><span class="p">:</span> <span class="n">permissionLevel</span><span class="p">}</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">),</span>
@@ -311,7 +317,6 @@
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;clientID&#39;</span><span class="p">],</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">]</span></div>
 
 
-    <span class="c1"># TODO: update client&#39;s owner</span>
 <div class="viewcode-block" id="Client.update_owner"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.update_owner">[docs]</a>    <span class="k">def</span> <span class="nf">update_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -330,7 +335,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/&#39;</span> <span class="o">+</span> <span class="n">clientID</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
         <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;owner&#39;</span><span class="p">:</span> <span class="n">owner</span><span class="p">}</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">),</span>
@@ -344,7 +349,6 @@
                 <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span></div>
 
-    <span class="c1"># TODO: update client&#39;s permissionLevel</span>
 <div class="viewcode-block" id="Client.update_permission"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.update_permission">[docs]</a>    <span class="k">def</span> <span class="nf">update_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">permissionLevel</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -363,7 +367,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/&#39;</span> <span class="o">+</span> <span class="n">clientID</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
         <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;permissionLevel&#39;</span><span class="p">:</span> <span class="n">permissionLevel</span><span class="p">}</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">),</span>
@@ -377,7 +381,6 @@
                 <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span></div>
 
-    <span class="c1"># TODO : reset Secret</span>
 <div class="viewcode-block" id="Client.reset_secret"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.reset_secret">[docs]</a>    <span class="k">def</span> <span class="nf">reset_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -394,7 +397,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/&#39;</span> <span class="o">+</span> <span class="n">clientID</span> <span class="o">+</span> <span class="s1">&#39;/secret&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
         <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
                                      <span class="n">flag</span><span class="o">=</span><span class="s1">&#39;PUT&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -412,7 +415,6 @@
 
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">]</span></div>
 
-    <span class="c1"># TODO: get clientID by owner</span>
 <div class="viewcode-block" id="Client.client_ids_by_owner"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.client_ids_by_owner">[docs]</a>    <span class="k">def</span> <span class="nf">client_ids_by_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -422,13 +424,14 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
+<span class="sd">        list of str</span>
 <span class="sd">            A list of client&#39;s ID owned by the user.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/by-owner&#39;</span>
         <span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;owner&#39;</span><span class="p">:</span> <span class="n">owner</span><span class="p">}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
         <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">param</span><span class="p">),</span>
                                      <span class="n">flag</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
@@ -443,7 +446,6 @@
             <span class="n">clientIDs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">clientIDs</span></div>
 
-    <span class="c1"># TODO: get api usage count by client</span>
 <div class="viewcode-block" id="Client.usage_by_client"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.usage_by_client">[docs]</a>    <span class="k">def</span> <span class="nf">usage_by_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -463,7 +465,7 @@
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s2">&quot;apps/&quot;</span> <span class="o">+</span> <span class="n">clientID</span> <span class="o">+</span> <span class="s2">&quot;/usage&quot;</span>
         <span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;owner&#39;</span><span class="p">:</span> <span class="n">owner</span><span class="p">}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
         <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">param</span><span class="p">),</span>
                                      <span class="n">flag</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
@@ -478,103 +480,133 @@
                 <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;api_usage&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Client.add_camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.add_camera">[docs]</a>    <span class="k">def</span> <span class="nf">add_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.write_camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.write_camera">[docs]</a>    <span class="k">def</span> <span class="nf">write_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
-        <span class="sd">&quot;&quot;&quot;add_camera initialization method.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        add or update camera in the database.</span>
 
-<span class="sd">                Parameters</span>
-<span class="sd">                ----------</span>
-<span class="sd">                camera_type : str</span>
-<span class="sd">                    Type of camera.</span>
-<span class="sd">                    Allowed values: &#39;ip&#39;, &#39;non_ip&#39;, &#39;stream&#39;/</span>
-<span class="sd">                is_active_image : bool</span>
-<span class="sd">                    If the camera is active and can get images.</span>
-<span class="sd">                    This field can identify true/false case-insensitively and 0/1.</span>
-<span class="sd">                is_active_video : bool</span>
-<span class="sd">                    If the camera is active and can get video.</span>
-<span class="sd">                    This field can identify true/false case-insensitively and 0/1.</span>
-<span class="sd">                legacy_cameraID : int, optional</span>
-<span class="sd">                    Original ID of the camera in SQL database.</span>
-<span class="sd">                source : str, optional</span>
-<span class="sd">                    Source of camera.</span>
-<span class="sd">                latitude : int or float, optional</span>
-<span class="sd">                    Latitude of the camera location.</span>
-<span class="sd">                longitude : int or float, optional</span>
-<span class="sd">                    Longitude of the camera location.</span>
-<span class="sd">                country : str, optional</span>
-<span class="sd">                    Country which the camera locates at.</span>
-<span class="sd">                state : str, optional</span>
-<span class="sd">                    State which the camera locates at.</span>
-<span class="sd">                city : str, optional</span>
-<span class="sd">                    City which the camera locates at.</span>
-<span class="sd">                resolution_width : int, optional</span>
-<span class="sd">                    Resolution width of the camera.</span>
-<span class="sd">                resolution_height : int, optional</span>
-<span class="sd">                    Resolution height of the camera.</span>
-<span class="sd">                utc_offset : int, optional</span>
-<span class="sd">                    Time difference between UTC and the camera location.</span>
-<span class="sd">                timezone_id : str, optional</span>
-<span class="sd">                    Time zone ID of the camera location.</span>
-<span class="sd">                timezone_name : str, optional</span>
-<span class="sd">                    Time zone name of the camera location.</span>
-<span class="sd">                reference_logo : str, optional</span>
-<span class="sd">                    Reference logo of the camera.</span>
-<span class="sd">                reference_url : str, optional</span>
-<span class="sd">                    Reference url of the camera.</span>
-<span class="sd">                ip : str, optional</span>
-<span class="sd">                    (ip_camera) IP address of the camera.</span>
-<span class="sd">                port : str or int, optional</span>
-<span class="sd">                    (ip_camera) Port to connect to camera.</span>
-<span class="sd">                brand : str, optional</span>
-<span class="sd">                    (ip_camera) Brand of the camera.</span>
-<span class="sd">                model : str, optional</span>
-<span class="sd">                    (ip_camera) Model of the camera.</span>
-<span class="sd">                snapshot_url : str, optional</span>
-<span class="sd">                    (non_ip_camera) Url to retrieve snapshots from the camera.</span>
-<span class="sd">                m3u8_url : str, optional</span>
-<span class="sd">                    (stream_camera) Url to retrieve stream from the camera.</span>
-<span class="sd">                image_path : str, optional</span>
-<span class="sd">                    (ip_camera) Path to retrieve images from the camera.</span>
-<span class="sd">                    if the camera is an ip camera and &#39;is_active_image&#39; is true,</span>
-<span class="sd">                    then it will always have a image_path.</span>
-<span class="sd">                    However, image_path can exist even if &#39;is_active_image&#39;</span>
-<span class="sd">                    is false for this ip camera.</span>
-<span class="sd">                video_path : str, optional</span>
-<span class="sd">                    (ip_camera) Path to retrieve video from the camera.</span>
-<span class="sd">                    if the camera is an ip camera and &#39;is_active_video&#39; is true,</span>
-<span class="sd">                    then it will always have a video_path.</span>
-<span class="sd">                    However, video_path can exist even if &#39;is_active_video&#39;</span>
-<span class="sd">                    is false for this ip camera.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            camera_type : str</span>
+<span class="sd">                Type of camera.</span>
+<span class="sd">                Allowed values: &#39;ip&#39;, &#39;non_ip&#39;, &#39;stream&#39;.</span>
+<span class="sd">                | This parameter is required for adding camera.</span>
+<span class="sd">            is_active_image : bool</span>
+<span class="sd">                Whether the camera is active and can get images.</span>
+<span class="sd">                This field can identify true/false case-insensitively and 0/1.</span>
+<span class="sd">                | This parameter is required for adding camera.</span>
+<span class="sd">            is_active_video : bool</span>
+<span class="sd">                Whether the camera is active and can get video.</span>
+<span class="sd">                This field can identify true/false case-insensitively and 0/1.</span>
+<span class="sd">                | This parameter is required for adding camera.</span>
+<span class="sd">            ip : str</span>
+<span class="sd">                (IP camera only) IP address of the camera.</span>
+<span class="sd">                | This parameter is required for adding an IP camera.</span>
+<span class="sd">            snapshot_url : str</span>
+<span class="sd">                (non-IP camera only) Url to retrieve snapshots from the camera.</span>
+<span class="sd">                | This parameter is required for adding a non-IP camera.</span>
+<span class="sd">            m3u8_url : str</span>
+<span class="sd">                (Stream camera only) Url to retrieve stream from the camera.</span>
+<span class="sd">                | This parameter is required for adding a stream camera.</span>
+<span class="sd">            cameraID : str</span>
+<span class="sd">                CameraID of the camera to be updated.</span>
+<span class="sd">                | This parameter is required for updating camera.</span>
 
-<span class="sd">                Raises</span>
-<span class="sd">                ------</span>
-<span class="sd">                    AuthenticationError</span>
-<span class="sd">                        If the client secret of this client object does not match the clientID.</span>
-<span class="sd">                    FormatError</span>
-<span class="sd">                        List of invalid attributes.</span>
-<span class="sd">                    ResourceConflictError</span>
-<span class="sd">                        The legacy_cameraID already exist in the database.</span>
-<span class="sd">                    InternalError</span>
-<span class="sd">                        If there is an API internal error.</span>
-<span class="sd">                    ResourceNotFoundError</span>
-<span class="sd">                        If no client app exists with the clientID of this client object.</span>
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        Including a cameraID in your write_camera request will update and overwrite the</span>
+<span class="sd">        corresponding camera information in the database.</span>
+<span class="sd">        Please ensure that the updated information is correct.</span>
 
-<span class="sd">                Returns</span>
-<span class="sd">                -------</span>
-<span class="sd">                str</span>
-<span class="sd">                    The new camera ID for the successfully updated camera.</span>
+
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
+<span class="sd">            legacy_cameraID : int, optional</span>
+<span class="sd">                Original ID of the camera in SQL database.</span>
+<span class="sd">            source : str, optional</span>
+<span class="sd">                Source of camera.</span>
+<span class="sd">            latitude : int or float, optional</span>
+<span class="sd">                Latitude of the camera location.</span>
+<span class="sd">            longitude : int or float, optional</span>
+<span class="sd">                Longitude of the camera location.</span>
+<span class="sd">            country : str, optional</span>
+<span class="sd">                Country which the camera locates at.</span>
+<span class="sd">            state : str, optional</span>
+<span class="sd">                State which the camera locates at.</span>
+<span class="sd">            city : str, optional</span>
+<span class="sd">                City which the camera locates at.</span>
+<span class="sd">            resolution_width : int, optional</span>
+<span class="sd">                Resolution width of the camera.</span>
+<span class="sd">            resolution_height : int, optional</span>
+<span class="sd">                Resolution height of the camera.</span>
+<span class="sd">            utc_offset : int, optional</span>
+<span class="sd">                Time difference between UTC and the camera location.</span>
+<span class="sd">            timezone_id : str, optional</span>
+<span class="sd">                Time zone ID of the camera location.</span>
+<span class="sd">            timezone_name : str, optional</span>
+<span class="sd">                Time zone name of the camera location.</span>
+<span class="sd">            reference_logo : str, optional</span>
+<span class="sd">                Reference logo of the camera.</span>
+<span class="sd">            reference_url : str, optional</span>
+<span class="sd">                Reference url of the camera.</span>
+<span class="sd">            port : str or int, optional</span>
+<span class="sd">                (ip_camera only) Port to connect to camera.</span>
+<span class="sd">            brand : str, optional</span>
+<span class="sd">                (ip_camera only) Brand of the camera.</span>
+<span class="sd">            model : str, optional</span>
+<span class="sd">                (ip_camera only) Model of the camera.</span>
+<span class="sd">            image_path : str, optional</span>
+<span class="sd">                (ip_camera only) Path to retrieve images from the camera.</span>
+<span class="sd">            video_path : str, optional</span>
+<span class="sd">                (ip_camera only) Path to retrieve video from the camera.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">            AuthenticationError</span>
+<span class="sd">                If the client secret of this client object does not match the clientID.</span>
+<span class="sd">            FormatError</span>
+<span class="sd">                Informartion of invalid parameter or unexpected paramters.</span>
+<span class="sd">            ResourceConflictError</span>
+<span class="sd">                The legacy_cameraID already exist in the database.</span>
+<span class="sd">            InternalError</span>
+<span class="sd">                If there is an API internal error.</span>
+<span class="sd">            ResourceNotFoundError</span>
+<span class="sd">                If no client app exists with the clientID of this client object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The camera ID for the successfully added or updated camera.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        When adding or updating a camera you must supply the corresponding required parameters</span>
+<span class="sd">        and may also include any number of the optional parameters defined below in</span>
+<span class="sd">        &#39;Other Parameters.</span>
+
+<span class="sd">        When Adding a new camera:</span>
+<span class="sd">        Do not include any cameraID when adding new cameras to the database.</span>
+<span class="sd">        When the camera is added to the database, a new cameraID will be assigned and returned</span>
+<span class="sd">        to the user.</span>
+
+<span class="sd">        When updating an existing camera in the database you must include the corresponding</span>
+<span class="sd">        cameraID and any fields you wish to update.</span>
+<span class="sd">        If in any occasion you need to change an existing camera to a different type,</span>
+<span class="sd">        you must include the corresponding retrieval method data.</span>
+<span class="sd">        (i.e. To change an IP camera to non-ip camera, you must include values of snapshot_url</span>
+<span class="sd">        and camera_type) Updating field in retrieval method requires you to also specify the</span>
+<span class="sd">        type of camera. (i.e. To change the image_path of an IP camera, you should specify the</span>
+<span class="sd">        camera_type and image_path)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">required_args</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active_image&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active_video&#39;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_args</span><span class="p">(</span><span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">required_args</span><span class="o">=</span><span class="n">required_args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_args</span><span class="p">(</span><span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">legal_args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_camera_fields</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
 
-        <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;cameras/create&#39;</span>
+        <span class="n">operation</span> <span class="o">=</span> <span class="s1">&#39;POST&#39;</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cameraID&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;PUT&#39;</span>
 
-        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;ip&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;camera_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;ip&#39;</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s1">&#39;ip&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                 <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
@@ -583,22 +615,30 @@
                 <span class="s1">&#39;image_path&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;image_path&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                 <span class="s1">&#39;video_path&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;video_path&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="p">}</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;non-ip&#39;</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">],</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;camera_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;non_ip&#39;</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s1">&#39;snapshot_url&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;snapshot_url&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="p">}</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;stream&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;camera_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;stream&#39;</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s1">&#39;m3u8_url&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;m3u8_url&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="p">}</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">])</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;camera_type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
-                                                   <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()),</span> <span class="n">flag</span><span class="o">=</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span>
-                                     <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">201</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;cameras/create&#39;</span>
+            <span class="n">temp_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;cameras/&#39;</span> <span class="o">+</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;cameraID&#39;</span><span class="p">)</span>
+            <span class="n">temp_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">())</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">temp_response</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">201</span> <span class="ow">and</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">AuthenticationError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
             <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span><span class="p">:</span>
@@ -612,140 +652,6 @@
 
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;cameraID&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Client.update_camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.update_camera">[docs]</a>    <span class="k">def</span> <span class="nf">update_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cameraID</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-
-        <span class="sd">&quot;&quot;&quot;update_camera initialization method.</span>
-
-<span class="sd">                Parameters</span>
-<span class="sd">                ----------</span>
-<span class="sd">                cameraID : str</span>
-<span class="sd">                    Required cameraID for the update camera</span>
-<span class="sd">                camera_type : str, optional</span>
-<span class="sd">                    Type of camera.</span>
-<span class="sd">                    Allowed values: &#39;ip&#39;, &#39;non_ip&#39;, &#39;stream&#39;/</span>
-<span class="sd">                is_active_image : bool, optional</span>
-<span class="sd">                    If the camera is active and can get images.</span>
-<span class="sd">                    This field can identify true/false case-insensitively and 0/1.</span>
-<span class="sd">                is_active_video : bool, optional</span>
-<span class="sd">                    If the camera is active and can get video.</span>
-<span class="sd">                    This field can identify true/false case-insensitively and 0/1.</span>
-<span class="sd">                legacy_cameraID : int, optional</span>
-<span class="sd">                    Original ID of the camera in SQL database.</span>
-<span class="sd">                source : str, optional</span>
-<span class="sd">                    Source of camera.</span>
-<span class="sd">                latitude : int or float, optional</span>
-<span class="sd">                    Latitude of the camera location.</span>
-<span class="sd">                longitude : int or float, optional</span>
-<span class="sd">                    Longitude of the camera location.</span>
-<span class="sd">                country : str, optional</span>
-<span class="sd">                    Country which the camera locates at.</span>
-<span class="sd">                state : str, optional</span>
-<span class="sd">                    State which the camera locates at.</span>
-<span class="sd">                city : str, optional</span>
-<span class="sd">                    City which the camera locates at.</span>
-<span class="sd">                resolution_width : int, optional</span>
-<span class="sd">                    Resolution width of the camera.</span>
-<span class="sd">                resolution_height : int, optional</span>
-<span class="sd">                    Resolution height of the camera.</span>
-<span class="sd">                utc_offset : int, optional</span>
-<span class="sd">                    Time difference between UTC and the camera location.</span>
-<span class="sd">                timezone_id : str, optional</span>
-<span class="sd">                    Time zone ID of the camera location.</span>
-<span class="sd">                timezone_name : str, optional</span>
-<span class="sd">                    Time zone name of the camera location.</span>
-<span class="sd">                reference_logo : str, optional</span>
-<span class="sd">                    Reference logo of the camera.</span>
-<span class="sd">                reference_url : str, optional</span>
-<span class="sd">                    Reference url of the camera.</span>
-<span class="sd">                ip : str, optional</span>
-<span class="sd">                    (ip_camera) IP address of the camera.</span>
-<span class="sd">                port : str or int, optional</span>
-<span class="sd">                    (ip_camera) Port to connect to camera.</span>
-<span class="sd">                brand : str, optional</span>
-<span class="sd">                    (ip_camera) Brand of the camera.</span>
-<span class="sd">                model : str, optional</span>
-<span class="sd">                    (ip_camera) Model of the camera.</span>
-<span class="sd">                snapshot_url : str, optional</span>
-<span class="sd">                    (non_ip_camera) Url to retrieve snapshots from the camera.</span>
-<span class="sd">                m3u8_url : str, optional</span>
-<span class="sd">                    (stream_camera) Url to retrieve stream from the camera.</span>
-<span class="sd">                image_path : str, optional</span>
-<span class="sd">                    (ip_camera) Path to retrieve images from the camera.</span>
-<span class="sd">                    if the camera is an ip camera and &#39;is_active_image&#39; is true,</span>
-<span class="sd">                    then it will always have a image_path.</span>
-<span class="sd">                    However, image_path can exist even if &#39;is_active_image&#39;</span>
-<span class="sd">                    is false for this ip camera.</span>
-<span class="sd">                video_path : str, optional</span>
-<span class="sd">                    (ip_camera) Path to retrieve video from the camera.</span>
-<span class="sd">                    if the camera is an ip camera and &#39;is_active_video&#39; is true,</span>
-<span class="sd">                    then it will always have a video_path.</span>
-<span class="sd">                    However, video_path can exist even if &#39;is_active_video&#39;</span>
-<span class="sd">                    is false for this ip camera.</span>
-
-<span class="sd">                Raises</span>
-<span class="sd">                ------</span>
-<span class="sd">                    AuthenticationError</span>
-<span class="sd">                        If the client secret of this client object does not match the clientID.</span>
-<span class="sd">                    FormatError</span>
-<span class="sd">                        List of invalid attributes.</span>
-<span class="sd">                    ResourceConflictError</span>
-<span class="sd">                        The legacy_cameraID already exist in the database.</span>
-<span class="sd">                    InternalError</span>
-<span class="sd">                        If there is an API internal error.</span>
-<span class="sd">                    ResourceNotFoundError</span>
-<span class="sd">                        If no client app exists with the clientID of this client object.</span>
-
-<span class="sd">                Returns</span>
-<span class="sd">                -------</span>
-<span class="sd">                str</span>
-<span class="sd">                    The camera ID for the successfully updated camera.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
-
-        <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;cameras/&#39;</span> <span class="o">+</span> <span class="n">cameraID</span>
-
-        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;ip&#39;</span><span class="p">:</span>
-
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;ip&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                <span class="s1">&#39;brand&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;brand&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                <span class="s1">&#39;image_path&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;image_path&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                <span class="s1">&#39;video_path&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;video_path&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="p">}</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;non_ip&#39;</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;snapshot_url&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;snapshot_url&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="p">}</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;stream&#39;</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;m3u8_url&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;m3u8_url&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="p">}</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;retrieval&#39;</span><span class="p">])</span>
-
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
-                                                  <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()),</span> <span class="n">flag</span><span class="o">=</span><span class="s1">&#39;PUT&#39;</span><span class="p">,</span>
-                                     <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">201</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">AuthenticationError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
-            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
-            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ResourceConflictError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
-            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ResourceNotFoundError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
-
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;cameraID&#39;</span><span class="p">]</span></div>
-
-    <span class="c1"># TODO: get a camera</span>
 <div class="viewcode-block" id="Client.camera_by_id"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.camera_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">camera_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cameraID</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method to get a camera object by using camera&#39;s ID</span>
@@ -761,7 +667,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s2">&quot;cameras/&quot;</span> <span class="o">+</span> <span class="n">cameraID</span>
         <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">),</span>
@@ -832,7 +738,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
         <span class="n">local_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
         <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;self&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">local_params</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">local_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;camera_type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -919,7 +825,7 @@
         <span class="c1"># validate parameter names here.</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
         <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_token</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">kwargs</span><span class="p">),</span>
                                      <span class="n">flag</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
@@ -964,7 +870,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/db-change&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_token</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
         <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_builder</span><span class="p">()</span>
         <span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span>
                  <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="n">end</span><span class="p">,</span>
