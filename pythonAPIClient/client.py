@@ -192,6 +192,7 @@ class Client(object):
                 raise InternalError()
         return response.json()['clientID'], response.json()['clientSecret']
 
+
     def update_owner(self, clientID, owner):
         """
         Parameters
@@ -360,47 +361,42 @@ class Client(object):
         """
         add or update camera in the database.
 
-        Required Params to Add A Camera
-        --------------------------------
-
+        Parameters
+        ----------
             camera_type : str
                 Type of camera.
                 Allowed values: 'ip', 'non_ip', 'stream'.
+                | This parameter is required for adding camera.
             is_active_image : bool
-                If the camera is active and can get images.
+                Whether the camera is active and can get images.
                 This field can identify true/false case-insensitively and 0/1.
+                | This parameter is required for adding camera.
             is_active_video : bool
-                If the camera is active and can get video.
+                Whether the camera is active and can get video.
                 This field can identify true/false case-insensitively and 0/1.
+                | This parameter is required for adding camera.
             ip : str
-                (ip_camera only) IP address of the camera.
+                (IP camera only) IP address of the camera.
+                | This parameter is required for adding an IP camera.
             snapshot_url : str
-                (non_ip_camera only) Url to retrieve snapshots from the camera.
+                (non-IP camera only) Url to retrieve snapshots from the camera.
+                | This parameter is required for adding a non-IP camera.
             m3u8_url : str
-                (stream_camera only) Url to retrieve stream from the camera.
-
-        Required Params to Update A Camera
-        ----------------------------------
-
+                (Stream camera only) Url to retrieve stream from the camera.
+                | This parameter is required for adding a stream camera.
             cameraID : str
                 CameraID of the camera to be updated.
+                | This parameter is required for updating camera.
 
-        Note
-        ----
-
-            For adding camera to database, besides supplying the required parameters,
-            you can also include any number of optional parameters defined below.
-            You must not supply cameraID when you want to add a new camera to the database.
-            A new cameraID will be generated and returned when the camera is successfully added.
-
-            For updating existing camera, besides cameraID, you can also
-            supply any number of parameters from required parameters to add a camera
-            and optional parameters defined below.
+        Warning
+        -------
+        Including a cameraID in your write_camera request will update and overwrite the
+        corresponding camera information in the database.
+        Please ensure that the updated information is correct.
 
 
-        Optional Params
-        ---------------
-
+        Other Parameters
+        ----------------
             legacy_cameraID : int, optional
                 Original ID of the camera in SQL database.
             source : str, optional
@@ -416,7 +412,7 @@ class Client(object):
             city : str, optional
                 City which the camera locates at.
             resolution_width : int, optional
-                Resolution width of the camera. It has to be positive.
+                Resolution width of the camera.
             resolution_height : int, optional
                 Resolution height of the camera.
             utc_offset : int, optional
@@ -445,7 +441,7 @@ class Client(object):
             AuthenticationError
                 If the client secret of this client object does not match the clientID.
             FormatError
-                List of invalid attributes.
+                Informartion of invalid parameter or unexpected paramters.
             ResourceConflictError
                 The legacy_cameraID already exist in the database.
             InternalError
@@ -457,6 +453,26 @@ class Client(object):
         -------
         str
             The camera ID for the successfully added or updated camera.
+
+        Note
+        ----
+        When adding or updating a camera you must supply the corresponding required parameters
+        and may also include any number of the optional parameters defined below in
+        'Other Parameters.
+
+        When Adding a new camera:
+        Do not include any cameraID when adding new cameras to the database.
+        When the camera is added to the database, a new cameraID will be assigned and returned
+        to the user.
+
+        When updating an existing camera in the database you must include the corresponding
+        cameraID and any fields you wish to update.
+        If in any occasion you need to change an existing camera to a different type,
+        you must include the corresponding retrieval method data.
+        (i.e. To change an IP camera to non-ip camera, you must include values of snapshot_url
+        and camera_type) Updating field in retrieval method requires you to also specify the
+        type of camera. (i.e. To change the image_path of an IP camera, you should specify the
+        camera_type and image_path)
         """
 
         self._check_args(kwargs=kwargs, legal_args=self._camera_fields)

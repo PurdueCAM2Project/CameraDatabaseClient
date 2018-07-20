@@ -76,7 +76,7 @@ class TestClient(unittest.TestCase):
         url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         with self.assertRaises(ResourceNotFoundError):
-            client.request_token()
+            client._request_token()
         mock_get.assert_called_once_with(url, params=params)
         self.assertEqual(1, mock_response.json.call_count)
         return mock_http_error_handler
@@ -97,7 +97,7 @@ class TestClient(unittest.TestCase):
         url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         with self.assertRaises(AuthenticationError):
-            client.request_token()
+            client._request_token()
         mock_get.assert_called_once_with(url, params=params)
         self.assertEqual(1, mock_response.json.call_count)
         return mock_http_error_handler
@@ -114,7 +114,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        response_dict = client.request_token()
+        response_dict = client._request_token()
         url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         mock_get.assert_called_once_with(url, params=params)
@@ -133,7 +133,7 @@ class TestClient(unittest.TestCase):
         url = self.base_URL + 'auth'
         params = {'clientID': clientID, 'clientSecret': clientSecret}
         with self.assertRaises(InternalError):
-            client.request_token()
+            client._request_token()
         mock_get.assert_called_once_with(url, params=params)
         self.assertEqual(0, mock_response.json.call_count)
 
@@ -185,7 +185,7 @@ class TestClient(unittest.TestCase):
             'clientSecret': 'test_clientSecret'
         }
         mock_post.side_effect = [mock_response, mock_response2]
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
@@ -222,7 +222,7 @@ class TestClient(unittest.TestCase):
             'message': 'Token expired',
         }
         mock_post.return_value = mock_response
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
@@ -351,7 +351,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             'message': 'Token expired',
         }
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_response1 = mock.Mock()
         mock_response1.status_code = 200
         mock_response1.json.return_value = {
@@ -392,7 +392,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             'message': 'Token expired',
         }
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -431,7 +431,7 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_response
 
         with self.assertRaises(ResourceNotFoundError):
-            client.request_token()
+            client._request_token()
         token_params = {'clientID': clientID, 'clientSecret': clientSecret}
         mock_get.assert_called_once_with(self.token_url, params=token_params)
         self.assertEqual(1, mock_response.json.call_count)
@@ -1114,7 +1114,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1149,7 +1149,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1188,7 +1188,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1229,7 +1229,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1443,7 +1443,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1478,7 +1478,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1519,7 +1519,7 @@ class TestClient(unittest.TestCase):
         mock_response.json.return_value = {
             "message": "Token expired"
         }
-        # set result for request_token()
+        # set result for _request_token()
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
@@ -1788,28 +1788,26 @@ class TestClient(unittest.TestCase):
         # validate result
         expected_cameraID = '5ae0ecbd336359291be74c12'
         url = Client.base_URL + 'cameras/' + expected_cameraID
-        data = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo', 'timezone_name': 'Test',
-                'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
+        data = {'utc_offset': 9, 'resolution_height': 312,
                 'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
                 'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
-        kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
-                  'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
+        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'utc_offset': 9,
                   'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
         header = {'Authorization': 'Bearer correctToken'}
 
-        resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', **kwargs)
+        resultID = client.write_camera(**kwargs)
         mock_put.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -1838,7 +1836,7 @@ class TestClient(unittest.TestCase):
                 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'ip': None,
                 'm3u8_url': None, 'is_active_video': True, 'is_active_image': False,
-                'type': 'non-ip', 'snapshot_url': 'test_snapshot'}
+                'type': 'non_ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
         kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
                   'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
                   'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
@@ -1846,11 +1844,11 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'non-ip',
-                  'snapshot_url': 'test_snapshot'}
+                  'is_active_image': False, 'camera_type': 'non_ip',
+                  'snapshot_url': 'test_snapshot', 'cameraID': '5ae0ecbd336359291be74c12'}
         header = {'Authorization': 'Bearer correctToken'}
 
-        resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', **kwargs)
+        resultID = client.write_camera(**kwargs)
         mock_put.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -1887,10 +1885,11 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'stream', 'm3u8_url': 'test_m3u8'}
+                  'cameraID': '5ae0ecbd336359291be74c12', 'is_active_image': False,
+                  'camera_type': 'stream', 'm3u8_url': 'test_m3u8'}
         header = {'Authorization': 'Bearer correctToken'}
 
-        resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', **kwargs)
+        resultID = client.write_camera(**kwargs)
         mock_put.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -1916,7 +1915,7 @@ class TestClient(unittest.TestCase):
             'cameraID': '5ae0ecbd336359291be74c12'
         }
         mock_put.side_effect = [mock_response, mock_response2]
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
@@ -1931,11 +1930,12 @@ class TestClient(unittest.TestCase):
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
-                  'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
+                  'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video',
+                  'cameraID': '5ae0ecbd336359291be74c12'}
 
-        resultID = client.update_camera(cameraID='5ae0ecbd336359291be74c12', **kwargs)
+        resultID = client.write_camera(**kwargs)
         self.assertEqual(resultID, testCamID)
         params = {
             'clientID': clientId,
@@ -1952,8 +1952,8 @@ class TestClient(unittest.TestCase):
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
 
         call_list = [mock.call(self.base_URL + 'cameras/' + testCamID, headers=headers,
@@ -1976,29 +1976,29 @@ class TestClient(unittest.TestCase):
         # validate result
         testCamID = '5ae0ecbd336359291be74c12'
         url = Client.base_URL + 'cameras/' + testCamID
-        data = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo', 'timezone_name': 'Test',
+        data = {'reference_url': 'url.com/ref', 'timezone_name': 'Test',
                 'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
                 'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
                 'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
-        kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
+        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'reference_url': 'url.com/ref',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
                   'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
         header = {'Authorization': 'Bearer correctToken'}
 
         with self.assertRaises(InternalError):
-            client.update_camera(cameraID='5ae0ecbd336359291be74c12', **kwargs)
+            client.write_camera(**kwargs)
         mock_put.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(0, mock_response.json.call_count)
 
@@ -2017,28 +2017,28 @@ class TestClient(unittest.TestCase):
         mock_put.return_value = mock_response
         testCamID = '5ae0ecbd336359291be74c12'
         url = self.base_URL + 'cameras/' + testCamID
-        data = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo', 'timezone_name': 'Test',
+        data = {'reference_url': 'url.com/ref', 'timezone_name': 'Test',
                 'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
                 'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
                 'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
-        kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
+        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'reference_url': 'url.com/ref',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
                   'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
 
         with self.assertRaises(FormatError):
-            client.update_camera(cameraID='5ae0ecbd336359291be74c12', **kwargs)
+            client.write_camera(**kwargs)
         mock_put.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
                                          data=data)
         self.assertEqual(1, mock_response.json.call_count)
@@ -2057,29 +2057,29 @@ class TestClient(unittest.TestCase):
         mock_put.return_value = mock_response
         testCamID = '5ae0ecbd336359291be74c12'
         url = self.base_URL + 'cameras/' + testCamID
-        data = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo', 'timezone_name': 'Test',
+        data = {'reference_url': 'url.com/ref', 'timezone_name': 'Test',
                 'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
                 'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
                 'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
-        kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
+        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'reference_url': 'url.com/ref',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
                   'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
         headers = {'Authorization': 'Bearer correctToken'}
 
         with self.assertRaises(ResourceNotFoundError):
-            client.update_camera(cameraID='5ae0ecbd336359291be74c12', **kwargs)
+            client.write_camera(**kwargs)
         mock_put.assert_called_once_with(url, headers=headers, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
@@ -2108,8 +2108,8 @@ class TestClient(unittest.TestCase):
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
@@ -2117,10 +2117,10 @@ class TestClient(unittest.TestCase):
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
-        resultID = client.add_camera(**kwargs)
+        resultID = client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -2150,8 +2150,8 @@ class TestClient(unittest.TestCase):
                 'source': 'source', 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url',
                 'is_active_video': False, 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"ip": null, "port": "8080", "brand": "Some Brand",'
-                             ' "model": "Some model", "image_path": "path/image",'
+                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
+                             ' "ip": null, "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
                   'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
@@ -2159,10 +2159,10 @@ class TestClient(unittest.TestCase):
                   'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
                   'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'type': 'ip', 'ip': None,
-                  'port': '8080', 'brand': 'Some Brand', 'model': 'Some model',
+                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
+                  'ip': None, 'port': '8080', 'brand': 'Some Brand', 'model': 'Some model',
                   'image_path': 'path/image', 'video_path': 'path/video'}
-        resultID = client.add_camera(**kwargs)
+        resultID = client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -2192,7 +2192,7 @@ class TestClient(unittest.TestCase):
                 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                 'ip': None, 'm3u8_url': None, 'is_active_video': True, 'is_active_image': False,
-                'type': 'non-ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
+                'type': 'non_ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
 
         kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
                   'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
@@ -2201,9 +2201,9 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'non-ip',
+                  'is_active_image': False, 'camera_type': 'non_ip',
                   'snapshot_url': 'test_snapshot'}
-        resultID = client.add_camera(**kwargs)
+        resultID = client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -2233,7 +2233,7 @@ class TestClient(unittest.TestCase):
                 'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA',
                 'longitude': 'test_long', 'latitude': 'test_lad', 'source': 'test_source',
                 'legacy_cameraID': 0, 'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                'is_active_image': False, 'type': 'non-ip',
+                'is_active_image': False, 'type': 'non_ip',
                 'retrieval': '{"snapshot_url": null}'}
         kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
                   'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
@@ -2242,9 +2242,9 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'non-ip',
+                  'is_active_image': False, 'camera_type': 'non_ip',
                   'snapshot_url': None}
-        resultID = client.add_camera(**kwargs)
+        resultID = client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -2283,8 +2283,8 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'stream', 'm3u8_url': 'test_m3u8'}
-        resultID = client.add_camera(**kwargs)
+                  'is_active_image': False, 'camera_type': 'stream', 'm3u8_url': 'test_m3u8'}
+        resultID = client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -2323,8 +2323,8 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'stream', 'm3u8_url': None}
-        resultID = client.add_camera(**kwargs)
+                  'is_active_image': False, 'camera_type': 'stream', 'm3u8_url': None}
+        resultID = client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
@@ -2349,7 +2349,7 @@ class TestClient(unittest.TestCase):
             'cameraID': 'test_cameraID'
         }
         mock_post.side_effect = [mock_response, mock_response2]
-        # set request_token()'s result
+        # set _request_token()'s result
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
@@ -2364,11 +2364,11 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
+                  'is_active_image': False, 'camera_type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
                   'brand': 'test_brand', 'model': 'test_model', 'image_path': 'test_image_path',
                   'video_path': 'test_vid_path'}
 
-        resultID = client.add_camera(**kwargs)
+        resultID = client.write_camera(**kwargs)
 
         self.assertEqual(resultID, 'test_cameraID')
         params = {
@@ -2385,8 +2385,8 @@ class TestClient(unittest.TestCase):
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                 'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
                 'is_active_image': False, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "test_brand",'
-                             ' "model": "test_model", "image_path": "test_image_path",'
+                'retrieval': '{"brand": "test_brand", "image_path": "test_image_path",'
+                             ' "ip": "127.0.0.2", "model": "test_model", "port": "8080",'
                              ' "video_path": "test_vid_path"}'}
         call_list = [mock.call(self.base_URL + 'cameras/create', headers=headers, data=data),
                      mock.call(self.base_URL + 'cameras/create', headers=newheaders, data=data)]
@@ -2412,8 +2412,8 @@ class TestClient(unittest.TestCase):
                 'longitude': 'test_long', 'latitude': 'test_lad', 'source': 'test_source',
                 'legacy_cameraID': 0, 'm3u8_url': None, 'snapshot_url': None,
                 'is_active_video': True, 'is_active_image': False, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "test_brand",'
-                             ' "model": "test_model", "image_path": "test_image_path",'
+                'retrieval': '{"brand": "test_brand", "image_path": "test_image_path",'
+                             ' "ip": "127.0.0.2", "model": "test_model", "port": "8080",'
                              ' "video_path": "test_vid_path"}'}
         header = {'Authorization': 'Bearer correctToken'}
 
@@ -2423,11 +2423,11 @@ class TestClient(unittest.TestCase):
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
+                  'is_active_image': False, 'camera_type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
                   'brand': 'test_brand', 'model': 'test_model', 'image_path': 'test_image_path',
                   'video_path': 'test_vid_path'}
         with self.assertRaises(InternalError):
-            client.add_camera(**kwargs)
+            client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(0, mock_response.json.call_count)
 
@@ -2450,10 +2450,9 @@ class TestClient(unittest.TestCase):
                 'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
                 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                'is_active_image': False, 'type': 'ip',
-                'retrieval': '{"ip": "127.0.0.2", "port": "8080", "brand": "test_brand",'
-                             ' "model": "test_model", "image_path": "test_image_path",'
+                'is_active_video': True, 'is_active_image': False, 'type': 'ip',
+                'retrieval': '{"brand": null, "image_path": null,'
+                             ' "ip": "127.0.0.2", "model": null, "port": "8080",'
                              ' "video_path": "test_vid_path"}'}
 
         kwargs = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
@@ -2461,41 +2460,26 @@ class TestClient(unittest.TestCase):
                   'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                  'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
-                  'brand': 'test_brand', 'model': 'test_model', 'image_path': 'test_image_path',
-                  'video_path': 'test_vid_path'}
+                  'is_active_video': True, 'is_active_image': False, 'camera_type': 'ip',
+                  'ip': '127.0.0.2', 'port': '8080', 'video_path': 'test_vid_path'}
 
         with self.assertRaises(FormatError):
-            client.add_camera(**kwargs)
+            client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
                                           data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
-    def test_add_camera_missing_required_args(self, mock_post):
+    def test_write_camera_illegal_args(self):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
         client.token = 'CorrectToken'
-        mock_response = mock.Mock()
-        expected_dict = {
-            "message": "Format Error Messages"
-        }
-        mock_response.json.return_value = expected_dict
-        mock_response.status_code = 422
-        mock_post.return_value = mock_response
 
-        kwargs = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                  'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                  'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                  'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                  'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                  'port': '8080', 'brand': 'test_brand', 'model': 'test_model',
+        kwargs = {'illegal': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'image_path': 'test_image_path', 'video_path': 'test_vid_path'}
 
         with self.assertRaises(FormatError):
-            client.add_camera(**kwargs)
+            client.write_camera(**kwargs)
 
 if __name__ == '__main__':
     unittest.main()
