@@ -514,10 +514,9 @@
 
 <span class="sd">        Warning</span>
 <span class="sd">        -------</span>
-<span class="sd">        Including a cameraID in your write_camera request will update and overwrite the</span>
-<span class="sd">        corresponding camera information in the database.</span>
-<span class="sd">        Please ensure that the updated information is correct.</span>
-
+<span class="sd">            Including a cameraID in your write_camera request will update and overwrite the</span>
+<span class="sd">            corresponding camera information in the database.</span>
+<span class="sd">            Please ensure that the updated information is correct.</span>
 
 <span class="sd">        Other Parameters</span>
 <span class="sd">        ----------------</span>
@@ -597,6 +596,7 @@
 <span class="sd">        and camera_type) Updating field in retrieval method requires you to also specify the</span>
 <span class="sd">        type of camera. (i.e. To change the image_path of an IP camera, you should specify the</span>
 <span class="sd">        camera_type and image_path)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_args</span><span class="p">(</span><span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">legal_args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_camera_fields</span><span class="p">)</span>
