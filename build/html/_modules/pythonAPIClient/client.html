@@ -490,27 +490,27 @@
 <span class="sd">            camera_type : str</span>
 <span class="sd">                Type of camera.</span>
 <span class="sd">                Allowed values: &#39;ip&#39;, &#39;non_ip&#39;, &#39;stream&#39;.</span>
-<span class="sd">                | This parameter is required for adding camera.</span>
+<span class="sd">                |  This parameter is required for adding camera.</span>
 <span class="sd">            is_active_image : bool</span>
 <span class="sd">                Whether the camera is active and can get images.</span>
 <span class="sd">                This field can identify true/false case-insensitively and 0/1.</span>
-<span class="sd">                | This parameter is required for adding camera.</span>
+<span class="sd">                |  This parameter is required for adding camera.</span>
 <span class="sd">            is_active_video : bool</span>
 <span class="sd">                Whether the camera is active and can get video.</span>
 <span class="sd">                This field can identify true/false case-insensitively and 0/1.</span>
-<span class="sd">                | This parameter is required for adding camera.</span>
+<span class="sd">                |  This parameter is required for adding camera.</span>
 <span class="sd">            ip : str</span>
 <span class="sd">                (IP camera only) IP address of the camera.</span>
-<span class="sd">                | This parameter is required for adding an IP camera.</span>
+<span class="sd">                |  This parameter is required for adding an IP camera.</span>
 <span class="sd">            snapshot_url : str</span>
 <span class="sd">                (non-IP camera only) Url to retrieve snapshots from the camera.</span>
-<span class="sd">                | This parameter is required for adding a non-IP camera.</span>
+<span class="sd">                |  This parameter is required for adding a non-IP camera.</span>
 <span class="sd">            m3u8_url : str</span>
 <span class="sd">                (Stream camera only) Url to retrieve stream from the camera.</span>
-<span class="sd">                | This parameter is required for adding a stream camera.</span>
+<span class="sd">                |  This parameter is required for adding a stream camera.</span>
 <span class="sd">            cameraID : str</span>
 <span class="sd">                CameraID of the camera to be updated.</span>
-<span class="sd">                | This parameter is required for updating camera.</span>
+<span class="sd">                |  This parameter is required for updating camera.</span>
 
 <span class="sd">        Warning</span>
 <span class="sd">        -------</span>
@@ -570,7 +570,10 @@
 <span class="sd">            InternalError</span>
 <span class="sd">                If there is an API internal error.</span>
 <span class="sd">            ResourceNotFoundError</span>
-<span class="sd">                If no client app exists with the clientID of this client object.</span>
+<span class="sd">                If no camera exists with the cameraID specified in the parameter.</span>
+
+<span class="sd">                Or If the client id of this client object does not match any client</span>
+<span class="sd">                in the database.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -659,6 +662,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        cameraID : str</span>
+<span class="sd">            Id of the camera in the database.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -692,9 +696,8 @@
                       <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;A method to search camera by attributes and location.</span>
-
 <span class="sd">        Searching by location requires user to provide coordiantes for a desired center point</span>
-<span class="sd">         and a radius in meters. The search will carry out in the area bounded by the circle.</span>
+<span class="sd">        and a radius in meters. The search will carry out in the area bounded by the circle.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -795,7 +798,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        :obj:`list` of :obj:`Camera`</span>
-<span class="sd">            List of camera objects that has the given retrieval method. If there ar eno cameras</span>
+<span class="sd">            List of camera objects that has the given retrieval method. If there are no cameras</span>
 <span class="sd">            matches the provided retrieval information, an empty list will be returned.</span>
 
 <span class="sd">        Raises</span>
@@ -809,7 +812,7 @@
 
 <span class="sd">            or snapshot_url is not provided when the camera type is &#39;non_ip&#39;.</span>
 
-<span class="sd">            or m3u8_url is not provided whe nthe camera ytpe is &#39;stream&#39;.</span>
+<span class="sd">            or m3u8_url is not provided whe nthe camera type is &#39;stream&#39;.</span>
 
 <span class="sd">        AuthenticationError</span>
 <span class="sd">            If the client secret of this client object does not match the clientID.</span>

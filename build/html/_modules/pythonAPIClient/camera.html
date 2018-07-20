@@ -176,10 +176,12 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">dict_entries</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Client initialization method.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        dict_entries: dict</span>
 <span class="sd">            Dictionary of all field values of a camera.</span>
+
 <span class="sd">        Note</span>
 <span class="sd">        ----</span>
 <span class="sd">            User should not construct any camera object on his/her own.</span>
@@ -207,6 +209,7 @@
 <div class="viewcode-block" id="IPCamera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.IPCamera">[docs]</a><span class="k">class</span> <span class="nc">IPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represent a single ip camera.</span>
 <span class="sd">    This is a subclass of Camera.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    ip : str</span>
@@ -220,6 +223,7 @@
 <div class="viewcode-block" id="NonIPCamera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.NonIPCamera">[docs]</a><span class="k">class</span> <span class="nc">NonIPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represent a single non-ip camera.</span>
 <span class="sd">    This is a subclass of Camera.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    snapshot_url : str</span>
@@ -228,6 +232,7 @@
 <div class="viewcode-block" id="StreamCamera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.StreamCamera">[docs]</a><span class="k">class</span> <span class="nc">StreamCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represent a single stream camera.</span>
 <span class="sd">    This is a subclass of Camera.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    m3u8_url : str</span>
