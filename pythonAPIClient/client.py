@@ -590,8 +590,8 @@ class Client(object):
             NOTE: please specify latitude and longitude if this parameter value is provided.
         offset : int, optional
             Number of cameras skipped. Since each time this function can return max 100 cameras,
-            calling this function the second time adding `offset=100` will get the second 100 cameras
-            beyond the first list of 100 cameras.
+            calling this function the second time adding `offset=100` will get the second 100
+            cameras beyond the first list of 100 cameras.
         camera_type : str, optional
             Type of camera.
             Allowed values: 'ip', 'non_ip', 'stream'.
@@ -622,7 +622,7 @@ class Client(object):
         Raises
         ------
         FormatError
-        
+
             If type of argument value is not expected for the given field.
 
             Or there are unexpected keywords in kwargs.
