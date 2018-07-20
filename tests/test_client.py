@@ -1779,7 +1779,7 @@ class TestClient(unittest.TestCase):
         client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
-        mock_response.status_code = 201
+        mock_response.status_code = 200
         mock_response.json.return_value = {
             "cameraID": "5ae0ecbd336359291be74c12"
         }
@@ -1788,23 +1788,13 @@ class TestClient(unittest.TestCase):
         # validate result
         expected_cameraID = '5ae0ecbd336359291be74c12'
         url = Client.base_URL + 'cameras/' + expected_cameraID
-        data = {'utc_offset': 9, 'resolution_height': 312,
-                'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
-                'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
-                'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
-                'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
-                'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
-                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
+        data = {'type': 'ip',
+                'retrieval': '{"brand": null, "image_path": null,'
+                             ' "ip": null, "model": null, "port": null,'
                              ' "video_path": "path/video"}'}
-        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'utc_offset': 9,
-                  'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
-                  'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
-                  'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
-                  'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
-                  'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
-                  'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
+        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'camera_type': 'ip',
+                  'video_path': 'path/video'}
+
         header = {'Authorization': 'Bearer correctToken'}
 
         resultID = client.write_camera(**kwargs)
@@ -1821,7 +1811,7 @@ class TestClient(unittest.TestCase):
         client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
-        mock_response.status_code = 201
+        mock_response.status_code = 200
         mock_response.json.return_value = {
             "cameraID": "5ae0ecbd336359291be74c12"
         }
@@ -1829,23 +1819,11 @@ class TestClient(unittest.TestCase):
         # validate result
         expected_cameraID = '5ae0ecbd336359291be74c12'
         url = Client.base_URL + 'cameras/' + expected_cameraID
-        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None, 'port': None,
-                'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'ip': None,
-                'm3u8_url': None, 'is_active_video': True, 'is_active_image': False,
-                'type': 'non_ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
-        kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
-                  'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                  'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                  'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                  'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                  'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                  'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'camera_type': 'non_ip',
+        data = {'is_active_image': False, 'type': 'non_ip',
+                'retrieval': '{"snapshot_url": "test_snapshot"}'}
+        kwargs = {'is_active_image': False, 'camera_type': 'non_ip',
                   'snapshot_url': 'test_snapshot', 'cameraID': '5ae0ecbd336359291be74c12'}
+
         header = {'Authorization': 'Bearer correctToken'}
 
         resultID = client.write_camera(**kwargs)
@@ -1854,7 +1832,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.put')
-    def test_update_camera_stream(self, mock_put):
+    def test_update_camera_stream_no_type(self, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientId, clientSecret)
@@ -1862,31 +1840,18 @@ class TestClient(unittest.TestCase):
         client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
-        mock_response.status_code = 201
+        mock_response.status_code = 200
         mock_response.json.return_value = {
             "cameraID": "5ae0ecbd336359291be74c12"
         }
         mock_put.return_value = mock_response
         # validate result
         expected_cameraID = '5ae0ecbd336359291be74c12'
-        url = Client.base_URL + 'cameras/' + expected_cameraID
-        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None, 'port': None,
-                'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'ip': None,
-                'snapshot_url': None, 'is_active_video': True, 'is_active_image': False,
-                'type': 'stream', 'retrieval': '{"m3u8_url": "test_m3u8"}'}
-        kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
-                  'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                  'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                  'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                  'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                  'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                  'ip': None, 'snapshot_url': None, 'is_active_video': True,
-                  'cameraID': '5ae0ecbd336359291be74c12', 'is_active_image': False,
-                  'camera_type': 'stream', 'm3u8_url': 'test_m3u8'}
+        url = self.base_URL + 'cameras/' + expected_cameraID
+
+        # doing so will not trigger error, update nothing
+        data = {'m3u8_url': 'test_m3u8', 'type': None}
+        kwargs = {'m3u8_url': 'test_m3u8', 'cameraID': expected_cameraID}
         header = {'Authorization': 'Bearer correctToken'}
 
         resultID = client.write_camera(**kwargs)
@@ -1910,7 +1875,7 @@ class TestClient(unittest.TestCase):
         # set second request.post's result
         testCamID = '5ae0ecbd336359291be74c12'
         mock_response2 = mock.Mock()
-        mock_response2.status_code = 201
+        mock_response2.status_code = 200
         mock_response2.json.return_value = {
             'cameraID': '5ae0ecbd336359291be74c12'
         }
@@ -1922,18 +1887,9 @@ class TestClient(unittest.TestCase):
             'token': 'newToken'
         }
         mock_get.return_value = mock_get_response
-        # run the test
 
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
-                  'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
-                  'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
-                  'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
-                  'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
-                  'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
-                  'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
-                  'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video',
-                  'cameraID': '5ae0ecbd336359291be74c12'}
+                  'timezone_name': 'Test', 'cameraID': '5ae0ecbd336359291be74c12'}
 
         resultID = client.write_camera(**kwargs)
         self.assertEqual(resultID, testCamID)
@@ -1941,20 +1897,12 @@ class TestClient(unittest.TestCase):
             'clientID': clientId,
             'clientSecret': clientSecret
         }
-        mock_get.assert_called_with(self.base_URL + 'auth', params=params)
+        mock_get.assert_called_with(self.token_url, params=params)
         headers = {'Authorization': 'Bearer ExpiredToken'}
         newheaders = {'Authorization': 'Bearer newToken'}
 
-        data = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo', 'timezone_name': 'Test',
-                'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
-                'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
-                'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
-                'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
-                'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
-                'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
-                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
-                             ' "video_path": "path/video"}'}
+        data = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
+                'timezone_name': 'Test', 'type': None}
 
         call_list = [mock.call(self.base_URL + 'cameras/' + testCamID, headers=headers,
                                data=data),
@@ -1976,24 +1924,12 @@ class TestClient(unittest.TestCase):
         # validate result
         testCamID = '5ae0ecbd336359291be74c12'
         url = Client.base_URL + 'cameras/' + testCamID
-        data = {'reference_url': 'url.com/ref', 'timezone_name': 'Test',
-                'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
-                'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
-                'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
-                'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
-                'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
-                'is_active_image': True, 'type': 'ip',
+        data = {'is_active_image': True, 'type': 'ip',
                 'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
                              ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
-        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'reference_url': 'url.com/ref',
-                  'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
-                  'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
-                  'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
-                  'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
-                  'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
-                  'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
+        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'is_active_image': True,
+                  'camera_type': 'ip', 'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
         header = {'Authorization': 'Bearer correctToken'}
 
@@ -2017,25 +1953,9 @@ class TestClient(unittest.TestCase):
         mock_put.return_value = mock_response
         testCamID = '5ae0ecbd336359291be74c12'
         url = self.base_URL + 'cameras/' + testCamID
-        data = {'reference_url': 'url.com/ref', 'timezone_name': 'Test',
-                'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
-                'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
-                'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
-                'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
-                'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
-                'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
-                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
-                             ' "video_path": "path/video"}'}
-        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'reference_url': 'url.com/ref',
-                  'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
-                  'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
-                  'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
-                  'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
-                  'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
-                  'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
-                  'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
+        data = {'is_active_image': 'not false', 'type': 'undefined'}
+        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'is_active_image': 'not false',
+                  'camera_type': 'undefined'}
 
         with self.assertRaises(FormatError):
             client.write_camera(**kwargs)
@@ -2057,25 +1977,8 @@ class TestClient(unittest.TestCase):
         mock_put.return_value = mock_response
         testCamID = '5ae0ecbd336359291be74c12'
         url = self.base_URL + 'cameras/' + testCamID
-        data = {'reference_url': 'url.com/ref', 'timezone_name': 'Test',
-                'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
-                'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
-                'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
-                'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
-                'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
-                'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
-                             ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
-                             ' "video_path": "path/video"}'}
-        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'reference_url': 'url.com/ref',
-                  'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
-                  'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
-                  'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
-                  'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
-                  'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
-                  'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
-                  'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
+        data = {'reference_url': 'url.com/ref', 'type': None}
+        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'reference_url': 'url.com/ref'}
         headers = {'Authorization': 'Bearer correctToken'}
 
         with self.assertRaises(ResourceNotFoundError):
@@ -2101,21 +2004,17 @@ class TestClient(unittest.TestCase):
         expected_camID = 'test_cameraID'
         url = Client.base_URL + 'cameras/create'
         header = {'Authorization': 'Bearer correctToken'}
-        data = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo', 'timezone_name': 'Test',
-                'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
-                'resolution_width': 123, 'city': 'WL', 'state': 'IN', 'country': 'USA',
-                'longitude': '100.21323', 'latitude': '-44.9281', 'source': 'source',
+
+        data = {'resolution_height': 312, 'resolution_width': 123,
+                'longitude': '100.21323', 'latitude': '-44.9281',
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
                 'is_active_image': True, 'type': 'ip',
                 'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
                              ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
-        kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
-                  'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
-                  'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
-                  'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
-                  'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
+        kwargs = {'resolution_height': 312, 'resolution_width': 123, 'longitude': '100.21323',
+                  'latitude': '-44.9281', 'legacy_cameraID': None,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
                   'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
@@ -2126,7 +2025,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
-    def test_add_camera_kwrgs_no_ip(self, mock_post):
+    def test_add_camera_kwrgs_only_ip(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientID, clientSecret)
@@ -2143,25 +2042,12 @@ class TestClient(unittest.TestCase):
         expected_camID = 'test_cameraID'
         url = Client.base_URL + 'cameras/create'
         header = {'Authorization': 'Bearer correctToken'}
-        data = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo', 'timezone_name': 'Test',
-                'timezone_id': 'GMT', 'utc_offset': 9, 'resolution_height': 312,
-                'resolution_width': 123, 'city': 'WL', 'state': 'IN',
-                'country': 'USA', 'longitude': '100.21323', 'latitude': '-44.9281',
-                'source': 'source', 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
-                'snapshot_url': 'sample.com/snapshot_url',
-                'is_active_video': False, 'is_active_image': True, 'type': 'ip',
-                'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
-                             ' "ip": null, "model": "Some model", "port": "8080",'
-                             ' "video_path": "path/video"}'}
-        kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
-                  'timezone_name': 'Test', 'timezone_id': 'GMT', 'utc_offset': 9,
-                  'resolution_height': 312, 'resolution_width': 123, 'city': 'WL',
-                  'state': 'IN', 'country': 'USA', 'longitude': '100.21323',
-                  'latitude': '-44.9281', 'source': 'source', 'legacy_cameraID': None,
-                  'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
-                  'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
-                  'ip': None, 'port': '8080', 'brand': 'Some Brand', 'model': 'Some model',
-                  'image_path': 'path/image', 'video_path': 'path/video'}
+        data = {'is_active_video': False, 'is_active_image': True, 'type': 'ip',
+                'retrieval': '{"brand": null, "image_path": null,'
+                             ' "ip": "test_ip", "model": null, "port": null,'
+                             ' "video_path": null}'}
+        kwargs = {'is_active_video': False, 'is_active_image': True,
+                  'camera_type': 'ip', 'ip': 'test_ip'}
         resultID = client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(resultID, expected_camID)
@@ -2185,23 +2071,20 @@ class TestClient(unittest.TestCase):
         expected_camID = 'test_cameraID'
         url = Client.base_URL + 'cameras/create'
         header = {'Authorization': 'Bearer correctToken'}
-        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None, 'port': None,
-                'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
                 'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
                 'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
                 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                'ip': None, 'm3u8_url': None, 'is_active_video': True, 'is_active_image': False,
+                'is_active_video': True, 'is_active_image': False,
                 'type': 'non_ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
 
-        kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
-                  'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
+        kwargs = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
                   'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
                   'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                  'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'camera_type': 'non_ip',
+                  'is_active_video': True, 'is_active_image': False, 'camera_type': 'non_ip',
                   'snapshot_url': 'test_snapshot'}
         resultID = client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
@@ -2217,36 +2100,23 @@ class TestClient(unittest.TestCase):
         client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
-        mock_response.status_code = 201
+        mock_response.status_code = 422
         mock_response.json.return_value = {
-            "cameraID": "test_cameraID",
+            "message": "Format Error Messages",
         }
         mock_post.return_value = mock_response
         # validate result
-        expected_camID = 'test_cameraID'
+
         url = Client.base_URL + 'cameras/create'
         header = {'Authorization': 'Bearer correctToken'}
-        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None, 'port': None,
-                'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                'resolution_height': 480, 'resolution_width': 720,
-                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA',
-                'longitude': 'test_long', 'latitude': 'test_lad', 'source': 'test_source',
-                'legacy_cameraID': 0, 'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                'is_active_image': False, 'type': 'non_ip',
+        data = {'is_active_video': True, 'is_active_image': False, 'type': 'non_ip',
                 'retrieval': '{"snapshot_url": null}'}
-        kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
-                  'port': None, 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                  'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                  'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                  'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                  'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                  'ip': None, 'm3u8_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'camera_type': 'non_ip',
-                  'snapshot_url': None}
-        resultID = client.write_camera(**kwargs)
+        kwargs = {'is_active_video': True, 'is_active_image': False,
+                  'camera_type': 'non_ip', 'snapshot_url': None}
+
+        with self.assertRaises(FormatError):
+            client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
@@ -2290,7 +2160,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
-    def test_add_camera_kwrgs_no_m3u8_url(self, mock_post):
+    def test_add_camera_kwrgs_missing_required(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
         client = Client(clientID, clientSecret)
@@ -2298,35 +2168,22 @@ class TestClient(unittest.TestCase):
         client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
-        mock_response.status_code = 201
+        mock_response.status_code = 422
         mock_response.json.return_value = {
-            "cameraID": "test_cameraID",
+            "message": "Format Error Messages",
         }
         mock_post.return_value = mock_response
         # validate result
-        expected_camID = 'test_cameraID'
+
         url = Client.base_URL + 'cameras/create'
         header = {'Authorization': 'Bearer correctToken'}
-        data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None, 'port': None,
-                'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0, 'ip': None,
-                'snapshot_url': None, 'is_active_video': True, 'is_active_image': False,
-                'type': 'stream', 'retrieval': '{"m3u8_url": null}'}
-        kwargs = {'video_path': None, 'image_path': None, 'model': None, 'brand': None,
-                  'port': None, 'reference_url': 'test_ref_url',
-                  'reference_logo': 'test_ref_logo', 'timezone_name': 'test_t_name',
-                  'timezone_id': 'test_t_id', 'utc_offset': 3,
-                  'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                  'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                  'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                  'ip': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'camera_type': 'stream', 'm3u8_url': None}
-        resultID = client.write_camera(**kwargs)
+        data = {'is_active_image': False, 'type': 'stream',
+                'retrieval': '{"m3u8_url": null}'}
+        kwargs = {'is_active_image': False, 'camera_type': 'stream'}
+
+        with self.assertRaises(FormatError):
+            client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('pythonAPIClient.client.requests.post')
@@ -2358,14 +2215,9 @@ class TestClient(unittest.TestCase):
         mock_get.return_value = mock_get_response
         # run the test
 
-        kwargs = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                  'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                  'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                  'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                  'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                  'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'camera_type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
-                  'brand': 'test_brand', 'model': 'test_model', 'image_path': 'test_image_path',
+        kwargs = {'is_active_video': True, 'is_active_image': False, 'port': '8080',
+                  'camera_type': 'ip', 'ip': '127.0.0.2', 'image_path': 'test_image_path',
+                  'brand': 'test_brand', 'model': 'test_model',
                   'video_path': 'test_vid_path'}
 
         resultID = client.write_camera(**kwargs)
@@ -2378,13 +2230,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_with(self.base_URL + 'auth', params=params)
         headers = {'Authorization': 'Bearer ExpiredToken'}
         newheaders = {'Authorization': 'Bearer newToken'}
-        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                'is_active_image': False, 'type': 'ip',
+        data = {'is_active_video': True, 'is_active_image': False, 'type': 'ip',
                 'retrieval': '{"brand": "test_brand", "image_path": "test_image_path",'
                              ' "ip": "127.0.0.2", "model": "test_model", "port": "8080",'
                              ' "video_path": "test_vid_path"}'}
@@ -2405,69 +2251,20 @@ class TestClient(unittest.TestCase):
         mock_post.return_value = mock_response
         # validate result
         url = Client.base_URL + 'cameras/create'
-        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id',
-                'utc_offset': 3, 'resolution_height': 480, 'resolution_width': 720,
-                'city': 'West Lafayette', 'state': 'Indiana', 'country': 'USA',
-                'longitude': 'test_long', 'latitude': 'test_lad', 'source': 'test_source',
-                'legacy_cameraID': 0, 'm3u8_url': None, 'snapshot_url': None,
-                'is_active_video': True, 'is_active_image': False, 'type': 'ip',
+        data = {'is_active_video': True, 'is_active_image': False, 'type': 'ip',
                 'retrieval': '{"brand": "test_brand", "image_path": "test_image_path",'
                              ' "ip": "127.0.0.2", "model": "test_model", "port": "8080",'
                              ' "video_path": "test_vid_path"}'}
         header = {'Authorization': 'Bearer correctToken'}
 
-        kwargs = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                  'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                  'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                  'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                  'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                  'm3u8_url': None, 'snapshot_url': None, 'is_active_video': True,
-                  'is_active_image': False, 'camera_type': 'ip', 'ip': '127.0.0.2', 'port': '8080',
-                  'brand': 'test_brand', 'model': 'test_model', 'image_path': 'test_image_path',
+        kwargs = {'is_active_video': True, 'is_active_image': False, 'camera_type': 'ip',
+                  'ip': '127.0.0.2', 'port': '8080', 'brand': 'test_brand',
+                  'model': 'test_model', 'image_path': 'test_image_path',
                   'video_path': 'test_vid_path'}
         with self.assertRaises(InternalError):
             client.write_camera(**kwargs)
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(0, mock_response.json.call_count)
-
-    @mock.patch('pythonAPIClient.client.requests.post')
-    def test_add_camera_all_correct_Format_Error(self, mock_post):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = 'CorrectToken'
-        mock_response = mock.Mock()
-        expected_dict = {
-            "message": "Format Error Messages"
-        }
-        mock_response.json.return_value = expected_dict
-        mock_response.status_code = 422
-        mock_post.return_value = mock_response
-        url = self.base_URL + 'cameras/create'
-        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                'is_active_video': True, 'is_active_image': False, 'type': 'ip',
-                'retrieval': '{"brand": null, "image_path": null,'
-                             ' "ip": "127.0.0.2", "model": null, "port": "8080",'
-                             ' "video_path": "test_vid_path"}'}
-
-        kwargs = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                  'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                  'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
-                  'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
-                  'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
-                  'is_active_video': True, 'is_active_image': False, 'camera_type': 'ip',
-                  'ip': '127.0.0.2', 'port': '8080', 'video_path': 'test_vid_path'}
-
-        with self.assertRaises(FormatError):
-            client.write_camera(**kwargs)
-        mock_post.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
-                                          data=data)
-        self.assertEqual(1, mock_response.json.call_count)
 
     def test_write_camera_illegal_args(self):
         clientId = '0' * 96
