@@ -366,27 +366,27 @@ class Client(object):
             camera_type : str
                 Type of camera.
                 Allowed values: 'ip', 'non_ip', 'stream'.
-                | This parameter is required for adding camera.
+                |  This parameter is required for adding camera.
             is_active_image : bool
                 Whether the camera is active and can get images.
                 This field can identify true/false case-insensitively and 0/1.
-                | This parameter is required for adding camera.
+                |  This parameter is required for adding camera.
             is_active_video : bool
                 Whether the camera is active and can get video.
                 This field can identify true/false case-insensitively and 0/1.
-                | This parameter is required for adding camera.
+                |  This parameter is required for adding camera.
             ip : str
                 (IP camera only) IP address of the camera.
-                | This parameter is required for adding an IP camera.
+                |  This parameter is required for adding an IP camera.
             snapshot_url : str
                 (non-IP camera only) Url to retrieve snapshots from the camera.
-                | This parameter is required for adding a non-IP camera.
+                |  This parameter is required for adding a non-IP camera.
             m3u8_url : str
                 (Stream camera only) Url to retrieve stream from the camera.
-                | This parameter is required for adding a stream camera.
+                |  This parameter is required for adding a stream camera.
             cameraID : str
                 CameraID of the camera to be updated.
-                | This parameter is required for updating camera.
+                |  This parameter is required for updating camera.
 
         Warning
         -------
@@ -446,7 +446,10 @@ class Client(object):
             InternalError
                 If there is an API internal error.
             ResourceNotFoundError
-                If no client app exists with the clientID of this client object.
+                If no camera exists with the cameraID specified in the parameter.
+
+                Or If the client id of this client object does not match any client
+                in the database.
 
         Returns
         -------
@@ -535,6 +538,7 @@ class Client(object):
         Parameters
         ----------
         cameraID : str
+            Id of the camera in the database.
 
         Returns
         -------
@@ -565,7 +569,6 @@ class Client(object):
     def search_camera(self, **kwargs):
 
         """A method to search camera by attributes and location.
-
         Searching by location requires user to provide coordiantes for a desired center point
         and a radius in meters. The search will carry out in the area bounded by the circle.
         Each time, this function can return a maximum of 100 cameras. Getting more cameras can
@@ -701,7 +704,7 @@ class Client(object):
         Returns
         -------
         :obj:`list` of :obj:`Camera`
-            List of camera objects that has the given retrieval method. If there ar eno cameras
+            List of camera objects that has the given retrieval method. If there are no cameras
             matches the provided retrieval information, an empty list will be returned.
 
         Raises
