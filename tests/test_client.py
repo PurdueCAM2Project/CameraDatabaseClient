@@ -1333,6 +1333,28 @@ class TestClient(unittest.TestCase):
         self.assertEqual(response_list[0].__dict__, actual_dict,
                          'Returned json is not tranlated correctly')
 
+    def test_search_camera_only_illegal_args(self):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+
+        kwargs = {'illegal': 'test_lad'}
+
+        with self.assertRaises(FormatError):
+            client.write_camera(**kwargs)
+
+    def test_search_camera_illegal_args(self):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+
+        kwargs = {'illegal': 'test_lad', 'image_path': 'test', 'video_path': 'test'}
+
+        with self.assertRaises(FormatError):
+            client.write_camera(**kwargs)
+
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_cam_exist_all_correct_cam_list(self, mock_get):
         clientID = '0' * 96
@@ -1591,6 +1613,18 @@ class TestClient(unittest.TestCase):
                                              'video_path': 'test_url'
                                              })
         self.assertEqual(1, mock_response.json.call_count)
+
+    def test_camera_exist_illegal_args(self):
+        clientId = '0' * 96
+        clientSecret = '0' * 71
+        client = Client(clientId, clientSecret)
+        client.token = 'CorrectToken'
+
+        kwargs = {'illegal': 'test_lad', 'camera_type': 'ip', 'image_path': 'test_url',
+                  'ip': 'test_ip', 'video_path': 'test_vid_path'}
+
+        with self.assertRaises(FormatError):
+            client.write_camera(**kwargs)
 
     @mock.patch('pythonAPIClient.client.requests.get')
     def test_get_change_log_all_correct(self, mock_get):

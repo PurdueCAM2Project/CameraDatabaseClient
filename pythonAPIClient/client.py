@@ -55,8 +55,28 @@ class Client(object):
                           'is_active_image', 'camera_type', 'ip', 'port', 'brand', 'model',
                           'image_path', 'video_path', 'cameraID'])
 
+    """
+    set: Static private variable to store all legal keywords for adding or updating a camera.
+    """
+
+    _search_fields = set(['resolution_height', 'resolution_width', 'city', 'is_active_video',
+                          'state', 'country', 'longitude', 'latitude', 'source', 'camera_type',
+                          'is_active_image', 'radius', 'offset'])
+
+    """
+    set: Static private variable to store all legal keywords for searching cameras.
+    """
+
+    _retrieval_fields = set(['ip', 'port', 'image_path', 'video_path', 'snapshot_url', 'm3u8_url'])
+
+    """
+    set: Static private variable to store all legal keywords in kwargs in check camera
+         existence function.
+    """
+
     @staticmethod
     def _check_args(kwargs, legal_args):
+
         illegal_args = set(kwargs.keys()) - legal_args
         if illegal_args:
             raise FormatError('Keywords ' + str(list(illegal_args)) + ' are not defined.')
@@ -546,30 +566,56 @@ class Client(object):
                 raise InternalError()
         return Camera.process_json(**response.json())
 
-    def search_camera(self, latitude=None, longitude=None, radius=None, camera_type=None,
-                      source=None, country=None, state=None, city=None, resolution_width=None,
-                      resolution_height=None, is_active_image=None, is_active_video=None,
-                      offset=None):
+    def search_camera(self, **kwargs):
 
         """A method to search camera by attributes and location.
         Searching by location requires user to provide coordiantes for a desired center point
         and a radius in meters. The search will carry out in the area bounded by the circle.
+        Each time, this function can return a maximum of 100 cameras. Getting more cameras can
+        be achieved by calling this function multiple times with offest parameter.
 
         Parameters
         ----------
+
         latitude : float, optional
+            Latitude of the center of the circle area to be searched.
+            Latitude ranges between +90 and -90.
+
+            NOTE: please specify longitude and radius if this parameter value is provided.
         longitude : float, optional
+            Longitude of the center of the circle area to be searched.
+            Longitude ranges between +180 and -180.
+
+            NOTE: please specify latitude and radius if this parameter value is provided.
         radius : float, optional
+            Radius in km of the circle area to be searched. Radius should be positive
+
+            NOTE: please specify latitude and longitude if this parameter value is provided.
         offset : int, optional
+            Number of cameras skipped. Since each time this function can return max 100 cameras,
+            calling this function the second time adding `offset=100` will get the second 100
+            cameras beyond the first list of 100 cameras.
         camera_type : str, optional
+            Type of camera.
+            Allowed values: 'ip', 'non_ip', 'stream'.
         source : str, optional
+            Source of the camera.
         country : str, optional
+            Country which the camera locates at.
         state : str, optional
+            State which the camera locates at.
         city : str, optional
+            City which the camera locates at.
         resolution_width : int, optional
+            Resolution width of the camera. It has to be positive.
         resolution_height : int, optional
+            Resolution height of the camera. It has to be positive.
         is_active_image : bool, optional
+            If the camera is active and can get images.
+            This field can identify true/false case-insensitively and 0/1.
         is_active_video : bool, optional
+            If the camera is active and can get video.
+            This field can identify true/false case-insensitively and 0/1.
 
         Returns
         -------
@@ -579,7 +625,10 @@ class Client(object):
         Raises
         ------
         FormatError
+
             If type of argument value is not expected for the given field.
+
+            Or there are unexpected keywords in kwargs.
 
             Or radius cannot is less than 0.
 
@@ -598,12 +647,13 @@ class Client(object):
         """
         if self.token is None:
             self._request_token()
-        local_params = dict(locals())
-        local_params.pop('self', None)
-        local_params['type'] = local_params.pop('camera_type', None)
+
+        self._check_args(kwargs, self._search_fields)
+
+        kwargs['type'] = kwargs.pop('camera_type', None)
 
         # filter out those parameters with value None, change true/false
-        search_params = {k: v for k, v in local_params.items() if v is not None}
+        search_params = {k: v for k, v in kwargs.items() if v is not None}
 
         url = Client.base_URL + 'cameras/search'
         header = self.header_builder()
@@ -662,13 +712,15 @@ class Client(object):
         FormatError
             If camera type is not valid.
 
-            or camera type is not provided.
+            Or camera type is not provided.
 
-            or ip is not provided when the camera type is 'ip'.
+            Or ip is not provided when the camera type is 'ip'.
 
-            or snapshot_url is not provided when the camera type is 'non_ip'.
+            Or snapshot_url is not provided when the camera type is 'non_ip'.
 
-            or m3u8_url is not provided whe nthe camera type is 'stream'.
+            Or m3u8_url is not provided when the camera ytpe is 'stream'.
+
+            Or there are unexpected keywords in kwargs.
 
         AuthenticationError
             If the client secret of this client object does not match the clientID.
@@ -678,10 +730,11 @@ class Client(object):
         InternalError
             If there is an API internal error.
         """
+
+        self._check_args(kwargs, self._retrieval_fields)
+
         url = Client.base_URL + "cameras/exist"
         kwargs['type'] = camera_type
-
-        # validate parameter names here.
 
         if self.token is None:
             self._request_token()
