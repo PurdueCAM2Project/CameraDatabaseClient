@@ -368,7 +368,6 @@ class Client(object):
                 CameraID of the camera to be updated.
                 | This parameter is required for updating camera.
 
-
         Warning
         -------
             Including a cameraID in your write_camera request will update and overwrite the
@@ -436,24 +435,24 @@ class Client(object):
 
         Note
         ----
-            When adding or updating a camera you must supply the corresponding required parameters
-            and may also include any number of the optional parameters defined below in
-            'Other Parameters'.
+        When adding or updating a camera you must supply the corresponding required parameters
+        and may also include any number of the optional parameters defined below in
+        'Other Parameters.
 
-            When Adding a new camera:
-            Do not include any cameraID when adding new cameras to the database.
-            After the camera is added to the database, a new cameraID will be assigned
-            and returned to the user.
+        When Adding a new camera:
+        Do not include any cameraID when adding new cameras to the database.
+        When the camera is added to the database, a new cameraID will be assigned and returned
+        to the user.
 
-            When updating an existing camera in the database you must include the corresponding
-            cameraID and any fields you wish to update.
-            If in any occasion you need to change an existing camera to
-            a different type, you must include the corresponding retrieval method data.
-            (i.e. To change an IP camera to non-ip camera,
-            you must include the snapshot_url and camera_type)
-            Updating field in retrieval method requires you to also specify the type camera.
-            (i.e. To change the image_path of an IP camera, you should specify the camera_type and
-            image_path)
+        When updating an existing camera in the database you must include the corresponding
+        cameraID and any fields you wish to update.
+        If in any occasion you need to change an existing camera to a different type,
+        you must include the corresponding retrieval method data.
+        (i.e. To change an IP camera to non-ip camera, you must include values of snapshot_url
+        and camera_type) Updating field in retrieval method requires you to also specify the
+        type of camera. (i.e. To change the image_path of an IP camera, you should specify the
+        camera_type and image_path)
+
         """
 
         self._check_args(kwargs=kwargs, legal_args=self._camera_fields)
