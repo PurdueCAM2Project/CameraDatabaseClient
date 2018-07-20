@@ -32,7 +32,7 @@ class Camera(object):
 
     def __init__(self, **dict_entries):
         """Client initialization method.
-        
+
         Parameters
         ----------
         dict_entries: dict
@@ -65,7 +65,7 @@ class Camera(object):
 class IPCamera(Camera):
     """Represent a single ip camera.
     This is a subclass of Camera.
-    
+
     Attributes
     ----------
     ip : str
@@ -79,7 +79,7 @@ class IPCamera(Camera):
 class NonIPCamera(Camera):
     """Represent a single non-ip camera.
     This is a subclass of Camera.
-    
+
     Attributes
     ----------
     snapshot_url : str
@@ -88,7 +88,7 @@ class NonIPCamera(Camera):
 class StreamCamera(Camera):
     """Represent a single stream camera.
     This is a subclass of Camera.
-    
+
     Attributes
     ----------
     m3u8_url : str
