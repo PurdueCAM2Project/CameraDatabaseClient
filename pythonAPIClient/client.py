@@ -390,10 +390,9 @@ class Client(object):
 
         Warning
         -------
-        Including a cameraID in your write_camera request will update and overwrite the
-        corresponding camera information in the database.
-        Please ensure that the updated information is correct.
-
+            Including a cameraID in your write_camera request will update and overwrite the
+            corresponding camera information in the database.
+            Please ensure that the updated information is correct.
 
         Other Parameters
         ----------------
@@ -473,6 +472,7 @@ class Client(object):
         and camera_type) Updating field in retrieval method requires you to also specify the
         type of camera. (i.e. To change the image_path of an IP camera, you should specify the
         camera_type and image_path)
+
         """
 
         self._check_args(kwargs=kwargs, legal_args=self._camera_fields)
