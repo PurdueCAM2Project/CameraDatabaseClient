@@ -427,7 +427,7 @@ class Client(object):
                 If there is an API internal error.
             ResourceNotFoundError
                 If no camera exists with the cameraID specified in the parameter.
-                
+
                 Or If the client id of this client object does not match any client
                 in the database.
 
