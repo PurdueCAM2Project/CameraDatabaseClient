@@ -718,28 +718,43 @@ camera_type and image_path)</p>
 
 <dl class="method">
 <dt id="pythonAPIClient.client.Client.search_camera">
-<code class="descname">search_camera</code><span class="sig-paren">(</span><em>latitude=None</em>, <em>longitude=None</em>, <em>radius=None</em>, <em>camera_type=None</em>, <em>source=None</em>, <em>country=None</em>, <em>state=None</em>, <em>city=None</em>, <em>resolution_width=None</em>, <em>resolution_height=None</em>, <em>is_active_image=None</em>, <em>is_active_video=None</em>, <em>offset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.search_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.search_camera" title="Permalink to this definition">¶</a></dt>
+<code class="descname">search_camera</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pythonAPIClient/client.html#Client.search_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pythonAPIClient.client.Client.search_camera" title="Permalink to this definition">¶</a></dt>
 <dd><p>A method to search camera by attributes and location.
 Searching by location requires user to provide coordiantes for a desired center point
-and a radius in meters. The search will carry out in the area bounded by the circle.</p>
+and a radius in meters. The search will carry out in the area bounded by the circle.
+Each time, this function can return a maximum of 100 cameras. Getting more cameras can
+be achieved by calling this function multiple times with offest parameter.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>latitude</strong> (<em>float</em><em>, </em><em>optional</em>) – </li>
-<li><strong>longitude</strong> (<em>float</em><em>, </em><em>optional</em>) – </li>
-<li><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – </li>
-<li><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) – </li>
-<li><strong>camera_type</strong> (<em>str</em><em>, </em><em>optional</em>) – </li>
-<li><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – </li>
-<li><strong>country</strong> (<em>str</em><em>, </em><em>optional</em>) – </li>
-<li><strong>state</strong> (<em>str</em><em>, </em><em>optional</em>) – </li>
-<li><strong>city</strong> (<em>str</em><em>, </em><em>optional</em>) – </li>
-<li><strong>resolution_width</strong> (<em>int</em><em>, </em><em>optional</em>) – </li>
-<li><strong>resolution_height</strong> (<em>int</em><em>, </em><em>optional</em>) – </li>
-<li><strong>is_active_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – </li>
-<li><strong>is_active_video</strong> (<em>bool</em><em>, </em><em>optional</em>) – </li>
+<li><strong>latitude</strong> (<em>float</em><em>, </em><em>optional</em>) – <p>Latitude of the center of the circle area to be searched.
+Latitude ranges between +90 and -90.</p>
+<p>NOTE: please specify longitude and radius if this parameter value is provided.</p>
+</li>
+<li><strong>longitude</strong> (<em>float</em><em>, </em><em>optional</em>) – <p>Longitude of the center of the circle area to be searched.
+Longitude ranges between +180 and -180.</p>
+<p>NOTE: please specify latitude and radius if this parameter value is provided.</p>
+</li>
+<li><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – <p>Radius in km of the circle area to be searched. Radius should be positive</p>
+<p>NOTE: please specify latitude and longitude if this parameter value is provided.</p>
+</li>
+<li><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of cameras skipped. Since each time this function can return max 100 cameras,
+calling this function the second time adding <cite>offset=100</cite> will get the second 100
+cameras beyond the first list of 100 cameras.</li>
+<li><strong>camera_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of camera.
+Allowed values: ‘ip’, ‘non_ip’, ‘stream’.</li>
+<li><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – Source of the camera.</li>
+<li><strong>country</strong> (<em>str</em><em>, </em><em>optional</em>) – Country which the camera locates at.</li>
+<li><strong>state</strong> (<em>str</em><em>, </em><em>optional</em>) – State which the camera locates at.</li>
+<li><strong>city</strong> (<em>str</em><em>, </em><em>optional</em>) – City which the camera locates at.</li>
+<li><strong>resolution_width</strong> (<em>int</em><em>, </em><em>optional</em>) – Resolution width of the camera. It has to be positive.</li>
+<li><strong>resolution_height</strong> (<em>int</em><em>, </em><em>optional</em>) – Resolution height of the camera. It has to be positive.</li>
+<li><strong>is_active_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – If the camera is active and can get images.
+This field can identify true/false case-insensitively and 0/1.</li>
+<li><strong>is_active_video</strong> (<em>bool</em><em>, </em><em>optional</em>) – If the camera is active and can get video.
+This field can identify true/false case-insensitively and 0/1.</li>
 </ul>
 </td>
 </tr>
@@ -751,6 +766,7 @@ and a radius in meters. The search will carry out in the area bounded by the cir
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
 <li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">FormatError</span></code> – If type of argument value is not expected for the given field.</p>
+<p>Or there are unexpected keywords in kwargs.</p>
 <p>Or radius cannot is less than 0.</p>
 <p>Or incorrect latitude range. (it should be between +90 and -90)</p>
 <p>Or incorrect longitude range. (it should be between +180 and -180)</p>
@@ -801,10 +817,11 @@ matches the provided retrieval information, an empty list will be returned.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
 <li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">FormatError</span></code> – If camera type is not valid.</p>
-<p>or camera type is not provided.</p>
-<p>or ip is not provided when the camera type is ‘ip’.</p>
-<p>or snapshot_url is not provided when the camera type is ‘non_ip’.</p>
-<p>or m3u8_url is not provided whe nthe camera type is ‘stream’.</p>
+<p>Or camera type is not provided.</p>
+<p>Or ip is not provided when the camera type is ‘ip’.</p>
+<p>Or snapshot_url is not provided when the camera type is ‘non_ip’.</p>
+<p>Or m3u8_url is not provided when the camera ytpe is ‘stream’.</p>
+<p>Or there are unexpected keywords in kwargs.</p>
 </li>
 <li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AuthenticationError</span></code> – If the client secret of this client object does not match the clientID.</p>
 </li>
