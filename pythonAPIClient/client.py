@@ -33,11 +33,6 @@ class Client(object):
         In order to access the package, register a new application by contacting the CAM2 team
         at https://www.cam2project.net/.
 
-        For each methods except internal method like _check_token(),
-        those methods will rerun _request_token() to get a new token if token expires.
-        But if the requests get status code of 401 for more than 2 times,
-        we raise an Authentication error.
-
     """
 
     base_URL = 'https://cam2-api.herokuapp.com/'
@@ -581,16 +576,16 @@ class Client(object):
             Latitude of the center of the circle area to be searched.
             Latitude ranges between +90 and -90.
 
-            NOTE: please specify longitude and radius if this parameter value is provided.
+            Please specify longitude and radius if this parameter value is provided.
         longitude : float, optional
             Longitude of the center of the circle area to be searched.
             Longitude ranges between +180 and -180.
 
-            NOTE: please specify latitude and radius if this parameter value is provided.
+            Please specify latitude and radius if this parameter value is provided.
         radius : float, optional
             Radius in km of the circle area to be searched. Radius should be positive
 
-            NOTE: please specify latitude and longitude if this parameter value is provided.
+            Please specify latitude and longitude if this parameter value is provided.
         offset : int, optional
             Number of cameras skipped. Since each time this function can return max 100 cameras,
             calling this function the second time adding `offset=100` will get the second 100
@@ -767,7 +762,7 @@ class Client(object):
 
         Returns
         -------
-        list of dict of {str : str}
+        :obj:`list` of dict
             A list of objects containing cameraID and creation time of the log.
 
         Raises
