@@ -177,11 +177,6 @@
 <span class="sd">        In order to access the package, register a new application by contacting the CAM2 team</span>
 <span class="sd">        at https://www.cam2project.net/.</span>
 
-<span class="sd">        For each methods except internal method like _check_token(),</span>
-<span class="sd">        those methods will rerun _request_token() to get a new token if token expires.</span>
-<span class="sd">        But if the requests get status code of 401 for more than 2 times,</span>
-<span class="sd">        we raise an Authentication error.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">base_URL</span> <span class="o">=</span> <span class="s1">&#39;https://cam2-api.herokuapp.com/&#39;</span>
@@ -725,16 +720,16 @@
 <span class="sd">            Latitude of the center of the circle area to be searched.</span>
 <span class="sd">            Latitude ranges between +90 and -90.</span>
 
-<span class="sd">            NOTE: please specify longitude and radius if this parameter value is provided.</span>
+<span class="sd">            Please specify longitude and radius if this parameter value is provided.</span>
 <span class="sd">        longitude : float, optional</span>
 <span class="sd">            Longitude of the center of the circle area to be searched.</span>
 <span class="sd">            Longitude ranges between +180 and -180.</span>
 
-<span class="sd">            NOTE: please specify latitude and radius if this parameter value is provided.</span>
+<span class="sd">            Please specify latitude and radius if this parameter value is provided.</span>
 <span class="sd">        radius : float, optional</span>
 <span class="sd">            Radius in km of the circle area to be searched. Radius should be positive</span>
 
-<span class="sd">            NOTE: please specify latitude and longitude if this parameter value is provided.</span>
+<span class="sd">            Please specify latitude and longitude if this parameter value is provided.</span>
 <span class="sd">        offset : int, optional</span>
 <span class="sd">            Number of cameras skipped. Since each time this function can return max 100 cameras,</span>
 <span class="sd">            calling this function the second time adding `offset=100` will get the second 100</span>
@@ -911,7 +906,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        list of dict of {str : str}</span>
+<span class="sd">        :obj:`list` of dict</span>
 <span class="sd">            A list of objects containing cameraID and creation time of the log.</span>
 
 <span class="sd">        Raises</span>

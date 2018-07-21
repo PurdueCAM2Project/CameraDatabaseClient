@@ -425,12 +425,8 @@ Each token expires in 5 minutes.</p>
 
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>In order to access the package, register a new application by contacting the CAM2 team
+<p class="last">In order to access the package, register a new application by contacting the CAM2 team
 at <a class="reference external" href="https://www.cam2project.net/">https://www.cam2project.net/</a>.</p>
-<p class="last">For each methods except internal method like _check_token(),
-those methods will rerun _request_token() to get a new token if token expires.
-But if the requests get status code of 401 for more than 2 times,
-we raise an Authentication error.</p>
 </div>
 <p>Client initialization method.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -731,14 +727,14 @@ be achieved by calling this function multiple times with offest parameter.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>latitude</strong> (<em>float</em><em>, </em><em>optional</em>) – <p>Latitude of the center of the circle area to be searched.
 Latitude ranges between +90 and -90.</p>
-<p>NOTE: please specify longitude and radius if this parameter value is provided.</p>
+<p>Please specify longitude and radius if this parameter value is provided.</p>
 </li>
 <li><strong>longitude</strong> (<em>float</em><em>, </em><em>optional</em>) – <p>Longitude of the center of the circle area to be searched.
 Longitude ranges between +180 and -180.</p>
-<p>NOTE: please specify latitude and radius if this parameter value is provided.</p>
+<p>Please specify latitude and radius if this parameter value is provided.</p>
 </li>
 <li><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – <p>Radius in km of the circle area to be searched. Radius should be positive</p>
-<p>NOTE: please specify latitude and longitude if this parameter value is provided.</p>
+<p>Please specify latitude and longitude if this parameter value is provided.</p>
 </li>
 <li><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of cameras skipped. Since each time this function can return max 100 cameras,
 calling this function the second time adding <cite>offset=100</cite> will get the second 100
@@ -851,10 +847,10 @@ in the database.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>list of dict of {str</strong> – A list of objects containing cameraID and creation time of the log.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of objects containing cameraID and creation time of the log.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str}</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of dict</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
