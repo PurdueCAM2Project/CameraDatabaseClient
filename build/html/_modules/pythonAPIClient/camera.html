@@ -204,7 +204,9 @@
             <span class="k">return</span> <span class="n">IPCamera</span><span class="p">(</span><span class="o">**</span><span class="n">dict_entries</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dict_entries</span><span class="p">[</span><span class="s1">&#39;camera_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;non_ip&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">NonIPCamera</span><span class="p">(</span><span class="o">**</span><span class="n">dict_entries</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">StreamCamera</span><span class="p">(</span><span class="o">**</span><span class="n">dict_entries</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">dict_entries</span><span class="p">[</span><span class="s1">&#39;camera_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;stream&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">StreamCamera</span><span class="p">(</span><span class="o">**</span><span class="n">dict_entries</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="IPCamera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.camera.IPCamera">[docs]</a><span class="k">class</span> <span class="nc">IPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represent a single ip camera.</span>
