@@ -60,7 +60,9 @@ class Camera(object):
             return IPCamera(**dict_entries)
         if dict_entries['camera_type'] == 'non_ip':
             return NonIPCamera(**dict_entries)
-        return StreamCamera(**dict_entries)
+        if dict_entries['camera_type'] == 'stream':
+            return StreamCamera(**dict_entries)
+        return None
 
 class IPCamera(Camera):
     """Represent a single ip camera.
