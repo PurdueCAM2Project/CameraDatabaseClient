@@ -4,7 +4,7 @@ This class holds the code to test camera objects.
 import unittest
 import sys
 from os import path
-from pythonAPIClient.camera import Camera, IPCamera, NonIPCamera, StreamCamera
+from CAM2CameraDatabaseClient.camera import Camera, IPCamera, NonIPCamera, StreamCamera
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 

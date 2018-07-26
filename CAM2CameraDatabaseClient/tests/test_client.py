@@ -5,9 +5,9 @@ import unittest
 import sys
 from os import path
 import mock
-from pythonAPIClient.client import Client
-from pythonAPIClient.camera import NonIPCamera
-from pythonAPIClient.error import AuthenticationError, InternalError, InvalidClientIdError,\
+from CAM2CameraDatabaseClient.client import Client
+from CAM2CameraDatabaseClient.camera import NonIPCamera
+from CAM2CameraDatabaseClient.error import AuthenticationError, InternalError, InvalidClientIdError,\
      InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
@@ -60,8 +60,8 @@ class TestClient(unittest.TestCase):
         head_example = {'Authorization': 'Bearer ' + 'dummy'}
         self.assertEqual(client.header_builder(), head_example)
 
-    @mock.patch('pythonAPIClient.error.AuthenticationError')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.error.AuthenticationError')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_token_incorrect_ID_Secret(self, mock_get, mock_http_error_handler):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -81,8 +81,8 @@ class TestClient(unittest.TestCase):
         self.assertEqual(1, mock_response.json.call_count)
         return mock_http_error_handler
 
-    @mock.patch('pythonAPIClient.error.AuthenticationError')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.error.AuthenticationError')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_token_incorrect_Secret(self, mock_get, mock_http_error_handler):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -102,7 +102,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(1, mock_response.json.call_count)
         return mock_http_error_handler
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_token_all_correct(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -122,7 +122,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.token, 'correctToken', 'token not stored in the client object.')
         return response_dict
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_token_all_correct_Internal_error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -137,7 +137,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, params=params)
         self.assertEqual(0, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_register(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -164,8 +164,8 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultSecret, expected_clientSecret)
         self.assertEqual(2, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_register_expired_token_success(self, mock_get, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -208,8 +208,8 @@ class TestClient(unittest.TestCase):
                      mock.call(reg_url, headers=new_headers, data=reg_data)]
         self.assertEqual(mock_post.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_register_expired_token_failure(self, mock_get, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -247,7 +247,7 @@ class TestClient(unittest.TestCase):
                      mock.call(reg_url, headers=new_headers, data=reg_data)]
         self.assertEqual(mock_post.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_register_no_owner(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -269,7 +269,7 @@ class TestClient(unittest.TestCase):
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_register_incorrect_clientID(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -297,7 +297,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(self.token_url, params=token_params)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_register_internal_error(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -318,7 +318,7 @@ class TestClient(unittest.TestCase):
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(0, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_all_correct(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -339,7 +339,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.client_ids_by_owner("testowner"), expected_clientID_array)
         mock_get.assert_called_once_with(url, headers=headers, params=param)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_expired_token_success(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -380,7 +380,7 @@ class TestClient(unittest.TestCase):
                      mock.call(ids_url, headers=new_headers, params=ids_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_expired_token_failure(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -417,7 +417,7 @@ class TestClient(unittest.TestCase):
                      mock.call(ids_url, headers=new_headers, params=ids_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_incorrect_clientID(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -436,7 +436,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(self.token_url, params=token_params)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_internal_error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -453,7 +453,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(0, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_clientID_all_correct(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -471,7 +471,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.usage_by_client('1', 'testowner'), 7)
         mock_get.assert_called_once_with(url, headers=headers, params=param)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_client_expired_token_success(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -506,7 +506,7 @@ class TestClient(unittest.TestCase):
                      mock.call(usage_url, headers=new_headers, params=usage_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_client_expired_token_failure(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -540,7 +540,7 @@ class TestClient(unittest.TestCase):
                      mock.call(usage_url, headers=new_headers, params=usage_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_client_authorization_error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -560,7 +560,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_client_id_not_found(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -580,7 +580,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_client_internal_error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -597,7 +597,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(0, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_owner(self, mock_put):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -615,8 +615,8 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.update_owner('1', 'testowner'), 'OK')
         mock_put.assert_called_once_with(url, headers=headers, data=data)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_update_owner_expired_token_success(self, mock_get, mock_put):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -648,8 +648,8 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_update_owner_expired_token_failure(self, mock_get, mock_put):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -680,7 +680,7 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_owner_invalid_clientid(self, mock_put):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -700,7 +700,7 @@ class TestClient(unittest.TestCase):
         mock_put.assert_called_once_with(url, headers=headers, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_permissionLevel(self, mock_put):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -718,8 +718,8 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.update_permission('1', 'user'), 'OK')
         mock_put.assert_called_once_with(url, headers=headers, data=data)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_update_permissionLevel_expired_token_success(self, mock_get, mock_put):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -751,8 +751,8 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_update_permissionLevel_expired_token_failure(self, mock_get, mock_put):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -783,7 +783,7 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_reset_secret(self, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -800,7 +800,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.reset_secret('1'), 'test_clientSecret')
         mock_put.assert_called_once_with(url, headers=headers, data=None)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_reset_secret_invalid_clientid(self, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -819,8 +819,8 @@ class TestClient(unittest.TestCase):
         mock_put.assert_called_once_with(url, headers=headers, data=None)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_reset_secret_expired_token_success(self, mock_get, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -851,8 +851,8 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'apps/1/secret', headers=newheaders, data=None)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_reset_secret_expired_token_failure(self, mock_get, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -882,7 +882,7 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'apps/1/secret', headers=newheaders, data=None)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_all_correct(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -912,7 +912,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.camera_by_id('12345').__dict__, expected_dict)
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_expired_token_success(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -959,7 +959,7 @@ class TestClient(unittest.TestCase):
                      mock.call(get_url, headers=new_headers, params=None)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_expired_token_failure(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -990,7 +990,7 @@ class TestClient(unittest.TestCase):
                      mock.call(get_url, headers=new_headers, params=None)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_format_error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1007,7 +1007,7 @@ class TestClient(unittest.TestCase):
         url = self.base_URL + 'cameras/12345'
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_internal_error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1021,7 +1021,7 @@ class TestClient(unittest.TestCase):
         url = self.base_URL + 'cameras/12345'
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_empty(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1042,7 +1042,7 @@ class TestClient(unittest.TestCase):
                          'Returned json is not tranlated correctly')
         return response_list
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_no_param(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1083,7 +1083,7 @@ class TestClient(unittest.TestCase):
             self.assertEqual(response_list[i].__dict__, actual_list[i].__dict__)
         return response_list
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_no_token(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1102,7 +1102,7 @@ class TestClient(unittest.TestCase):
                                     params={'country': 'USA'})
         self.assertEqual(2, mock_get.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_Expired_Token_failure(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1137,7 +1137,7 @@ class TestClient(unittest.TestCase):
                      mock.call(search_url, headers=new_headers, params=search_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_Expired_Token_success(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1176,7 +1176,7 @@ class TestClient(unittest.TestCase):
                      mock.call(search_url, headers=new_headers, params=search_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_Expired_Token_format_error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1217,7 +1217,7 @@ class TestClient(unittest.TestCase):
                      mock.call(search_url, headers=new_headers, params=search_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_Expired_Token_internal_error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1258,7 +1258,7 @@ class TestClient(unittest.TestCase):
                      mock.call(search_url, headers=new_headers, params=search_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_all_correct_Internal_Error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1274,7 +1274,7 @@ class TestClient(unittest.TestCase):
                                          params={'country': 'USA'})
         self.assertEqual(0, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_Format_Error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1294,7 +1294,7 @@ class TestClient(unittest.TestCase):
                                          params={'resolution_width': 'USA'})
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_all_correct(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1355,7 +1355,7 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(FormatError):
             client.write_camera(**kwargs)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_cam_exist_all_correct_cam_list(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1398,7 +1398,7 @@ class TestClient(unittest.TestCase):
         for i in range(2):
             self.assertEqual(response_list[i].__dict__, actual_list[i].__dict__)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_all_correct_empty(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1416,7 +1416,7 @@ class TestClient(unittest.TestCase):
         actual_dict = []
         self.assertEqual(response_list, actual_dict, 'Returned json is not tranlated correctly')
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_eixst_expired_token_success(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1453,7 +1453,7 @@ class TestClient(unittest.TestCase):
                      mock.call(match_url, headers=new_headers, params=match_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_Expired_Token_failure(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1488,7 +1488,7 @@ class TestClient(unittest.TestCase):
                      mock.call(match_url, headers=new_headers, params=match_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_Expired_Token_format_error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1529,7 +1529,7 @@ class TestClient(unittest.TestCase):
                      mock.call(match_url, headers=new_headers, params=match_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_Expired_Token_internal_error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1570,7 +1570,7 @@ class TestClient(unittest.TestCase):
                      mock.call(match_url, headers=new_headers, params=match_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_all_correct_Internal_Error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1590,7 +1590,7 @@ class TestClient(unittest.TestCase):
                                              })
         self.assertEqual(0, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_Format_Error(self, mock_get):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -1626,7 +1626,7 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(FormatError):
             client.write_camera(**kwargs)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_all_correct(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1659,7 +1659,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(client.get_change_log(), clientObject)
         mock_get.assert_called_once_with(url, headers=headers, params=param)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_expired_token_success(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1709,7 +1709,7 @@ class TestClient(unittest.TestCase):
                      mock.call(url, headers=newheaders, params=param)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_expired_token_failure(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1746,7 +1746,7 @@ class TestClient(unittest.TestCase):
             mock.call(url, headers=newheaders, params=param)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_format_error(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1767,7 +1767,7 @@ class TestClient(unittest.TestCase):
                  'offset': None}
         mock_get.assert_called_once_with(url, headers=headers, params=param)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_resource_not_found_error(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1785,7 +1785,7 @@ class TestClient(unittest.TestCase):
         param = {'clientID': clientId, 'clientSecret': clientSecret}
         mock_get.assert_called_once_with(url, params=param)
 
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_with_internal_error(self, mock_get):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1804,7 +1804,7 @@ class TestClient(unittest.TestCase):
         headers = {'Authorization': 'Bearer CorrectToken'}
         mock_get.assert_called_once_with(url, headers=headers, params=param)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_ip(self, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1836,7 +1836,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultID, expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_non_ip(self, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1865,7 +1865,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultID, expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_stream_no_type(self, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1893,8 +1893,8 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultID, expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_update_camera_expired_token_success(self, mock_get, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1944,7 +1944,7 @@ class TestClient(unittest.TestCase):
                                data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_internal_error(self, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1972,7 +1972,7 @@ class TestClient(unittest.TestCase):
         mock_put.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(0, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_all_correct_Format_Error(self, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -1997,7 +1997,7 @@ class TestClient(unittest.TestCase):
                                          data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.put')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_invalid_clientID(self, mock_put):
         clientId = '0' * 96
         clientSecret = '0' * 71
@@ -2020,7 +2020,7 @@ class TestClient(unittest.TestCase):
         mock_put.assert_called_once_with(url, headers=headers, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_ip(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -2058,7 +2058,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_only_ip(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -2087,7 +2087,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_non_ip(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -2125,7 +2125,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_no_snapshot_url(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -2153,7 +2153,7 @@ class TestClient(unittest.TestCase):
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_stream(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -2193,7 +2193,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(resultID, expected_camID)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_missing_required(self, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -2220,8 +2220,8 @@ class TestClient(unittest.TestCase):
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
-    @mock.patch('pythonAPIClient.client.requests.get')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_add_camera_expired_token_success(self, mock_get, mock_post):
         clientID = '0' * 96
         clientSecret = '0' * 71
@@ -2272,7 +2272,7 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'cameras/create', headers=newheaders, data=data)]
         self.assertEqual(mock_post.call_args_list, call_list)
 
-    @mock.patch('pythonAPIClient.client.requests.post')
+    @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_internal_error(self, mock_post):
         clientId = '0' * 96
         clientSecret = '0' * 71
