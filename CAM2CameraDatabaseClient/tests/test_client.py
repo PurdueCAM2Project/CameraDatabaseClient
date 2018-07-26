@@ -12,15 +12,21 @@ from CAM2CameraDatabaseClient.error import AuthenticationError, InternalError, I
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 
-class TestClient(unittest.TestCase):
+class BaseClientTest(unittest.TestCase):
     """
     Test all requests from
     with different scenarios
-    https://purduecam2project.github.io/CameraDatabaseAPI/#api-cameras-camCreate
+    https://purduecam2project.github.io/CameraDatabaseAPI/
     """
     def setUp(self):
         self.base_URL = 'https://cam2-api.herokuapp.com/'
         self.token_url = self.base_URL + 'auth'
+
+    def tearDown(self):
+        del self.base_URL
+        del self.token_url
+
+class InitClientTest(BaseClientTest):
 
     def test_client_init_wrong_ClientId_Length(self):
         with self.assertRaises(InvalidClientIdError):
@@ -59,6 +65,8 @@ class TestClient(unittest.TestCase):
         client.token = 'dummy'
         head_example = {'Authorization': 'Bearer ' + 'dummy'}
         self.assertEqual(client.header_builder(), head_example)
+
+class RequestTokenTest(BaseClientTest):
 
     @mock.patch('CAM2CameraDatabaseClient.error.AuthenticationError')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
@@ -137,6 +145,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, params=params)
         self.assertEqual(0, mock_response.json.call_count)
 
+class RegisterTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_register(self, mock_post):
         clientID = '0' * 96
@@ -318,6 +327,7 @@ class TestClient(unittest.TestCase):
         mock_post.assert_called_once_with(url, headers=header, data=data)
         self.assertEqual(0, mock_response.json.call_count)
 
+class GetClientIDTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_all_correct(self, mock_get):
         clientID = '0' * 96
@@ -453,6 +463,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(0, mock_response.json.call_count)
 
+class GetUsageTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_clientID_all_correct(self, mock_get):
         clientID = '0' * 96
@@ -597,6 +608,7 @@ class TestClient(unittest.TestCase):
         mock_get.assert_called_once_with(url, headers=headers, params=param)
         self.assertEqual(0, mock_response.json.call_count)
 
+class UpdateOwnerTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_owner(self, mock_put):
         clientID = '0' * 96
@@ -700,6 +712,7 @@ class TestClient(unittest.TestCase):
         mock_put.assert_called_once_with(url, headers=headers, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
+class UpdatePermissionTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_permissionLevel(self, mock_put):
         clientID = '0' * 96
@@ -783,6 +796,7 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
+class ResetSecretTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_reset_secret(self, mock_put):
         clientId = '0' * 96
@@ -882,6 +896,7 @@ class TestClient(unittest.TestCase):
                      mock.call(self.base_URL + 'apps/1/secret', headers=newheaders, data=None)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
+class GetCamIDTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_all_correct(self, mock_get):
         clientID = '0' * 96
@@ -1021,6 +1036,7 @@ class TestClient(unittest.TestCase):
         url = self.base_URL + 'cameras/12345'
         mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
 
+class SearchCamTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_empty(self, mock_get):
         clientID = '0' * 96
@@ -1355,6 +1371,7 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(FormatError):
             client.write_camera(**kwargs)
 
+class CamExistTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_cam_exist_all_correct_cam_list(self, mock_get):
         clientID = '0' * 96
@@ -1626,6 +1643,7 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(FormatError):
             client.write_camera(**kwargs)
 
+class ChangeLogTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_all_correct(self, mock_get):
         clientId = '0' * 96
@@ -1804,6 +1822,7 @@ class TestClient(unittest.TestCase):
         headers = {'Authorization': 'Bearer CorrectToken'}
         mock_get.assert_called_once_with(url, headers=headers, params=param)
 
+class WriteCamTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_ip(self, mock_put):
         clientId = '0' * 96
@@ -2105,17 +2124,13 @@ class TestClient(unittest.TestCase):
         expected_camID = 'test_cameraID'
         url = Client.base_URL + 'cameras/create'
         header = {'Authorization': 'Bearer correctToken'}
-        data = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+        data = {'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
                 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                 'is_active_video': True, 'is_active_image': False,
                 'type': 'non_ip', 'retrieval': '{"snapshot_url": "test_snapshot"}'}
 
-        kwargs = {'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
-                  'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
-                  'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
+        kwargs = {'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
                   'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'is_active_video': True, 'is_active_image': False, 'camera_type': 'non_ip',
