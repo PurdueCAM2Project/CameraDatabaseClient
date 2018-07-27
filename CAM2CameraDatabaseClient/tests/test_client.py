@@ -7,8 +7,9 @@ from os import path
 import mock
 from CAM2CameraDatabaseClient.client import Client
 from CAM2CameraDatabaseClient.camera import NonIPCamera
-from CAM2CameraDatabaseClient.error import AuthenticationError, InternalError, InvalidClientIdError,\
-     InvalidClientSecretError, ResourceNotFoundError, FormatError, AuthorizationError
+from CAM2CameraDatabaseClient.error import AuthenticationError, InternalError,\
+     InvalidClientIdError, InvalidClientSecretError, ResourceNotFoundError,\
+     FormatError, AuthorizationError
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 
@@ -21,10 +22,7 @@ class BaseClientTest(unittest.TestCase):
     def setUp(self):
         self.base_URL = 'https://cam2-api.herokuapp.com/'
         self.token_url = self.base_URL + 'auth'
-
-    def tearDown(self):
-        del self.base_URL
-        del self.token_url
+        self.token_params = {'clientID': '0' * 96, 'clientSecret': '0' * 71}
 
 class InitClientTest(BaseClientTest):
 
@@ -68,12 +66,14 @@ class InitClientTest(BaseClientTest):
 
 class RequestTokenTest(BaseClientTest):
 
+    def setUp(self):
+        super(RequestTokenTest, self).setUp()
+        self.params = {'clientID': '0' * 96, 'clientSecret': '0' * 71}
+        self.client = Client('0' * 96, '0' * 71)
+
     @mock.patch('CAM2CameraDatabaseClient.error.AuthenticationError')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_token_incorrect_ID_Secret(self, mock_get, mock_http_error_handler):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
             "message": "Cannot find client with that ClientID"
@@ -81,20 +81,16 @@ class RequestTokenTest(BaseClientTest):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 404
         mock_get.return_value = mock_response
-        url = self.base_URL + 'auth'
-        params = {'clientID': clientID, 'clientSecret': clientSecret}
+
         with self.assertRaises(ResourceNotFoundError):
-            client._request_token()
-        mock_get.assert_called_once_with(url, params=params)
+            self.client._request_token()
+        mock_get.assert_called_once_with(self.token_url, params=self.params)
         self.assertEqual(1, mock_response.json.call_count)
         return mock_http_error_handler
 
     @mock.patch('CAM2CameraDatabaseClient.error.AuthenticationError')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_token_incorrect_Secret(self, mock_get, mock_http_error_handler):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
             "message": "Bad client secret"
@@ -102,19 +98,15 @@ class RequestTokenTest(BaseClientTest):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 401
         mock_get.return_value = mock_response
-        url = self.base_URL + 'auth'
-        params = {'clientID': clientID, 'clientSecret': clientSecret}
+
         with self.assertRaises(AuthenticationError):
-            client._request_token()
-        mock_get.assert_called_once_with(url, params=params)
+            self.client._request_token()
+        mock_get.assert_called_once_with(self.token_url, params=self.params)
         self.assertEqual(1, mock_response.json.call_count)
         return mock_http_error_handler
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_token_all_correct(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
             "token": "correctToken"
@@ -122,37 +114,38 @@ class RequestTokenTest(BaseClientTest):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        response_dict = client._request_token()
-        url = self.base_URL + 'auth'
-        params = {'clientID': clientID, 'clientSecret': clientSecret}
-        mock_get.assert_called_once_with(url, params=params)
+        response_dict = self.client._request_token()
+
+        mock_get.assert_called_once_with(self.token_url, params=self.params)
         self.assertEqual(1, mock_response.json.call_count)
-        self.assertEqual(client.token, 'correctToken', 'token not stored in the client object.')
+        self.assertEqual(self.client.token, 'correctToken',
+                         'token not stored in the client object.')
         return response_dict
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_token_all_correct_Internal_error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = self.base_URL + 'auth'
-        params = {'clientID': clientID, 'clientSecret': clientSecret}
+
         with self.assertRaises(InternalError):
-            client._request_token()
-        mock_get.assert_called_once_with(url, params=params)
+            self.client._request_token()
+        mock_get.assert_called_once_with(self.token_url, params=self.params)
         self.assertEqual(0, mock_response.json.call_count)
 
 class RegisterTest(BaseClientTest):
+
+    def setUp(self):
+        super(RegisterTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.data = {'owner': 'testowner', 'permissionLevel': 'user'}
+        self.url = self.base_URL + 'apps/register'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_register(self, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 200
@@ -164,11 +157,9 @@ class RegisterTest(BaseClientTest):
         # validate result
         expected_clientID = 'test_clientID'
         expected_clientSecret = 'test_clientSecret'
-        url = Client.base_URL + 'apps/register'
-        header = {'Authorization': 'Bearer correctToken'}
-        data = {'owner': 'testowner', 'permissionLevel': 'user'}
-        resultID, resultSecret = client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header, data=data)
+
+        resultID, resultSecret = self.client.register('testowner')
+        mock_post.assert_called_once_with(self.url, headers=self.header, data=self.data)
         self.assertEqual(resultID, expected_clientID)
         self.assertEqual(resultSecret, expected_clientSecret)
         self.assertEqual(2, mock_response.json.call_count)
@@ -176,10 +167,7 @@ class RegisterTest(BaseClientTest):
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_register_expired_token_success(self, mock_get, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set first request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -198,32 +186,24 @@ class RegisterTest(BaseClientTest):
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_get.return_value = mock_get_response
         # run the test
-        resultID, resultSecret = client.register('testowner')
+        resultID, resultSecret = self.client.register('testowner')
         self.assertEqual(resultID, 'test_clientID')
         self.assertEqual(resultSecret, 'test_clientSecret')
-
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        mock_get.assert_called_with(self.token_url, params=token_params)
+        mock_get.assert_called_with(self.token_url, params=self.token_params)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        reg_url = self.base_URL + 'apps/register'
-        reg_data = {'owner': 'testowner', 'permissionLevel': 'user'}
-        call_list = [mock.call(reg_url, headers=headers, data=reg_data),
-                     mock.call(reg_url, headers=new_headers, data=reg_data)]
+        call_list = [mock.call(self.url, headers=headers, data=self.data),
+                     mock.call(self.url, headers=self.header, data=self.data)]
         self.assertEqual(mock_post.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_register_expired_token_failure(self, mock_get, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set first request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -235,33 +215,26 @@ class RegisterTest(BaseClientTest):
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_get.return_value = mock_get_response
         # run the test
         with self.assertRaises(AuthenticationError):
-            client.register('testowner')
+            self.client.register('testowner')
 
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        mock_get.assert_called_with(self.token_url, params=token_params)
+        mock_get.assert_called_with(self.token_url, params=self.token_params)
         self.assertEqual(3, mock_post.call_count)
         self.assertEqual(2, mock_get.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        reg_url = self.base_URL + 'apps/register'
-        reg_data = {'owner': 'testowner', 'permissionLevel': 'user'}
-        call_list = [mock.call(reg_url, headers=headers, data=reg_data),
-                     mock.call(reg_url, headers=new_headers, data=reg_data),
-                     mock.call(reg_url, headers=new_headers, data=reg_data)]
+        call_list = [mock.call(self.url, headers=headers, data=self.data),
+                     mock.call(self.url, headers=self.header, data=self.data),
+                     mock.call(self.url, headers=self.header, data=self.data)]
         self.assertEqual(mock_post.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_register_no_owner(self, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # set request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 422
@@ -270,19 +243,14 @@ class RegisterTest(BaseClientTest):
         }
         mock_post.return_value = mock_response
         # validate result
-        url = Client.base_URL + 'apps/register'
-        data = {'owner': 'testowner', 'permissionLevel': 'user'}
-        header = {'Authorization': 'Bearer correctToken'}
+
         with self.assertRaises(FormatError):
-            client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header, data=data)
+            self.client.register('testowner')
+        mock_post.assert_called_once_with(self.url, headers=self.header, data=self.data)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_register_incorrect_clientID(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
 
         # incorrect clientID in this case can only cause 404 error
         # in request token function.
@@ -301,39 +269,40 @@ class RegisterTest(BaseClientTest):
         mock_get.return_value = mock_response
 
         with self.assertRaises(ResourceNotFoundError):
-            client.register('testowner')
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        mock_get.assert_called_once_with(self.token_url, params=token_params)
+            self.client.register('testowner')
+
+        mock_get.assert_called_once_with(self.token_url, params=self.token_params)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_register_internal_error(self, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
+
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_post.return_value = mock_response
         # validate result
-        url = Client.base_URL + 'apps/register'
-        data = {'owner': 'testowner', 'permissionLevel': 'user'}
-        header = {'Authorization': 'Bearer correctToken'}
 
         with self.assertRaises(InternalError):
-            client.register('testowner')
-        mock_post.assert_called_once_with(url, headers=header, data=data)
+            self.client.register('testowner')
+        mock_post.assert_called_once_with(self.url, headers=self.header, data=self.data)
         self.assertEqual(0, mock_response.json.call_count)
 
 class GetClientIDTest(BaseClientTest):
+
+    def setUp(self):
+        super(GetClientIDTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.param = {'owner': 'testowner'}
+        self.url = self.base_URL + 'apps/by-owner'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_all_correct(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 200
         clientObject = [
@@ -342,19 +311,13 @@ class GetClientIDTest(BaseClientTest):
         mock_response.json.return_value = clientObject
 
         mock_get.return_value = mock_response
-        headers = {'Authorization': 'Bearer correctToken'}
-        url = Client.base_URL + 'apps/by-owner'
-        param = {'owner': 'testowner'}
         expected_clientID_array = ['test_clientID1', 'test_clientID2']
-        self.assertEqual(client.client_ids_by_owner("testowner"), expected_clientID_array)
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+        self.assertEqual(self.client.client_ids_by_owner("testowner"), expected_clientID_array)
+        mock_get.assert_called_once_with(self.url, headers=self.header, params=self.param)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_expired_token_success(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "ExpiredToken"
+        self.client.token = "ExpiredToken"
         # set first requests.get's result
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -365,7 +328,7 @@ class GetClientIDTest(BaseClientTest):
         mock_response1 = mock.Mock()
         mock_response1.status_code = 200
         mock_response1.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         # set second requests.get's result
         mock_response2 = mock.Mock()
@@ -377,25 +340,18 @@ class GetClientIDTest(BaseClientTest):
         mock_get.side_effect = [mock_response, mock_response1, mock_response2]
 
         # run the test
-        client.client_ids_by_owner('testowner')
+        self.client.client_ids_by_owner('testowner')
         self.assertEqual(3, mock_get.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        ids_params = {'owner': 'testowner'}
-        ids_url = self.base_URL + 'apps/by-owner'
-        call_list = [mock.call(ids_url, headers=headers, params=ids_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(ids_url, headers=new_headers, params=ids_params)]
+        call_list = [mock.call(self.url, headers=headers, params=self.param),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=self.param)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_expired_token_failure(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "ExpiredToken"
+        self.client.token = "ExpiredToken"
         # set first requests.get's result
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -406,33 +362,26 @@ class GetClientIDTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_get.side_effect = [mock_response, mock_response2, mock_response,
                                 mock_response2, mock_response]
         # run the test
         with self.assertRaises(AuthenticationError):
-            client.client_ids_by_owner('testowner')
+            self.client.client_ids_by_owner('testowner')
         self.assertEqual(5, mock_get.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        ids_params = {'owner': 'testowner'}
-        ids_url = self.base_URL + 'apps/by-owner'
-        call_list = [mock.call(ids_url, headers=headers, params=ids_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(ids_url, headers=new_headers, params=ids_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(ids_url, headers=new_headers, params=ids_params)]
+        call_list = [mock.call(self.url, headers=headers, params=self.param),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=self.param),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=self.param)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_incorrect_clientID(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 404
         mock_response.json.return_value = {
@@ -441,53 +390,47 @@ class GetClientIDTest(BaseClientTest):
         mock_get.return_value = mock_response
 
         with self.assertRaises(ResourceNotFoundError):
-            client._request_token()
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        mock_get.assert_called_once_with(self.token_url, params=token_params)
+            self.client._request_token()
+        mock_get.assert_called_once_with(self.token_url, params=self.token_params)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_clientID_by_owner_internal_error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/by-owner'
-        param = {'owner': 'testowner'}
-        headers = {'Authorization': 'Bearer correctToken'}
+
         with self.assertRaises(InternalError):
-            client.client_ids_by_owner('testowner')
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+            self.client.client_ids_by_owner('testowner')
+        mock_get.assert_called_once_with(self.url, headers=self.header, params=self.param)
         self.assertEqual(0, mock_response.json.call_count)
 
 class GetUsageTest(BaseClientTest):
+
+    def setUp(self):
+        super(GetUsageTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.param = {'owner': 'testowner'}
+        self.url = self.base_URL + 'apps/1/usage'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_clientID_all_correct(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
             'api_usage': 7
         }
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/1/usage'
-        param = {'owner': 'testowner'}
-        headers = {'Authorization': 'Bearer correctToken'}
-        self.assertEqual(client.usage_by_client('1', 'testowner'), 7)
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+
+        self.assertEqual(self.client.usage_by_client('1', 'testowner'), 7)
+        mock_get.assert_called_once_with(self.url, headers=self.header, params=self.param)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_client_expired_token_success(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "ExpiredToken"
+        self.client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -496,7 +439,7 @@ class GetUsageTest(BaseClientTest):
         mock_response1 = mock.Mock()
         mock_response1.status_code = 200
         mock_response1.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
@@ -504,25 +447,18 @@ class GetUsageTest(BaseClientTest):
             'api_usage': 1
         }
         mock_get.side_effect = [mock_response, mock_response1, mock_response2]
-        self.assertEqual(1, client.usage_by_client('1', 'testowner'))
+        self.assertEqual(1, self.client.usage_by_client('1', 'testowner'))
         self.assertEqual(3, mock_get.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        usage_params = {'owner': 'testowner'}
-        usage_url = self.base_URL + 'apps/1/usage'
-        call_list = [mock.call(usage_url, headers=headers, params=usage_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(usage_url, headers=new_headers, params=usage_params)]
+        call_list = [mock.call(self.url, headers=headers, params=self.param),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=self.param)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_client_expired_token_failure(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "ExpiredToken"
+        self.client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -531,32 +467,25 @@ class GetUsageTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_get.side_effect = [mock_response, mock_response2, mock_response,
                                 mock_response2, mock_response]
         with self.assertRaises(AuthenticationError):
-            client.usage_by_client('1', 'testowner')
+            self.client.usage_by_client('1', 'testowner')
         self.assertEqual(5, mock_get.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        usage_params = {'owner': 'testowner'}
-        usage_url = self.base_URL + 'apps/1/usage'
-        call_list = [mock.call(usage_url, headers=headers, params=usage_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(usage_url, headers=new_headers, params=usage_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(usage_url, headers=new_headers, params=usage_params)]
+        call_list = [mock.call(self.url, headers=headers, params=self.param),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=self.param),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=self.param)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_client_authorization_error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 403
         mock_response.json.return_value = {
@@ -564,76 +493,61 @@ class GetUsageTest(BaseClientTest):
         }
         mock_get.return_value = mock_response
         with self.assertRaises(AuthorizationError):
-            client.usage_by_client('1', 'testowner')
-        url = Client.base_URL + 'apps/1/usage'
-        param = {'owner': 'testowner'}
-        headers = {'Authorization': 'Bearer correctToken'}
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+            self.client.usage_by_client('1', 'testowner')
+        mock_get.assert_called_once_with(self.url, headers=self.header, params=self.param)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_client_id_not_found(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 404
         mock_response.json.return_value = {
             'message': 'No app exists with given clientID'
         }
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/1/usage'
-        param = {'owner': 'testowner'}
-        headers = {'Authorization': 'Bearer correctToken'}
         with self.assertRaises(ResourceNotFoundError):
-            client.usage_by_client('1', 'testowner')
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+            self.client.usage_by_client('1', 'testowner')
+        mock_get.assert_called_once_with(self.url, headers=self.header, params=self.param)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_usage_by_client_internal_error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = Client.base_URL + 'apps/1/usage'
-        param = {'owner': 'testowner'}
-        headers = {'Authorization': 'Bearer correctToken'}
+
         with self.assertRaises(InternalError):
-            client.usage_by_client('1', 'testowner')
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+            self.client.usage_by_client('1', 'testowner')
+        mock_get.assert_called_once_with(self.url, headers=self.header, params=self.param)
         self.assertEqual(0, mock_response.json.call_count)
 
 class UpdateOwnerTest(BaseClientTest):
+
+    def setUp(self):
+        super(UpdateOwnerTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.data = {'owner': 'testowner'}
+        self.url = self.base_URL + 'apps/1'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_owner(self, mock_put):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
             'message': 'OK'
         }
         mock_put.return_value = mock_response
-        url = Client.base_URL + 'apps/1'
-        headers = {'Authorization': 'Bearer correctToken'}
-        data = {'owner': 'testowner'}
-        self.assertEqual(client.update_owner('1', 'testowner'), 'OK')
-        mock_put.assert_called_once_with(url, headers=headers, data=data)
+        self.assertEqual(self.client.update_owner('1', 'testowner'), 'OK')
+        mock_put.assert_called_once_with(self.url, headers=self.header, data=self.data)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_update_owner_expired_token_success(self, mock_get, mock_put):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "ExpiredToken"
+        self.client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -649,24 +563,20 @@ class UpdateOwnerTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_get.return_value = mock_response2
-        self.assertEqual('OK', client.update_owner('1', 'testowner'))
+        self.assertEqual('OK', self.client.update_owner('1', 'testowner'))
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        data = {'owner': 'testowner'}
-        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
-                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
+
+        call_list = [mock.call(self.url, headers=headers, data=self.data),
+                     mock.call(self.url, headers=self.header, data=self.data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_update_owner_expired_token_failure(self, mock_get, mock_put):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "ExpiredToken"
+        self.client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -677,67 +587,59 @@ class UpdateOwnerTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken',
+            'token': 'correctToken',
         }
         mock_get.return_value = mock_response2
         with self.assertRaises(AuthenticationError):
-            client.update_owner('1', 'testowner')
+            self.client.update_owner('1', 'testowner')
         self.assertEqual(3, mock_put.call_count)
         self.assertEqual(2, mock_get.call_count)
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        data = {'owner': 'testowner'}
-        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
-                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data),
-                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
+
+        call_list = [mock.call(self.url, headers=headers, data=self.data),
+                     mock.call(self.url, headers=self.header, data=self.data),
+                     mock.call(self.url, headers=self.header, data=self.data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_owner_invalid_clientid(self, mock_put):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 404
         mock_response.json.return_value = {
             'message': 'No app exists with given client id.'
         }
         mock_put.return_value = mock_response
-        url = Client.base_URL + 'apps/1'
-        headers = {'Authorization': 'Bearer correctToken'}
-        data = {'owner': 'testowner'}
         with self.assertRaises(ResourceNotFoundError):
-            client.update_owner('1', 'testowner')
-        mock_put.assert_called_once_with(url, headers=headers, data=data)
+            self.client.update_owner('1', 'testowner')
+        mock_put.assert_called_once_with(self.url, headers=self.header, data=self.data)
         self.assertEqual(1, mock_response.json.call_count)
 
 class UpdatePermissionTest(BaseClientTest):
+
+    def setUp(self):
+        super(UpdatePermissionTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.data = {'permissionLevel': 'user'}
+        self.url = self.base_URL + 'apps/1'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_permissionLevel(self, mock_put):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
             'message': 'OK'
         }
         mock_put.return_value = mock_response
-        headers = {'Authorization': 'Bearer correctToken'}
-        url = Client.base_URL + 'apps/1'
-        data = {'permissionLevel': 'user'}
-        self.assertEqual(client.update_permission('1', 'user'), 'OK')
-        mock_put.assert_called_once_with(url, headers=headers, data=data)
+        self.assertEqual(self.client.update_permission('1', 'user'), 'OK')
+        mock_put.assert_called_once_with(self.url, headers=self.header, data=self.data)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_update_permissionLevel_expired_token_success(self, mock_get, mock_put):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "ExpiredToken"
+        self.client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -753,24 +655,19 @@ class UpdatePermissionTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken',
+            'token': 'correctToken',
         }
         mock_get.return_value = mock_response2
-        self.assertEqual(client.update_permission('1', 'user'), 'OK')
+        self.assertEqual(self.client.update_permission('1', 'user'), 'OK')
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        data = {'permissionLevel': 'user'}
-        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
-                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
+        call_list = [mock.call(self.url, headers=headers, data=self.data),
+                     mock.call(self.url, headers=self.header, data=self.data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_update_permissionLevel_expired_token_failure(self, mock_get, mock_put):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = "ExpiredToken"
+        self.client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -781,65 +678,58 @@ class UpdatePermissionTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken',
+            'token': 'correctToken',
         }
         mock_get.return_value = mock_response2
         with self.assertRaises(AuthenticationError):
-            client.update_permission('1', 'user')
+            self.client.update_permission('1', 'user')
         self.assertEqual(3, mock_put.call_count)
         self.assertEqual(2, mock_get.call_count)
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        data = {'permissionLevel': 'user'}
-        call_list = [mock.call(self.base_URL + 'apps/1', headers=headers, data=data),
-                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data),
-                     mock.call(self.base_URL + 'apps/1', headers=new_headers, data=data)]
+
+        call_list = [mock.call(self.url, headers=headers, data=self.data),
+                     mock.call(self.url, headers=self.header, data=self.data),
+                     mock.call(self.url, headers=self.header, data=self.data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
 class ResetSecretTest(BaseClientTest):
+
+    def setUp(self):
+        super(ResetSecretTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.url = self.base_URL + 'apps/1/secret'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_reset_secret(self, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
             'clientSecret': 'test_clientSecret'
         }
         mock_put.return_value = mock_response
-        url = Client.base_URL + 'apps/1/secret'
-        headers = {'Authorization': 'Bearer correctToken'}
-        self.assertEqual(client.reset_secret('1'), 'test_clientSecret')
-        mock_put.assert_called_once_with(url, headers=headers, data=None)
+        self.assertEqual(self.client.reset_secret('1'), 'test_clientSecret')
+        mock_put.assert_called_once_with(self.url, headers=self.header, data=None)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_reset_secret_invalid_clientid(self, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 404
         mock_response.json.return_value = {
             'message': 'No app exists with given client id.'
         }
         mock_put.return_value = mock_response
-        url = Client.base_URL + 'apps/1/secret'
-        headers = {'Authorization': 'Bearer correctToken'}
         with self.assertRaises(ResourceNotFoundError):
-            client.reset_secret('1')
-        mock_put.assert_called_once_with(url, headers=headers, data=None)
+            self.client.reset_secret('1')
+        mock_put.assert_called_once_with(self.url, headers=self.header, data=None)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_reset_secret_expired_token_success(self, mock_get, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = "ExpiredToken"
+        self.client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -855,23 +745,19 @@ class ResetSecretTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_get.return_value = mock_response2
-        self.assertEqual('test_clientSecret', client.reset_secret('1'))
+        self.assertEqual('test_clientSecret', self.client.reset_secret('1'))
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        newheaders = {'Authorization': 'Bearer newToken'}
-        call_list = [mock.call(self.base_URL + 'apps/1/secret', headers=headers, data=None),
-                     mock.call(self.base_URL + 'apps/1/secret', headers=newheaders, data=None)]
+        call_list = [mock.call(self.url, headers=headers, data=None),
+                     mock.call(self.url, headers=self.header, data=None)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_reset_secret_expired_token_failure(self, mock_get, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = "ExpiredToken"
+        self.client.token = "ExpiredToken"
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -882,27 +768,30 @@ class ResetSecretTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken',
+            'token': 'correctToken',
         }
         mock_get.return_value = mock_response2
         with self.assertRaises(AuthenticationError):
-            client.reset_secret('1')
+            self.client.reset_secret('1')
         self.assertEqual(3, mock_put.call_count)
         self.assertEqual(2, mock_get.call_count)
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        newheaders = {'Authorization': 'Bearer newToken'}
-        call_list = [mock.call(self.base_URL + 'apps/1/secret', headers=headers, data=None),
-                     mock.call(self.base_URL + 'apps/1/secret', headers=newheaders, data=None),
-                     mock.call(self.base_URL + 'apps/1/secret', headers=newheaders, data=None)]
+        call_list = [mock.call(self.url, headers=headers, data=None),
+                     mock.call(self.url, headers=self.header, data=None),
+                     mock.call(self.url, headers=self.header, data=None)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
 class GetCamIDTest(BaseClientTest):
+
+    def setUp(self):
+        super(GetCamIDTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.url = self.base_URL + 'cameras/12345'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_all_correct(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         expected_dict = {
             'camera_type': 'ip',
@@ -923,16 +812,12 @@ class GetCamIDTest(BaseClientTest):
         mock_response.json.return_value = mock_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/12345'
-        self.assertEqual(client.camera_by_id('12345').__dict__, expected_dict)
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
+        self.assertEqual(self.client.camera_by_id('12345').__dict__, expected_dict)
+        mock_get.assert_called_once_with(self.url, headers=self.header)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_expired_token_success(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -941,7 +826,7 @@ class GetCamIDTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            "token": "newToken"
+            "token": "correctToken"
         }
         mock_response3 = mock.Mock()
         mock_response3.status_code = 200
@@ -963,23 +848,17 @@ class GetCamIDTest(BaseClientTest):
         }
         mock_response3.json.return_value = mock_dict
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
-        self.assertEqual(client.camera_by_id('12345').__dict__, expected_dict)
+        self.assertEqual(self.client.camera_by_id('12345').__dict__, expected_dict)
         self.assertEqual(3, mock_get.call_count)
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        get_url = self.base_URL + 'cameras/12345'
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        call_list = [mock.call(get_url, headers=headers),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(get_url, headers=new_headers, params=None)]
+        call_list = [mock.call(self.url, headers=headers),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=None)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_expired_token_failure(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -988,29 +867,23 @@ class GetCamIDTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            "token": "newToken"
+            "token": "correctToken"
         }
         mock_get.side_effect = [mock_response, mock_response2, mock_response,
                                 mock_response2, mock_response]
         with self.assertRaises(AuthenticationError):
-            client.camera_by_id('12345')
+            self.client.camera_by_id('12345')
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
-        get_url = self.base_URL + 'cameras/12345'
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        call_list = [mock.call(get_url, headers=headers),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(get_url, headers=new_headers, params=None),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(get_url, headers=new_headers, params=None)]
+        call_list = [mock.call(self.url, headers=headers),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=None),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=None)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_format_error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         mock_response.status_code = 422
         mock_response.json.return_value = {
@@ -1018,40 +891,37 @@ class GetCamIDTest(BaseClientTest):
         }
         mock_get.return_value = mock_response
         with self.assertRaises(FormatError):
-            client.camera_by_id('12345')
-        url = self.base_URL + 'cameras/12345'
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
+            self.client.camera_by_id('12345')
+        mock_get.assert_called_once_with(self.url, headers=self.header)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_id_internal_error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
         with self.assertRaises(InternalError):
-            client.camera_by_id('12345')
-        url = self.base_URL + 'cameras/12345'
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'})
+            self.client.camera_by_id('12345')
+        mock_get.assert_called_once_with(self.url, headers=self.header)
 
 class SearchCamTest(BaseClientTest):
+
+    def setUp(self):
+        super(SearchCamTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.url = self.base_URL + 'cameras/search'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_empty(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         expected_dict = []
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        response_list = client.search_camera(offset=10000)
-        url = self.base_URL + 'cameras/search'
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
-                                         params={'offset': 10000})
+        response_list = self.client.search_camera(offset=10000)
+        mock_get.assert_called_once_with(self.url, headers=self.header, params={'offset': 10000})
         self.assertEqual(1, mock_get.call_count)
         actual_list = []
         self.assertEqual(response_list, actual_list,
@@ -1060,10 +930,7 @@ class SearchCamTest(BaseClientTest):
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_no_param(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
 
         # without params user should get 1st 100 cameras
@@ -1079,10 +946,8 @@ class SearchCamTest(BaseClientTest):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        response_list = client.search_camera()
-        url = self.base_URL + 'cameras/search'
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
-                                         params={})
+        response_list = self.client.search_camera()
+        mock_get.assert_called_once_with(self.url, headers=self.header, params={})
         self.assertEqual(1, mock_get.call_count)
 
         cam_entries = {"legacy_cameraID": 31280, "camera_type": "non_ip", "source": "webcam_jp",
@@ -1101,9 +966,6 @@ class SearchCamTest(BaseClientTest):
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_no_token(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         mock_response = mock.Mock()
         expected_dict = {
             "token": "correctToken"
@@ -1111,19 +973,14 @@ class SearchCamTest(BaseClientTest):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/search'
         with self.assertRaises(TypeError):
-            client.search_camera(country='USA')
-        mock_get.assert_called_with(url, headers={'Authorization': 'Bearer correctToken'},
-                                    params={'country': 'USA'})
+            self.client.search_camera(country='USA')
+        mock_get.assert_called_with(self.url, headers=self.header, params={'country': 'USA'})
         self.assertEqual(2, mock_get.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_Expired_Token_failure(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set result for first search camera
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -1134,31 +991,25 @@ class SearchCamTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_get.side_effect = [mock_response, mock_response2, mock_response,
                                 mock_response2, mock_response]
         with self.assertRaises(AuthenticationError):
-            client.search_camera(country='USA')
+            self.client.search_camera(country='USA')
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
         search_params = {'country': 'USA'}
-        search_url = self.base_URL + 'cameras/search'
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        call_list = [mock.call(search_url, headers=headers, params=search_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(search_url, headers=new_headers, params=search_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(search_url, headers=new_headers, params=search_params)]
+        call_list = [mock.call(self.url, headers=headers, params=search_params),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=search_params),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=search_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_Expired_Token_success(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set result for first search camera
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -1169,7 +1020,7 @@ class SearchCamTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         # set result for second search camera
         mock_response3 = mock.Mock()
@@ -1178,26 +1029,20 @@ class SearchCamTest(BaseClientTest):
         expected_dict = []
         mock_response3.json.return_value = expected_dict
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
-        self.assertEqual(client.search_camera(country='JP'), expected_dict,
+        self.assertEqual(self.client.search_camera(country='JP'), expected_dict,
                          'Empty camera list is not correctly parsed.')
         self.assertEqual(3, mock_get.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
         search_params = {'country': 'JP'}
-        search_url = self.base_URL + 'cameras/search'
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        call_list = [mock.call(search_url, headers=headers, params=search_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(search_url, headers=new_headers, params=search_params)]
+        call_list = [mock.call(self.url, headers=headers, params=search_params),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=search_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_Expired_Token_format_error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set result for first search camera
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -1208,7 +1053,7 @@ class SearchCamTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         # set result for second search camera
         mock_response3 = mock.Mock()
@@ -1219,26 +1064,20 @@ class SearchCamTest(BaseClientTest):
         mock_response3.json.return_value = expected_dict
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
         with self.assertRaises(FormatError):
-            client.search_camera(offset='JP')
+            self.client.search_camera(offset='JP')
         self.assertEqual(3, mock_get.call_count)
         self.assertEqual(1, mock_response3.json.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
         search_params = {'offset': 'JP'}
-        search_url = self.base_URL + 'cameras/search'
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        call_list = [mock.call(search_url, headers=headers, params=search_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(search_url, headers=new_headers, params=search_params)]
+        call_list = [mock.call(self.url, headers=headers, params=search_params),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=search_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_Expired_Token_internal_error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set result for first search camera
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -1249,7 +1088,7 @@ class SearchCamTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         # set result for second search camera
         mock_response3 = mock.Mock()
@@ -1260,42 +1099,31 @@ class SearchCamTest(BaseClientTest):
         mock_response3.json.return_value = expected_dict
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
         with self.assertRaises(InternalError):
-            client.search_camera(country='JP')
+            self.client.search_camera(country='JP')
         self.assertEqual(3, mock_get.call_count)
         self.assertEqual(0, mock_response3.json.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
         search_params = {'country': 'JP'}
-        search_url = self.base_URL + 'cameras/search'
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        call_list = [mock.call(search_url, headers=headers, params=search_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(search_url, headers=new_headers, params=search_params)]
+        call_list = [mock.call(self.url, headers=headers, params=search_params),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=search_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_all_correct_Internal_Error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/search'
         with self.assertRaises(InternalError):
-            client.search_camera(country='USA')
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
-                                         params={'country': 'USA'})
+            self.client.search_camera(country='USA')
+        mock_get.assert_called_once_with(self.url, headers=self.header, params={'country': 'USA'})
         self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_Format_Error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         expected_dict = {
             "message": "Format Error Messages"
@@ -1303,19 +1131,16 @@ class SearchCamTest(BaseClientTest):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 422
         mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/search'
+
         with self.assertRaises(FormatError):
-            client.search_camera(resolution_width='USA')
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+            self.client.search_camera(resolution_width='USA')
+        mock_get.assert_called_once_with(self.url, headers=self.header,
                                          params={'resolution_width': 'USA'})
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_search_camera_all_correct(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         expected_dict = [{"legacy_cameraID":31280, "type":"non_ip", "source":"webcam_jp",
                           "country":"JP", "state":None, "city":None, "resolution_width":1,
@@ -1328,10 +1153,9 @@ class SearchCamTest(BaseClientTest):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        response_list = client.search_camera(
+        response_list = self.client.search_camera(
             country='JP', camera_type='non_ip', is_active_image=True, offset=100)
-        url = self.base_URL + 'cameras/search'
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+        mock_get.assert_called_once_with(self.url, headers=self.header,
                                          params={
                                              'country': 'JP',
                                              'type': 'non_ip',
@@ -1350,34 +1174,28 @@ class SearchCamTest(BaseClientTest):
                          'Returned json is not tranlated correctly')
 
     def test_search_camera_only_illegal_args(self):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = 'CorrectToken'
-
+        self.client.token = 'correctToken'
         kwargs = {'illegal': 'test_lad'}
-
         with self.assertRaises(FormatError):
-            client.write_camera(**kwargs)
+            self.client.write_camera(**kwargs)
 
     def test_search_camera_illegal_args(self):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = 'CorrectToken'
-
+        self.client.token = 'correctToken'
         kwargs = {'illegal': 'test_lad', 'image_path': 'test', 'video_path': 'test'}
-
         with self.assertRaises(FormatError):
-            client.write_camera(**kwargs)
+            self.client.write_camera(**kwargs)
 
 class CamExistTest(BaseClientTest):
+
+    def setUp(self):
+        super(CamExistTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.url = self.base_URL + 'cameras/exist'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_cam_exist_all_correct_cam_list(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
 
         expected_dict = [{"legacy_cameraID":31280, "type":"non_ip", "source":"webcam_jp",
@@ -1391,11 +1209,10 @@ class CamExistTest(BaseClientTest):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        response_list = client.check_cam_exist(
+        response_list = self.client.check_cam_exist(
             camera_type='non_ip',
             snapshot_url='/preview/adf.jpg')
-        url = self.base_URL + 'cameras/exist'
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+        mock_get.assert_called_once_with(self.url, headers=self.header,
                                          params={
                                              'type': 'non_ip',
                                              'snapshot_url': '/preview/adf.jpg'
@@ -1417,28 +1234,21 @@ class CamExistTest(BaseClientTest):
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_all_correct_empty(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         mock_dict = []
         mock_response.json.return_value = mock_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        response_list = client.check_cam_exist(camera_type='stream', m3u8_url='test_url')
-        url = self.base_URL + 'cameras/exist'
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+        response_list = self.client.check_cam_exist(camera_type='stream', m3u8_url='test_url')
+        mock_get.assert_called_once_with(self.url, headers=self.header,
                                          params={'type': 'stream', 'm3u8_url': 'test_url'})
         actual_dict = []
         self.assertEqual(response_list, actual_dict, 'Returned json is not tranlated correctly')
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_eixst_expired_token_success(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -1447,7 +1257,7 @@ class CamExistTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            "token": "newToken"
+            "token": "correctToken"
         }
         mock_response3 = mock.Mock()
         mock_response3.status_code = 200
@@ -1456,26 +1266,20 @@ class CamExistTest(BaseClientTest):
         mock_response3.json.return_value = mock_dict
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
         self.assertEqual(
-            client.check_cam_exist(camera_type='stream', m3u8_url='test_url'),
+            self.client.check_cam_exist(camera_type='stream', m3u8_url='test_url'),
             expected_dict
         )
         self.assertEqual(3, mock_get.call_count)
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
         match_params = {'type': 'stream', 'm3u8_url': 'test_url'}
-        match_url = self.base_URL + 'cameras/exist'
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        call_list = [mock.call(match_url, headers=headers, params=match_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(match_url, headers=new_headers, params=match_params)]
+        call_list = [mock.call(self.url, headers=headers, params=match_params),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=match_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_Expired_Token_failure(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set result for first search camera
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -1486,31 +1290,25 @@ class CamExistTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_get.side_effect = [mock_response, mock_response2, mock_response,
                                 mock_response2, mock_response]
         with self.assertRaises(AuthenticationError):
-            client.check_cam_exist(camera_type='stream', m3u8_url='test_url')
+            self.client.check_cam_exist(camera_type='stream', m3u8_url='test_url')
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
         match_params = {'type': 'stream', 'm3u8_url': 'test_url'}
-        match_url = self.base_URL + 'cameras/exist'
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        call_list = [mock.call(match_url, headers=headers, params=match_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(match_url, headers=new_headers, params=match_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(match_url, headers=new_headers, params=match_params)]
+        call_list = [mock.call(self.url, headers=headers, params=match_params),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=match_params),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=match_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_Expired_Token_format_error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set result for first search camera
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -1521,7 +1319,7 @@ class CamExistTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         # set result for second search camera
         mock_response3 = mock.Mock()
@@ -1532,26 +1330,20 @@ class CamExistTest(BaseClientTest):
         mock_response3.json.return_value = expected_dict
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
         with self.assertRaises(FormatError):
-            client.check_cam_exist(camera_type='ip')
+            self.client.check_cam_exist(camera_type='ip')
         self.assertEqual(3, mock_get.call_count)
         self.assertEqual(1, mock_response3.json.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
         match_params = {'type': 'ip'}
-        match_url = self.base_URL + 'cameras/exist'
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        call_list = [mock.call(match_url, headers=headers, params=match_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(match_url, headers=new_headers, params=match_params)]
+        call_list = [mock.call(self.url, headers=headers, params=match_params),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=match_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_Expired_Token_internal_error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set result for first search camera
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -1562,7 +1354,7 @@ class CamExistTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         # set result for second search camera
         mock_response3 = mock.Mock()
@@ -1573,33 +1365,27 @@ class CamExistTest(BaseClientTest):
         mock_response3.json.return_value = expected_dict
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
         with self.assertRaises(InternalError):
-            client.check_cam_exist(camera_type='ip', image_path='test_url')
+            self.client.check_cam_exist(camera_type='ip', image_path='test_url')
         self.assertEqual(3, mock_get.call_count)
         self.assertEqual(0, mock_response3.json.call_count)
 
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        new_headers = {'Authorization': 'Bearer newToken'}
         match_params = {'type': 'ip', 'image_path': 'test_url'}
-        match_url = self.base_URL + 'cameras/exist'
-        token_params = {'clientID': clientID, 'clientSecret': clientSecret}
-        call_list = [mock.call(match_url, headers=headers, params=match_params),
-                     mock.call(self.token_url, params=token_params),
-                     mock.call(match_url, headers=new_headers, params=match_params)]
+        call_list = [mock.call(self.url, headers=headers, params=match_params),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=match_params)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_all_correct_Internal_Error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/exist'
         with self.assertRaises(InternalError):
-            client.check_cam_exist(camera_type='ip', image_path='test_url', video_path='test_url')
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+            self.client.check_cam_exist(camera_type='ip', image_path='test_url',
+                                        video_path='test_url')
+        mock_get.assert_called_once_with(self.url, headers=self.header,
                                          params={
                                              'type': 'ip',
                                              'image_path': 'test_url',
@@ -1609,10 +1395,7 @@ class CamExistTest(BaseClientTest):
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_camera_exist_Format_Error(self, mock_get):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         expected_dict = {
             "message": "Format Error Messages"
@@ -1620,10 +1403,10 @@ class CamExistTest(BaseClientTest):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 422
         mock_get.return_value = mock_response
-        url = self.base_URL + 'cameras/exist'
         with self.assertRaises(FormatError):
-            client.check_cam_exist(camera_type='iip', image_path='test_url', video_path='test_url')
-        mock_get.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
+            self.client.check_cam_exist(camera_type='iip', image_path='test_url',
+                                        video_path='test_url')
+        mock_get.assert_called_once_with(self.url, headers=self.header,
                                          params={
                                              'type': 'iip',
                                              'image_path': 'test_url',
@@ -1632,24 +1415,24 @@ class CamExistTest(BaseClientTest):
         self.assertEqual(1, mock_response.json.call_count)
 
     def test_camera_exist_illegal_args(self):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = 'CorrectToken'
-
+        self.client.token = 'correctToken'
         kwargs = {'illegal': 'test_lad', 'camera_type': 'ip', 'image_path': 'test_url',
                   'ip': 'test_ip', 'video_path': 'test_vid_path'}
 
         with self.assertRaises(FormatError):
-            client.write_camera(**kwargs)
+            self.client.write_camera(**kwargs)
 
 class ChangeLogTest(BaseClientTest):
+
+    def setUp(self):
+        super(ChangeLogTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.url = self.base_URL + 'apps/db-change'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_all_correct(self, mock_get):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = "CorrectToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 200
         clientObject = [
@@ -1668,21 +1451,15 @@ class ChangeLogTest(BaseClientTest):
         ]
         mock_response.json.return_value = clientObject
         mock_get.return_value = mock_response
-
-        headers = {'Authorization': 'Bearer CorrectToken'}
-        url = Client.base_URL + 'apps/db-change'
         param = {'start': None,
                  'end': None,
                  'offset': None}
-        self.assertEqual(client.get_change_log(), clientObject)
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+        self.assertEqual(self.client.get_change_log(), clientObject)
+        mock_get.assert_called_once_with(self.url, headers=self.header, params=param)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_expired_token_success(self, mock_get):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -1691,7 +1468,7 @@ class ChangeLogTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            "token": "newToken"
+            "token": "correctToken"
         }
         mock_response3 = mock.Mock()
         mock_response3.status_code = 200
@@ -1712,27 +1489,22 @@ class ChangeLogTest(BaseClientTest):
         mock_response3.json.return_value = clientObject
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
 
-        self.assertEqual(client.get_change_log(), clientObject)
+        self.assertEqual(self.client.get_change_log(start='2018-07-04T19:52:52.337Z',
+                                                    end='2018-07-05T19:52:52.337Z',
+                                                    offset=1000), clientObject)
         self.assertEqual(3, mock_get.call_count)
-        url = Client.base_URL + 'apps/db-change'
-        param = {'start': None,
-                 'end': None,
-                 'offset': None}
+        param = {'start': '2018-07-04T19:52:52.337Z',
+                 'end': '2018-07-05T19:52:52.337Z',
+                 'offset': 1000}
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        newheaders = {'Authorization': 'Bearer newToken'}
-        rparam = {'clientID': clientId, 'clientSecret': clientSecret}
-
-        call_list = [mock.call(url, headers=headers, params=param),
-                     mock.call(self.base_URL + 'auth', params=rparam),
-                     mock.call(url, headers=newheaders, params=param)]
+        call_list = [mock.call(self.url, headers=headers, params=param),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=param)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_expired_token_failure(self, mock_get):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         mock_response = mock.Mock()
         mock_response.status_code = 401
         mock_response.json.return_value = {
@@ -1741,35 +1513,27 @@ class ChangeLogTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            "token": "newToken"
+            "token": "correctToken"
         }
         mock_get.side_effect = [mock_response, mock_response2, mock_response,
                                 mock_response2, mock_response]
         with self.assertRaises(AuthenticationError):
-            client.get_change_log()
-
-        url = Client.base_URL + 'apps/db-change'
+            self.client.get_change_log()
         param = {'start': None,
                  'end': None,
                  'offset': None}
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        newheaders = {'Authorization': 'Bearer newToken'}
-        rparam = {'clientID': clientId, 'clientSecret': clientSecret}
-
         call_list = [
-            mock.call(url, headers=headers, params=param),
-            mock.call(self.base_URL + 'auth', params=rparam),
-            mock.call(url, headers=newheaders, params=param),
-            mock.call(self.base_URL + 'auth', params=rparam),
-            mock.call(url, headers=newheaders, params=param)]
+            mock.call(self.url, headers=headers, params=param),
+            mock.call(self.token_url, params=self.token_params),
+            mock.call(self.url, headers=self.header, params=param),
+            mock.call(self.token_url, params=self.token_params),
+            mock.call(self.url, headers=self.header, params=param)]
         self.assertEqual(mock_get.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_format_error(self, mock_get):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         mock_response.status_code = 422
         mock_response.json.return_value = {
@@ -1777,20 +1541,14 @@ class ChangeLogTest(BaseClientTest):
         }
         mock_get.return_value = mock_response
         with self.assertRaises(FormatError):
-            client.get_change_log()
-        url = Client.base_URL + 'apps/db-change'
-        headers = {'Authorization': 'Bearer CorrectToken'}
+            self.client.get_change_log()
         param = {'start': None,
                  'end': None,
                  'offset': None}
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+        mock_get.assert_called_once_with(self.url, headers=self.header, params=param)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_resource_not_found_error(self, mock_get):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        # client.token = 'CorrectToken'
         mock_response = mock.Mock()
         mock_response.status_code = 404
         mock_response.json.return_value = {
@@ -1798,127 +1556,103 @@ class ChangeLogTest(BaseClientTest):
         }
         mock_get.return_value = mock_response
         with self.assertRaises(ResourceNotFoundError):
-            client.get_change_log()
-        url = Client.base_URL + 'auth'
-        param = {'clientID': clientId, 'clientSecret': clientSecret}
-        mock_get.assert_called_once_with(url, params=param)
+            self.client.get_change_log()
+        mock_get.assert_called_once_with(self.token_url, params=self.token_params)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_get_change_log_with_internal_error(self, mock_get):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = "CorrectToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_get.return_value = mock_response
         with self.assertRaises(InternalError):
-            client.get_change_log()
+            self.client.get_change_log()
 
-        url = Client.base_URL + 'apps/db-change'
         param = {'start': None,
                  'end': None,
                  'offset': None}
-        headers = {'Authorization': 'Bearer CorrectToken'}
-        mock_get.assert_called_once_with(url, headers=headers, params=param)
+        mock_get.assert_called_once_with(self.url, headers=self.header, params=param)
 
 class WriteCamTest(BaseClientTest):
+
+    def setUp(self):
+        super(WriteCamTest, self).setUp()
+        self.client = Client('0' * 96, '0' * 71)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.expected_cameraID = '5ae0ecbd336359291be74c12'
+        self.update_url = self.base_URL + 'cameras/' + self.expected_cameraID
+        self.create_url = self.base_URL + 'cameras/create'
+
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_ip(self, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "cameraID": "5ae0ecbd336359291be74c12"
+            "cameraID": self.expected_cameraID
         }
 
         mock_put.return_value = mock_response
         # validate result
-        expected_cameraID = '5ae0ecbd336359291be74c12'
-        url = Client.base_URL + 'cameras/' + expected_cameraID
         data = {'type': 'ip',
                 'retrieval': '{"brand": null, "image_path": null,'
                              ' "ip": null, "model": null, "port": null,'
                              ' "video_path": "path/video"}'}
-        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'camera_type': 'ip',
+        kwargs = {'cameraID': self.expected_cameraID, 'camera_type': 'ip',
                   'video_path': 'path/video'}
 
-        header = {'Authorization': 'Bearer correctToken'}
-
-        resultID = client.write_camera(**kwargs)
-        mock_put.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(resultID, expected_cameraID)
+        resultID = self.client.write_camera(**kwargs)
+        mock_put.assert_called_once_with(self.update_url, headers=self.header, data=data)
+        self.assertEqual(resultID, self.expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_non_ip(self, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "cameraID": "5ae0ecbd336359291be74c12"
+            "cameraID": self.expected_cameraID
         }
         mock_put.return_value = mock_response
         # validate result
-        expected_cameraID = '5ae0ecbd336359291be74c12'
-        url = Client.base_URL + 'cameras/' + expected_cameraID
         data = {'is_active_image': False, 'type': 'non_ip',
                 'retrieval': '{"snapshot_url": "test_snapshot"}'}
         kwargs = {'is_active_image': False, 'camera_type': 'non_ip',
-                  'snapshot_url': 'test_snapshot', 'cameraID': '5ae0ecbd336359291be74c12'}
-
-        header = {'Authorization': 'Bearer correctToken'}
-
-        resultID = client.write_camera(**kwargs)
-        mock_put.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(resultID, expected_cameraID)
+                  'snapshot_url': 'test_snapshot', 'cameraID': self.expected_cameraID}
+        resultID = self.client.write_camera(**kwargs)
+        mock_put.assert_called_once_with(self.update_url, headers=self.header, data=data)
+        self.assertEqual(resultID, self.expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_stream_no_type(self, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "cameraID": "5ae0ecbd336359291be74c12"
+            "cameraID": self.expected_cameraID
         }
         mock_put.return_value = mock_response
         # validate result
-        expected_cameraID = '5ae0ecbd336359291be74c12'
-        url = self.base_URL + 'cameras/' + expected_cameraID
-
-        # doing so will not trigger error, update nothing
         data = {'m3u8_url': 'test_m3u8', 'type': None}
-        kwargs = {'m3u8_url': 'test_m3u8', 'cameraID': expected_cameraID}
-        header = {'Authorization': 'Bearer correctToken'}
+        kwargs = {'m3u8_url': 'test_m3u8', 'cameraID': self.expected_cameraID}
 
-        resultID = client.write_camera(**kwargs)
-        mock_put.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(resultID, expected_cameraID)
+        resultID = self.client.write_camera(**kwargs)
+        mock_put.assert_called_once_with(self.update_url, headers=self.header, data=data)
+        self.assertEqual(resultID, self.expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_update_camera_expired_token_success(self, mock_get, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set first request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -1926,77 +1660,60 @@ class WriteCamTest(BaseClientTest):
             'message': 'Token expired.'
         }
         # set second request.post's result
-        testCamID = '5ae0ecbd336359291be74c12'
         mock_response2 = mock.Mock()
         mock_response2.status_code = 200
         mock_response2.json.return_value = {
-            'cameraID': '5ae0ecbd336359291be74c12'
+            'cameraID': self.expected_cameraID
         }
         mock_put.side_effect = [mock_response, mock_response2]
         # set _request_token()'s result
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_get.return_value = mock_get_response
 
         kwargs = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
-                  'timezone_name': 'Test', 'cameraID': '5ae0ecbd336359291be74c12'}
+                  'timezone_name': 'Test', 'cameraID': self.expected_cameraID}
 
-        resultID = client.write_camera(**kwargs)
-        self.assertEqual(resultID, testCamID)
-        params = {
-            'clientID': clientId,
-            'clientSecret': clientSecret
-        }
-        mock_get.assert_called_with(self.token_url, params=params)
+        resultID = self.client.write_camera(**kwargs)
+        self.assertEqual(resultID, self.expected_cameraID)
+
+        mock_get.assert_called_with(self.token_url, params=self.token_params)
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        newheaders = {'Authorization': 'Bearer newToken'}
-
         data = {'reference_url': 'url.com/ref', 'reference_logo': 'Logo',
                 'timezone_name': 'Test', 'type': None}
 
-        call_list = [mock.call(self.base_URL + 'cameras/' + testCamID, headers=headers,
-                               data=data),
-                     mock.call(self.base_URL + 'cameras/' + testCamID, headers=newheaders,
-                               data=data)]
+        call_list = [mock.call(self.update_url, headers=headers, data=data),
+                     mock.call(self.update_url, headers=self.header, data=data)]
         self.assertEqual(mock_put.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_internal_error(self, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_put.return_value = mock_response
         # validate result
-        testCamID = '5ae0ecbd336359291be74c12'
-        url = Client.base_URL + 'cameras/' + testCamID
         data = {'is_active_image': True, 'type': 'ip',
                 'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
                              ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
-        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'is_active_image': True,
+        kwargs = {'cameraID': self.expected_cameraID, 'is_active_image': True,
                   'camera_type': 'ip', 'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
-        header = {'Authorization': 'Bearer correctToken'}
 
         with self.assertRaises(InternalError):
-            client.write_camera(**kwargs)
-        mock_put.assert_called_once_with(url, headers=header, data=data)
+            self.client.write_camera(**kwargs)
+        mock_put.assert_called_once_with(self.update_url, headers=self.header, data=data)
         self.assertEqual(0, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_all_correct_Format_Error(self, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
         mock_response = mock.Mock()
         expected_dict = {
             "message": "Format Error Messages"
@@ -2004,59 +1721,42 @@ class WriteCamTest(BaseClientTest):
         mock_response.json.return_value = expected_dict
         mock_response.status_code = 422
         mock_put.return_value = mock_response
-        testCamID = '5ae0ecbd336359291be74c12'
-        url = self.base_URL + 'cameras/' + testCamID
         data = {'is_active_image': 'not false', 'type': 'undefined'}
-        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'is_active_image': 'not false',
+        kwargs = {'cameraID': self.expected_cameraID, 'is_active_image': 'not false',
                   'camera_type': 'undefined'}
 
         with self.assertRaises(FormatError):
-            client.write_camera(**kwargs)
-        mock_put.assert_called_once_with(url, headers={'Authorization': 'Bearer CorrectToken'},
-                                         data=data)
+            self.client.write_camera(**kwargs)
+        mock_put.assert_called_once_with(self.update_url, headers=self.header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.put')
     def test_update_camera_invalid_clientID(self, mock_put):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         mock_response = mock.Mock()
         mock_response.status_code = 404
         mock_response.json.return_value = {
             'message': 'No app exists with given client id.'
         }
         mock_put.return_value = mock_response
-        testCamID = '5ae0ecbd336359291be74c12'
-        url = self.base_URL + 'cameras/' + testCamID
         data = {'reference_url': 'url.com/ref', 'type': None}
-        kwargs = {'cameraID': '5ae0ecbd336359291be74c12', 'reference_url': 'url.com/ref'}
-        headers = {'Authorization': 'Bearer correctToken'}
-
+        kwargs = {'cameraID': self.expected_cameraID, 'reference_url': 'url.com/ref'}
         with self.assertRaises(ResourceNotFoundError):
-            client.write_camera(**kwargs)
-        mock_put.assert_called_once_with(url, headers=headers, data=data)
+            self.client.write_camera(**kwargs)
+        mock_put.assert_called_once_with(self.update_url, headers=self.header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_ip(self, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 201
         mock_response.json.return_value = {
-            "cameraID": "test_cameraID",
+            "cameraID": self.expected_cameraID,
         }
         mock_post.return_value = mock_response
-        # validate result
-        expected_camID = 'test_cameraID'
-        url = Client.base_URL + 'cameras/create'
-        header = {'Authorization': 'Bearer correctToken'}
 
         data = {'resolution_height': 312, 'resolution_width': 123,
                 'longitude': '100.21323', 'latitude': '-44.9281',
@@ -2072,58 +1772,47 @@ class WriteCamTest(BaseClientTest):
                   'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
                   'model': 'Some model', 'image_path': 'path/image', 'video_path': 'path/video'}
-        resultID = client.write_camera(**kwargs)
-        mock_post.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(resultID, expected_camID)
+        resultID = self.client.write_camera(**kwargs)
+        mock_post.assert_called_once_with(self.create_url, headers=self.header, data=data)
+        self.assertEqual(resultID, self.expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_only_ip(self, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 201
         mock_response.json.return_value = {
-            "cameraID": "test_cameraID",
+            "cameraID": self.expected_cameraID,
         }
         mock_post.return_value = mock_response
         # validate result
-        expected_camID = 'test_cameraID'
-        url = Client.base_URL + 'cameras/create'
-        header = {'Authorization': 'Bearer correctToken'}
+
         data = {'is_active_video': False, 'is_active_image': True, 'type': 'ip',
                 'retrieval': '{"brand": null, "image_path": null,'
                              ' "ip": "test_ip", "model": null, "port": null,'
                              ' "video_path": null}'}
         kwargs = {'is_active_video': False, 'is_active_image': True,
                   'camera_type': 'ip', 'ip': 'test_ip'}
-        resultID = client.write_camera(**kwargs)
-        mock_post.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(resultID, expected_camID)
+        resultID = self.client.write_camera(**kwargs)
+        mock_post.assert_called_once_with(self.create_url, headers=self.header, data=data)
+        self.assertEqual(resultID, self.expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_non_ip(self, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 201
         mock_response.json.return_value = {
-            "cameraID": "test_cameraID",
+            "cameraID": self.expected_cameraID,
         }
         mock_post.return_value = mock_response
         # validate result
-        expected_camID = 'test_cameraID'
-        url = Client.base_URL + 'cameras/create'
-        header = {'Authorization': 'Bearer correctToken'}
         data = {'resolution_height': 480, 'resolution_width': 720, 'city': 'West Lafayette',
                 'state': 'Indiana', 'country': 'USA', 'longitude': 'test_long',
                 'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
@@ -2135,18 +1824,15 @@ class WriteCamTest(BaseClientTest):
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'is_active_video': True, 'is_active_image': False, 'camera_type': 'non_ip',
                   'snapshot_url': 'test_snapshot'}
-        resultID = client.write_camera(**kwargs)
-        mock_post.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(resultID, expected_camID)
+        resultID = self.client.write_camera(**kwargs)
+        mock_post.assert_called_once_with(self.create_url, headers=self.header, data=data)
+        self.assertEqual(resultID, self.expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_no_snapshot_url(self, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 422
@@ -2155,37 +1841,28 @@ class WriteCamTest(BaseClientTest):
         }
         mock_post.return_value = mock_response
         # validate result
-
-        url = Client.base_URL + 'cameras/create'
-        header = {'Authorization': 'Bearer correctToken'}
         data = {'is_active_video': True, 'is_active_image': False, 'type': 'non_ip',
                 'retrieval': '{"snapshot_url": null}'}
         kwargs = {'is_active_video': True, 'is_active_image': False,
                   'camera_type': 'non_ip', 'snapshot_url': None}
 
         with self.assertRaises(FormatError):
-            client.write_camera(**kwargs)
-        mock_post.assert_called_once_with(url, headers=header, data=data)
+            self.client.write_camera(**kwargs)
+        mock_post.assert_called_once_with(self.create_url, headers=self.header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_stream(self, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 201
         mock_response.json.return_value = {
-            "cameraID": "test_cameraID",
+            "cameraID": self.expected_cameraID,
         }
         mock_post.return_value = mock_response
         # validate result
-        expected_camID = 'test_cameraID'
-        url = Client.base_URL + 'cameras/create'
-        header = {'Authorization': 'Bearer correctToken'}
         data = {'video_path': None, 'image_path': None, 'model': None, 'brand': None, 'port': None,
                 'reference_url': 'test_ref_url', 'reference_logo': 'test_ref_logo',
                 'timezone_name': 'test_t_name', 'timezone_id': 'test_t_id', 'utc_offset': 3,
@@ -2203,18 +1880,16 @@ class WriteCamTest(BaseClientTest):
                   'latitude': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'ip': None, 'snapshot_url': None, 'is_active_video': True,
                   'is_active_image': False, 'camera_type': 'stream', 'm3u8_url': 'test_m3u8'}
-        resultID = client.write_camera(**kwargs)
-        mock_post.assert_called_once_with(url, headers=header, data=data)
-        self.assertEqual(resultID, expected_camID)
+        resultID = self.client.write_camera(**kwargs)
+        mock_post.assert_called_once_with(self.create_url, headers=self.header, data=data)
+        self.assertEqual(resultID, self.expected_cameraID)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_kwrgs_missing_required(self, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
+
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 422
@@ -2223,25 +1898,19 @@ class WriteCamTest(BaseClientTest):
         }
         mock_post.return_value = mock_response
         # validate result
-
-        url = Client.base_URL + 'cameras/create'
-        header = {'Authorization': 'Bearer correctToken'}
         data = {'is_active_image': False, 'type': 'stream',
                 'retrieval': '{"m3u8_url": null}'}
         kwargs = {'is_active_image': False, 'camera_type': 'stream'}
 
         with self.assertRaises(FormatError):
-            client.write_camera(**kwargs)
-        mock_post.assert_called_once_with(url, headers=header, data=data)
+            self.client.write_camera(**kwargs)
+        mock_post.assert_called_once_with(self.create_url, headers=self.header, data=data)
         self.assertEqual(1, mock_response.json.call_count)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     @mock.patch('CAM2CameraDatabaseClient.client.requests.get')
     def test_add_camera_expired_token_success(self, mock_get, mock_post):
-        clientID = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientID, clientSecret)
-        client.token = 'ExpiredToken'
+        self.client.token = 'ExpiredToken'
         # set first request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 401
@@ -2252,14 +1921,14 @@ class WriteCamTest(BaseClientTest):
         mock_response2 = mock.Mock()
         mock_response2.status_code = 201
         mock_response2.json.return_value = {
-            'cameraID': 'test_cameraID'
+            'cameraID': self.expected_cameraID
         }
         mock_post.side_effect = [mock_response, mock_response2]
         # set _request_token()'s result
         mock_get_response = mock.Mock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
-            'token': 'newToken'
+            'token': 'correctToken'
         }
         mock_get.return_value = mock_get_response
         # run the test
@@ -2269,63 +1938,49 @@ class WriteCamTest(BaseClientTest):
                   'brand': 'test_brand', 'model': 'test_model',
                   'video_path': 'test_vid_path'}
 
-        resultID = client.write_camera(**kwargs)
+        resultID = self.client.write_camera(**kwargs)
 
-        self.assertEqual(resultID, 'test_cameraID')
-        params = {
-            'clientID': clientID,
-            'clientSecret': clientSecret
-        }
-        mock_get.assert_called_with(self.base_URL + 'auth', params=params)
+        self.assertEqual(resultID, self.expected_cameraID)
+        mock_get.assert_called_with(self.token_url, params=self.token_params)
         headers = {'Authorization': 'Bearer ExpiredToken'}
-        newheaders = {'Authorization': 'Bearer newToken'}
         data = {'is_active_video': True, 'is_active_image': False, 'type': 'ip',
                 'retrieval': '{"brand": "test_brand", "image_path": "test_image_path",'
                              ' "ip": "127.0.0.2", "model": "test_model", "port": "8080",'
                              ' "video_path": "test_vid_path"}'}
-        call_list = [mock.call(self.base_URL + 'cameras/create', headers=headers, data=data),
-                     mock.call(self.base_URL + 'cameras/create', headers=newheaders, data=data)]
+        call_list = [mock.call(self.create_url, headers=headers, data=data),
+                     mock.call(self.create_url, headers=self.header, data=data)]
         self.assertEqual(mock_post.call_args_list, call_list)
 
     @mock.patch('CAM2CameraDatabaseClient.client.requests.post')
     def test_add_camera_internal_error(self, mock_post):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
         # provide token for building header
-        client.token = "correctToken"
+        self.client.token = "correctToken"
         # manipulate request.post's result
         mock_response = mock.Mock()
         mock_response.status_code = 500
         mock_post.return_value = mock_response
         # validate result
-        url = Client.base_URL + 'cameras/create'
         data = {'is_active_video': True, 'is_active_image': False, 'type': 'ip',
                 'retrieval': '{"brand": "test_brand", "image_path": "test_image_path",'
                              ' "ip": "127.0.0.2", "model": "test_model", "port": "8080",'
                              ' "video_path": "test_vid_path"}'}
-        header = {'Authorization': 'Bearer correctToken'}
-
         kwargs = {'is_active_video': True, 'is_active_image': False, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'test_brand',
                   'model': 'test_model', 'image_path': 'test_image_path',
                   'video_path': 'test_vid_path'}
         with self.assertRaises(InternalError):
-            client.write_camera(**kwargs)
-        mock_post.assert_called_once_with(url, headers=header, data=data)
+            self.client.write_camera(**kwargs)
+        mock_post.assert_called_once_with(self.create_url, headers=self.header, data=data)
         self.assertEqual(0, mock_response.json.call_count)
 
     def test_write_camera_illegal_args(self):
-        clientId = '0' * 96
-        clientSecret = '0' * 71
-        client = Client(clientId, clientSecret)
-        client.token = 'CorrectToken'
+        self.client.token = 'correctToken'
 
         kwargs = {'illegal': 'test_lad', 'source': 'test_source', 'legacy_cameraID': 0,
                   'image_path': 'test_image_path', 'video_path': 'test_vid_path'}
 
         with self.assertRaises(FormatError):
-            client.write_camera(**kwargs)
+            self.client.write_camera(**kwargs)
 
 if __name__ == '__main__':
     unittest.main()
