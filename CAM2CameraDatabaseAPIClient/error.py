@@ -9,7 +9,6 @@ class Error(Exception):
     """
     pass
 
-
 class FormatError(Error):
     """Class representing format error.
 
