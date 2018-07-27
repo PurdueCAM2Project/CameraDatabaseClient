@@ -3,6 +3,7 @@ Represents a CAM2 client application.
 """
 import json
 import requests
+from .config import SECRET_LENGTH, CLIENTID_LENGTH
 from .error import AuthenticationError, InternalError, InvalidClientIdError, \
     InvalidClientSecretError, ResourceNotFoundError, FormatError, \
     AuthorizationError, ResourceConflictError
@@ -141,9 +142,9 @@ class Client(object):
             Client secret should have a length of at least 71 characters.
 
         """
-        if len(clientID) != 96:
+        if len(clientID) != CLIENTID_LENGTH:
             raise InvalidClientIdError
-        if len(clientSecret) < 71:
+        if len(clientSecret) < SECRET_LENGTH:
             raise InvalidClientSecretError
         self.clientID = clientID
         self.clientSecret = clientSecret
