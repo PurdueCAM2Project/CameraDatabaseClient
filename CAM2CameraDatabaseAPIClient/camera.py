@@ -2,7 +2,7 @@
 Represents a camera.
 """
 
-class Camera(object):
+class Camera(dict):
 
     """Class representing a general camera.
     Attributes
@@ -31,7 +31,8 @@ class Camera(object):
     """
 
     def __init__(self, **dict_entries):
-        """Client initialization method.
+        """Camera constructor. It overrides dict's constructor's definition. It allows to use the underlying
+        data structure of python's builtin dict.
 
         Parameters
         ----------
@@ -44,10 +45,9 @@ class Camera(object):
             Camera should only be initialized by results returned from the API.
             Documentation of camera constructor is for CAM2 API team only.
         """
-        self.__dict__.update(dict_entries)
+        super().__init__(**dict_entries)
 
-    def __str__(self):
-        return str(self.__dict__)
+   
 
     @staticmethod
     def process_json(**dict_entries):
