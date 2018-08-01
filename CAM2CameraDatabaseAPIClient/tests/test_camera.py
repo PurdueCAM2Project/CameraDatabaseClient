@@ -105,11 +105,13 @@ class TestCamera(unittest.TestCase):
 
     def test_iter(self):
 
-        cam = Camera(**self.cam_attr)  # will mutate it
+        cam = Camera(**self.cam_attr)
         self.assertTrue(hasattr(cam, '__iter__'))
 
         testing_dict = dict(**self.cam_attr)
         self.assertEqual(list(cam.__iter__()), list(testing_dict.__iter__()))
+
+
 
 
 
