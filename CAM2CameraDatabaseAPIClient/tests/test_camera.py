@@ -2,7 +2,7 @@
 This class holds the code to test camera objects.
 """
 import unittest
-import sys
+import sys, random
 from os import path
 from CAM2CameraDatabaseAPIClient.camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
@@ -80,6 +80,38 @@ class TestCamera(unittest.TestCase):
         self.assertTrue(issubclass(ip_cam_test.__class__, Camera))
 
         self.assertEqual(ip_cam_test, ip_attr)
+
+    def test_getitem(self):
+
+        cam = Camera(**self.cam_attr)
+
+        self.assertTrue(hasattr(cam , '__getitem__'))
+
+        for k, v in self.cam_attr.items():
+            self.assertEqual(v, cam.get(k), 'Failed to get attribute {0}'.format(k))
+            self.assertEqual(v, cam[k], 'Failed to index attribute {0}'.format(k))
+
+    def test_setitem(self):
+
+
+        cam = Camera(**self.cam_attr)
+        self.assertTrue(hasattr(cam, '__setitem__'))
+
+        for k,v in self.cam_attr.items():
+            x = random.random()
+            cam[k] = x
+            self.assertEqual(x, cam[k], 'Failed to set attribute {0}'.format(k))
+
+
+    def test_iter(self):
+
+        cam = Camera(**self.cam_attr)  # will mutate it
+        self.assertTrue(hasattr(cam, '__iter__'))
+
+        testing_dict = dict(**self.cam_attr)
+        self.assertEqual(list(cam.__iter__()), list(testing_dict.__iter__()))
+
+
 
 
 
