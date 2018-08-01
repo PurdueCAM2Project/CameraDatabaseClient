@@ -72,7 +72,6 @@ class TestCamera(unittest.TestCase):
             'model': 'test_model',
             'image_path': 'test_image',
             'video_path': None})
-        print(ip_attr)
 
         ip_cam_test = IPCamera(**ip_attr)
 
