@@ -113,6 +113,12 @@ class TestCamera(unittest.TestCase):
 
 
 
+    def test_pop(self):
+        cam = Camera(**self.cam_attr)
+        self.assertTrue(hasattr(cam, 'pop'))
+
+        for k, v in self.cam_attr.items():
+            self.assertEqual(v, cam.pop(k), 'Failed to pop attribute {0}'.format(k))
 
 
 
