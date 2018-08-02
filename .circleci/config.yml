@@ -48,7 +48,7 @@ jobs:
           name: run linter
           command: |
             . venv/bin/activate
-            pylint -j 0 pythonAPIClient tests
+            pylint -j 0 CAM2CameraDatabaseAPIClient
 
       - store_artifacts:
           path: test-reports

@@ -1,14 +1,13 @@
 """
 This file defines all the custom errors.
 """
-
+from .config import SECRET_LENGTH, CLIENTID_LENGTH
 
 class Error(Exception):
     """
     Represent a generic error.
     """
     pass
-
 
 class FormatError(Error):
     """Class representing format error.
@@ -106,7 +105,7 @@ class InvalidClientIdError(Error):
 
     def __init__(self):
         Error.__init__(self, None, None)
-        self.message = 'The Length of ClientID should be 96'
+        self.message = 'The Length of ClientID should be ' + str(CLIENTID_LENGTH) + '.'
 
     def __str__(self):
         return str(self.message)
@@ -133,7 +132,7 @@ class InvalidClientSecretError(Error):
 
     def __init__(self):
         Error.__init__(self, None, None)
-        self.message = 'Length of ClientSecret should be at least 71.'
+        self.message = 'Length of ClientSecret should be at least ' + str(SECRET_LENGTH) + '.'
 
     def __str__(self):
         return str(self.message)
