@@ -5,6 +5,9 @@ Represents a camera.
 class Camera(dict):
 
     """Class representing a general camera.
+    It inherits from dict and uses  all its methods as defined in dict. Therefore, there's no need to define
+    a constructor.
+
     Attributes
     ----------
     cameraID : str
@@ -29,24 +32,6 @@ class Camera(dict):
     reference_logo : str, optional
     reference_url : str, optional
     """
-
-    def __init__(self, **dict_entries):
-        """Camera constructor. It overrides dict's constructor's definition.
-        It allows to use the underlying data structure of python's builtin dict.
-
-        Parameters
-        ----------
-        dict_entries: dict
-            Dictionary of all field values of a camera.
-
-        Note
-        ----
-            User should not construct any camera object on his/her own.
-            Camera should only be initialized by results returned from the API.
-            Documentation of camera constructor is for CAM2 API team only.
-        """
-        super().__init__(**dict_entries)
-
     @staticmethod
     def process_json(**dict_entries):
         dict_entries['camera_type'] = dict_entries['type']

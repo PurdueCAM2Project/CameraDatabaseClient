@@ -98,7 +98,7 @@ class TestCamera(unittest.TestCase):
         cam = Camera(**self.cam_attr)
         self.assertTrue(hasattr(cam, '__setitem__'))
 
-        for k in self.cam_attr.keys():
+        for k in self.cam_attr:
             x = random.random()
             cam[k] = x
             self.assertEqual(x, cam[k], 'Failed to set attribute {0}'.format(k))
