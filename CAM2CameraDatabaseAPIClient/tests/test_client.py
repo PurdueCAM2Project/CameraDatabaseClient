@@ -814,7 +814,7 @@ class GetCamIDTest(BaseClientTest):
         mock_response.json.return_value = mock_dict
         mock_response.status_code = 200
         mock_get.return_value = mock_response
-        self.assertEqual(self.client.camera_by_id('12345').__dict__, expected_dict)
+        self.assertEqual(self.client.camera_by_id('12345'), expected_dict)
         mock_get.assert_called_once_with(self.url, headers=self.header)
 
     @mock.patch('CAM2CameraDatabaseAPIClient.client.requests.get')
@@ -850,7 +850,7 @@ class GetCamIDTest(BaseClientTest):
         }
         mock_response3.json.return_value = mock_dict
         mock_get.side_effect = [mock_response, mock_response2, mock_response3]
-        self.assertEqual(self.client.camera_by_id('12345').__dict__, expected_dict)
+        self.assertEqual(self.client.camera_by_id('12345'), expected_dict)
         self.assertEqual(3, mock_get.call_count)
         headers = {'Authorization': 'Bearer ExpiredToken'}
         call_list = [mock.call(self.url, headers=headers),
@@ -1172,7 +1172,7 @@ class SearchCamTest(BaseClientTest):
                        "reference_url":"http://some_url", "cameraID":"5b0e74213651360004edb426",
                        "snapshot_url":"http://images./preview/adf.jpg",
                        "latitude":35.8876, "longitude":136.098}
-        self.assertEqual(response_list[0].__dict__, actual_dict,
+        self.assertEqual(response_list[0], actual_dict,
                          'Returned json is not tranlated correctly')
 
     def test_search_camera_only_illegal_args(self):
