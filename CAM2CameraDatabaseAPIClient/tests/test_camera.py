@@ -2,7 +2,8 @@
 This class holds the code to test camera objects.
 """
 import unittest
-import sys, random
+import sys
+import random
 from os import path
 from CAM2CameraDatabaseAPIClient.camera import Camera, IPCamera, NonIPCamera, StreamCamera
 
@@ -63,7 +64,7 @@ class TestCamera(unittest.TestCase):
 
         self.cam_attr.pop('m3u8_url')
 
-    def test_non_ip_cam_init(self):
+    def test_ip_cam_init(self):
         ip_attr = dict(self.cam_attr)
         ip_attr.update({
             'ip': '127.0.0.1',
@@ -85,7 +86,7 @@ class TestCamera(unittest.TestCase):
 
         cam = Camera(**self.cam_attr)
 
-        self.assertTrue(hasattr(cam , '__getitem__'))
+        self.assertTrue(hasattr(cam, '__getitem__'))
 
         for k, v in self.cam_attr.items():
             self.assertEqual(v, cam.get(k), 'Failed to get attribute {0}'.format(k))
@@ -97,7 +98,7 @@ class TestCamera(unittest.TestCase):
         cam = Camera(**self.cam_attr)
         self.assertTrue(hasattr(cam, '__setitem__'))
 
-        for k,v in self.cam_attr.items():
+        for k in self.cam_attr.keys():
             x = random.random()
             cam[k] = x
             self.assertEqual(x, cam[k], 'Failed to set attribute {0}'.format(k))

@@ -31,8 +31,8 @@ class Camera(dict):
     """
 
     def __init__(self, **dict_entries):
-        """Camera constructor. It overrides dict's constructor's definition. It allows to use the underlying
-        data structure of python's builtin dict.
+        """Camera constructor. It overrides dict's constructor's definition.
+        It allows to use the underlying data structure of python's builtin dict.
 
         Parameters
         ----------
@@ -46,8 +46,6 @@ class Camera(dict):
             Documentation of camera constructor is for CAM2 API team only.
         """
         super().__init__(**dict_entries)
-
-   
 
     @staticmethod
     def process_json(**dict_entries):
