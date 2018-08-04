@@ -963,7 +963,7 @@ class SearchCamTest(BaseClientTest):
         cam = NonIPCamera(**cam_entries)
         actual_list = [cam] * 100
         for i in range(100):
-            self.assertEqual(response_list[i].__dict__, actual_list[i].__dict__)
+            self.assertEqual(response_list[i], actual_list[i])
         return response_list
 
     @mock.patch('CAM2CameraDatabaseAPIClient.client.requests.get')
@@ -1232,7 +1232,7 @@ class CamExistTest(BaseClientTest):
         cam = NonIPCamera(**cam_entries)
         actual_list = [cam] * 2
         for i in range(2):
-            self.assertEqual(response_list[i].__dict__, actual_list[i].__dict__)
+            self.assertEqual(response_list[i], actual_list[i])
 
     @mock.patch('CAM2CameraDatabaseAPIClient.client.requests.get')
     def test_camera_exist_all_correct_empty(self, mock_get):
