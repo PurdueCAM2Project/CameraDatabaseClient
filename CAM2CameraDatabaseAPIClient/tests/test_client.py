@@ -1598,11 +1598,11 @@ class WriteCamTest(BaseClientTest):
 
         mock_put.return_value = mock_response
         # validate result
-        data = {'type': 'ip',
+        data = {'type': 'ip', 'frame_rate': 10,
                 'retrieval': '{"brand": null, "image_path": null,'
                              ' "ip": null, "model": null, "port": null,'
                              ' "video_path": "path/video"}'}
-        kwargs = {'cameraID': self.expected_cameraID, 'camera_type': 'ip',
+        kwargs = {'cameraID': self.expected_cameraID, 'camera_type': 'ip', 'frame_rate': 10,
                   'video_path': 'path/video'}
 
         resultID = self.client.write_camera(**kwargs)
@@ -1764,12 +1764,12 @@ class WriteCamTest(BaseClientTest):
                 'longitude': '100.21323', 'latitude': '-44.9281',
                 'legacy_cameraID': None, 'm3u8_url': 'sample.com/m3u8_url',
                 'snapshot_url': 'sample.com/snapshot_url', 'is_active_video': False,
-                'is_active_image': True, 'type': 'ip',
+                'is_active_image': True, 'type': 'ip', 'frame_rate': 10,
                 'retrieval': '{"brand": "Some Brand", "image_path": "path/image",'
                              ' "ip": "127.0.0.2", "model": "Some model", "port": "8080",'
                              ' "video_path": "path/video"}'}
         kwargs = {'resolution_height': 312, 'resolution_width': 123, 'longitude': '100.21323',
-                  'latitude': '-44.9281', 'legacy_cameraID': None,
+                  'latitude': '-44.9281', 'legacy_cameraID': None, 'frame_rate': 10,
                   'm3u8_url': 'sample.com/m3u8_url', 'snapshot_url': 'sample.com/snapshot_url',
                   'is_active_video': False, 'is_active_image': True, 'camera_type': 'ip',
                   'ip': '127.0.0.2', 'port': '8080', 'brand': 'Some Brand',
