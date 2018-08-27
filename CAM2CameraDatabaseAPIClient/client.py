@@ -356,7 +356,7 @@ class Client(object):
 
         """
         add or update camera in the database.
-        
+
         Examples
         --------
             - Adding a camera of type 'IP' into the database:
@@ -367,7 +367,7 @@ class Client(object):
                           'm3u8_url': None, 'cameraID': None, ...}
             Pass the keyword arguments dictionary to the write_camera function:
                 write_camera(**kwargs)
-                
+
             - Updating a camera of type 'IP' in the database:
             Create a keyword arguments dictionary which contains all the parameters
             needed to update the camera (Must provide cameraID):
@@ -385,7 +385,7 @@ class Client(object):
                           'm3u8_url': None, 'cameraID': None, ...}
             Pass the keyword arguments dictionary to the write_camera function:
                 write_camera(**kwargs)
-                
+
             - Updating a camera of type 'NON_IP' in the database:
             Create a keyword arguments dictionary which contains all the parameters
             needed to update the camera (Must provide cameraID):
@@ -403,7 +403,7 @@ class Client(object):
                           'm3u8_url': test_url, 'cameraID': None, ...}
             Pass the keyword arguments dictionary to the write_camera function:
                 write_camera(**kwargs)
-                
+
             - Updating a camera of type 'STREAM' in the database:
             Create a keyword arguments dictionary which contains all the parameters
             needed to update the camera (Must provide cameraID):
@@ -412,7 +412,7 @@ class Client(object):
                           'm3u8_url': updated_test_url, 'cameraID': 5ae0ecbd336359291be74c12, ...}
             Pass the keyword arguments dictionary to the write_camera function:
                 write_camera(**kwargs)
-                
+
         Parameters
         ----------
             camera_type : str
