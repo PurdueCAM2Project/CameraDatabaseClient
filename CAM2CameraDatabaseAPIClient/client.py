@@ -153,7 +153,8 @@ class Client(object):
     # Functions for webUI
 
     def register(self, owner, permissionLevel='user'):
-        """Client initialization method.
+        """
+        Create a client to use CamraDatabaseAPI
 
         Parameters
         ----------
@@ -170,6 +171,11 @@ class Client(object):
             Client id of the newly registered client application.
         str
             Client secret of the newly registered client application.
+
+        Example
+        _______
+
+            client.register('testowner', 'webUI')
 
         """
         url = Client.base_URL + 'apps/register'
@@ -191,6 +197,8 @@ class Client(object):
 
     def update_owner(self, clientID, owner):
         """
+        Update owner's username for the given clientID
+
         Parameters
         ----------
         clientID : str
@@ -203,6 +211,11 @@ class Client(object):
         -------
         str
             Success message.
+
+        Example
+        _______
+
+            client.update_owner(self.clientID, 'testowner')
 
         """
         url = Client.base_URL + 'apps/' + clientID
@@ -223,6 +236,8 @@ class Client(object):
 
     def update_permission(self, clientID, permissionLevel):
         """
+        Update owner's permissionLevel for the given clientID
+
         Parameters
         ----------
         clientID : str
@@ -235,6 +250,11 @@ class Client(object):
         -------
         str
             Success message.
+
+        Example
+        _______
+
+            client.update_permission(self.clientID, 'admin')
 
         """
         url = Client.base_URL + 'apps/' + clientID
@@ -255,6 +275,8 @@ class Client(object):
 
     def reset_secret(self, clientID):
         """
+        A method to reset client secret
+
         Parameters
         ----------
 
@@ -265,6 +287,11 @@ class Client(object):
         --------
         str
             New clientSecret
+
+        Example
+        _______
+
+            client.reset_secret(self.clientID)
 
         """
         url = Client.base_URL + 'apps/' + clientID + '/secret'
@@ -289,6 +316,8 @@ class Client(object):
 
     def client_ids_by_owner(self, owner):
         """
+        A method to get all client ids for a specific owner
+
         Parameters
         ----------
         owner : str
@@ -298,6 +327,11 @@ class Client(object):
         -------
         list of str
             A list of client's ID owned by the user.
+
+        Example
+        _______
+
+            client.client_ids_by_owner('testowner')
 
         """
         url = Client.base_URL + 'apps/by-owner'
@@ -332,6 +366,11 @@ class Client(object):
         -------
         int
             The number of requests made by the client.
+
+        Example
+        _______
+
+            client.usage_by_client(self.clientID, 'testowner')
 
         """
         url = Client.base_URL + "apps/" + clientID + "/usage"
@@ -540,6 +579,11 @@ class Client(object):
         -------
         :obj:`Camera`
             A camera object.
+
+        Example
+        _______
+
+            client.camera_by_id('5ae0ecbc336359291be74c0b')
 
         """
         if self.token is None:
@@ -752,6 +796,8 @@ class Client(object):
 
     def get_change_log(self, start=None, end=None, offset=None):
         """
+        A method to get change_log for a specific time period
+
         Parameters
         ----------
         start : str, optional
@@ -774,6 +820,11 @@ class Client(object):
             If there is an API internal error.
         FormatError
             If type of argument value is not expected for the given field.
+
+        Example
+        _______
+
+            client.get_change_log('2018-08-27T15:53:00', '2018-08-27T16:53:00', 10)
 
         """
         url = Client.base_URL + 'apps/db-change'
