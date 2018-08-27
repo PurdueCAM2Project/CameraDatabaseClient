@@ -1,5 +1,5 @@
 # CAM2 database API python client 
-![Alt text](CAM2_logo.jpg? "Title")
+![image](CAM2_logo.jpg)
 ## What is this repository for?
 This repository stores the source code for the CAM2 camera API's python client.
 
