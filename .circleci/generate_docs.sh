@@ -31,10 +31,10 @@ fi
 sudo pip install sphinx
 sudo pip install sphinx_rtd_theme
 # create new site
-mkdir CAM2CameraDatabaseAPIClient
-cp -a ../CAM2CameraDatabaseAPIClient/* ./CAM2CameraDatabaseAPIClient/
+mkdir pythonAPIClient
+cp -a ../CAM2CameraDatabaseAPIClient/* ./pythonAPIClientt/
 make html
-rm -rf CAM2CameraDatabaseAPIClient/*
+rm -rf pythonAPIClient/*
 
 
 # stage any changes and new files
