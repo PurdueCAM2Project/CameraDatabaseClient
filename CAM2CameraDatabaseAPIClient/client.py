@@ -357,6 +357,62 @@ class Client(object):
         """
         add or update camera in the database.
 
+        Examples
+        --------
+            - Adding a camera of type 'IP' into the database:
+            Create a keyword arguments dictionary which contains all the parameters
+            needed to create the camera:
+                kwargs = {'camera_type': 'ip', 'is_active_image': True,
+                          'is_active_video': False, 'ip': '127.0.0.1', 'snapshot_url': None,
+                          'm3u8_url': None, 'cameraID': None, ...}
+            Pass the keyword arguments dictionary to the write_camera function:
+                write_camera(**kwargs)
+
+            - Updating a camera of type 'IP' in the database:
+            Create a keyword arguments dictionary which contains all the parameters
+            needed to update the camera (Must provide cameraID):
+                kwargs = {'camera_type': 'ip', 'is_active_image': True,
+                          'is_active_video': False, 'ip': '127.0.0.2', 'snapshot_url': None,
+                          'm3u8_url': None, 'cameraID': 5ae0ecbd336359291be74c12, ...}
+            Pass the keyword arguments dictionary to the write_camera function:
+                write_camera(**kwargs)
+            -------------------------------------------------------------------------------------
+            - Adding a camera of type 'NON_IP' into the database:
+            Create a keyword arguments dictionary which contains all the parameters
+            needed to create the camera:
+                kwargs = {'camera_type': 'non_ip', 'is_active_image': True,
+                          'is_active_video': False, 'ip': None, 'snapshot_url': test_url,
+                          'm3u8_url': None, 'cameraID': None, ...}
+            Pass the keyword arguments dictionary to the write_camera function:
+                write_camera(**kwargs)
+
+            - Updating a camera of type 'NON_IP' in the database:
+            Create a keyword arguments dictionary which contains all the parameters
+            needed to update the camera (Must provide cameraID):
+                kwargs = {'camera_type': 'non_ip', 'is_active_image': True,
+                          'is_active_video': False, 'ip': None, 'snapshot_url': updated_test_url,
+                          'm3u8_url': None, 'cameraID': 5ae0ecbd336359291be74c12, ...}
+            Pass the keyword arguments dictionary to the write_camera function:
+                write_camera(**kwargs)
+            -------------------------------------------------------------------------------------
+            - Adding a camera of type 'STREAM' into the database:
+            Create a keyword arguments dictionary which contains all the parameters
+            needed to create the camera:
+                kwargs = {'camera_type': 'stream', 'is_active_image': True,
+                          'is_active_video': False, 'ip': None, 'snapshot_url': None,
+                          'm3u8_url': test_url, 'cameraID': None, ...}
+            Pass the keyword arguments dictionary to the write_camera function:
+                write_camera(**kwargs)
+
+            - Updating a camera of type 'STREAM' in the database:
+            Create a keyword arguments dictionary which contains all the parameters
+            needed to update the camera (Must provide cameraID):
+                kwargs = {'camera_type': 'stream', 'is_active_image': True,
+                          'is_active_video': False, 'ip': None, 'snapshot_url': None,
+                          'm3u8_url': updated_test_url, 'cameraID': 5ae0ecbd336359291be74c12, ...}
+            Pass the keyword arguments dictionary to the write_camera function:
+                write_camera(**kwargs)
+
         Parameters
         ----------
             camera_type : str
@@ -456,7 +512,7 @@ class Client(object):
         ----
         When adding or updating a camera you must supply the corresponding required parameters
         and may also include any number of the optional parameters defined below in
-        'Other Parameters.
+        'Other Parameters'.
 
         When Adding a new camera:
         Do not include any cameraID when adding new cameras to the database.
