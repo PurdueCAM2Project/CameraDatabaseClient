@@ -173,7 +173,7 @@ class Client(object):
             Client secret of the newly registered client application.
 
         Example
-        _______
+        -------
 
             client.register('testowner', 'webUI')
 
@@ -213,7 +213,7 @@ class Client(object):
             Success message.
 
         Example
-        _______
+        -------
 
             client.update_owner(self.clientID, 'testowner')
 
@@ -252,7 +252,7 @@ class Client(object):
             Success message.
 
         Example
-        _______
+        -------
 
             client.update_permission(self.clientID, 'admin')
 
@@ -289,7 +289,7 @@ class Client(object):
             New clientSecret
 
         Example
-        _______
+        -------
 
             client.reset_secret(self.clientID)
 
@@ -329,7 +329,7 @@ class Client(object):
             A list of client's ID owned by the user.
 
         Example
-        _______
+        -------
 
             client.client_ids_by_owner('testowner')
 
@@ -368,7 +368,7 @@ class Client(object):
             The number of requests made by the client.
 
         Example
-        _______
+        -------
 
             client.usage_by_client(self.clientID, 'testowner')
 
@@ -581,7 +581,7 @@ class Client(object):
             A camera object.
 
         Example
-        _______
+        -------
 
             client.camera_by_id('5ae0ecbc336359291be74c0b')
 
@@ -822,7 +822,7 @@ class Client(object):
             If type of argument value is not expected for the given field.
 
         Example
-        _______
+        -------
 
             client.get_change_log('2018-08-27T15:53:00', '2018-08-27T16:53:00', 10)
 
