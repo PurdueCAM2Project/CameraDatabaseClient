@@ -9,6 +9,8 @@ jobs:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:3.6.1
+      - image: circleci/python:2.7.15
+
 
     working_directory: ~/repo
 
@@ -37,6 +39,12 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            python3 -m unittest discover
 
       - run:
           name: run tests
