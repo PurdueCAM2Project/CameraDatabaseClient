@@ -1,7 +1,7 @@
-pythonAPIClient
-===============
+CAM2CameraDatabaseAPIClient
+===========================
 
 .. toctree::
    :maxdepth: 4
 
-   pythonAPIClient
+   CAM2CameraDatabaseAPIClient
