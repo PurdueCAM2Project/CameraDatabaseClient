@@ -1,21 +1,21 @@
-pythonAPIClient package
+CAM2CameraDatabaseAPIClient package
 =======================
 
 
-pythonAPIClient.camera module
+CAM2CameraDatabaseAPIClient.camera module
 -----------------------------
 
-.. automodule:: pythonAPIClient.camera
+.. automodule:: CAM2CameraDatabaseAPIClient.camera
     :members:
 
-pythonAPIClient.client module
+CAM2CameraDatabaseAPIClient.client module
 -----------------------------
 
-.. automodule:: pythonAPIClient.client
+.. automodule:: CAM2CameraDatabaseAPIClientt.client
     :members:
 
-pythonAPIClient.error module
+CAM2CameraDatabaseAPIClient.error module
 ----------------------------
 
-.. automodule:: pythonAPIClient.error
+.. automodule:: CAM2CameraDatabaseAPIClient.error
     :members:
