@@ -11,7 +11,7 @@ CAM2CameraDatabaseAPIClient.camera module
 CAM2CameraDatabaseAPIClient.client module
 -----------------------------------------
 
-.. automodule:: CAM2CameraDatabaseAPIClientt.client
+.. automodule:: CAM2CameraDatabaseAPIClient.client
     :members:
 
 CAM2CameraDatabaseAPIClient.error module
