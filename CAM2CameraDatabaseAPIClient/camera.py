@@ -5,8 +5,7 @@ Represents a camera.
 class Camera(dict):
 
     """Class representing a general camera.
-    It inherits from dict and uses  all its methods as defined in dict.
-    Therefore, there's no need to define a constructor.
+
 
     Attributes
     ----------
