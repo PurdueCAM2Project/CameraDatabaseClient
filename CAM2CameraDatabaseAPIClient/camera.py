@@ -2,9 +2,11 @@
 Represents a camera.
 """
 
-class Camera(object):
+class Camera(dict):
 
     """Class representing a general camera.
+
+
     Attributes
     ----------
     cameraID : str
@@ -29,26 +31,6 @@ class Camera(object):
     reference_logo : str, optional
     reference_url : str, optional
     """
-
-    def __init__(self, **dict_entries):
-        """Client initialization method.
-
-        Parameters
-        ----------
-        dict_entries: dict
-            Dictionary of all field values of a camera.
-
-        Note
-        ----
-            User should not construct any camera object on his/her own.
-            Camera should only be initialized by results returned from the API.
-            Documentation of camera constructor is for CAM2 API team only.
-        """
-        self.__dict__.update(dict_entries)
-
-    def __str__(self):
-        return str(self.__dict__)
-
     @staticmethod
     def process_json(**dict_entries):
         dict_entries['camera_type'] = dict_entries['type']
