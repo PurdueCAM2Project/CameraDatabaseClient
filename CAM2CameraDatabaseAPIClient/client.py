@@ -46,7 +46,7 @@ class Client(object):
 
     _camera_fields = set(['reference_url', 'reference_logo', 'timezone_name', 'timezone_id',
                           'utc_offset', 'resolution_height', 'resolution_width', 'city',
-                          'state', 'country', 'longitude', 'latitude', 'source',
+                          'state', 'country', 'longitude', 'latitude', 'frame_rate', 'source',
                           'legacy_cameraID', 'm3u8_url', 'snapshot_url', 'is_active_video',
                           'is_active_image', 'camera_type', 'ip', 'port', 'brand', 'model',
                           'image_path', 'video_path', 'cameraID'])
@@ -187,7 +187,6 @@ class Client(object):
             else:
                 raise InternalError()
         return response.json()['clientID'], response.json()['clientSecret']
-
 
     def update_owner(self, clientID, owner):
         """
@@ -450,6 +449,8 @@ class Client(object):
         ----------------
             legacy_cameraID : int, optional
                 Original ID of the camera in SQL database.
+            frame_rate : int, optional
+                Frame-rate of the camera.
             source : str, optional
                 Source of camera.
             latitude : int or float, optional

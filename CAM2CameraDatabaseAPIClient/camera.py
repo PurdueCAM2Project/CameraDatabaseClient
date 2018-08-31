@@ -16,6 +16,7 @@ class Camera(dict):
     camera_type: str
         Type of the camera.
     source : str, optional
+    frame_rate : int, optional
     country : str, optional
     state : str, optional
     city : str, optional

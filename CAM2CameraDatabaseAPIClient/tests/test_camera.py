@@ -17,6 +17,7 @@ class TestCamera(unittest.TestCase):
             'cameraID': 'test',
             'legacy_cameraID': 1,
             'camera_type': 'ip',
+            'frame_rate': 10,
             'source': None,
             'country': 'USA',
             'state': 'IN',
