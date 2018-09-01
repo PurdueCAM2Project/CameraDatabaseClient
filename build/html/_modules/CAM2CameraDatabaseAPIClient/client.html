@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pythonAPIClient.client &mdash; CAM2 Database API Client  documentation</title>
+  <title>CAM2CameraDatabaseAPIClient.client &mdash; CAM2 Database API Client  documentation</title>
   
 
   
@@ -126,7 +126,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>pythonAPIClient.client</li>
+      <li>CAM2CameraDatabaseAPIClient.client</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -141,19 +141,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pythonAPIClient.client</h1><div class="highlight"><pre>
+  <h1>Source code for CAM2CameraDatabaseAPIClient.client</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Represents a CAM2 client application.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">.config</span> <span class="k">import</span> <span class="n">SECRET_LENGTH</span><span class="p">,</span> <span class="n">CLIENTID_LENGTH</span>
 <span class="kn">from</span> <span class="nn">.error</span> <span class="k">import</span> <span class="n">AuthenticationError</span><span class="p">,</span> <span class="n">InternalError</span><span class="p">,</span> <span class="n">InvalidClientIdError</span><span class="p">,</span> \
     <span class="n">InvalidClientSecretError</span><span class="p">,</span> <span class="n">ResourceNotFoundError</span><span class="p">,</span> <span class="n">FormatError</span><span class="p">,</span> \
     <span class="n">AuthorizationError</span><span class="p">,</span> <span class="n">ResourceConflictError</span>
 <span class="kn">from</span> <span class="nn">.camera</span> <span class="k">import</span> <span class="n">Camera</span>
 
 
-<div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class representing a CAM2 client application.</span>
 
 <span class="sd">    [More detailed description of what client object do.]</span>
@@ -285,9 +286,9 @@
 <span class="sd">            Client secret should have a length of at least 71 characters.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">clientID</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">96</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">clientID</span><span class="p">)</span> <span class="o">!=</span> <span class="n">CLIENTID_LENGTH</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidClientIdError</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">clientSecret</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">71</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">clientSecret</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">SECRET_LENGTH</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidClientSecretError</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clientID</span> <span class="o">=</span> <span class="n">clientID</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clientSecret</span> <span class="o">=</span> <span class="n">clientSecret</span>
@@ -295,7 +296,7 @@
 
     <span class="c1"># Functions for webUI</span>
 
-<div class="viewcode-block" id="Client.register"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">permissionLevel</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.register"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">permissionLevel</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Client initialization method.</span>
 
 <span class="sd">        Parameters</span>
@@ -332,7 +333,7 @@
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;clientID&#39;</span><span class="p">],</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="Client.update_owner"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.update_owner">[docs]</a>    <span class="k">def</span> <span class="nf">update_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.update_owner"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.update_owner">[docs]</a>    <span class="k">def</span> <span class="nf">update_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -364,7 +365,7 @@
                 <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Client.update_permission"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.update_permission">[docs]</a>    <span class="k">def</span> <span class="nf">update_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">permissionLevel</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.update_permission"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.update_permission">[docs]</a>    <span class="k">def</span> <span class="nf">update_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">permissionLevel</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -396,7 +397,7 @@
                 <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Client.reset_secret"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.reset_secret">[docs]</a>    <span class="k">def</span> <span class="nf">reset_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.reset_secret"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.reset_secret">[docs]</a>    <span class="k">def</span> <span class="nf">reset_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -430,7 +431,7 @@
 
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Client.client_ids_by_owner"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.client_ids_by_owner">[docs]</a>    <span class="k">def</span> <span class="nf">client_ids_by_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.client_ids_by_owner"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.client_ids_by_owner">[docs]</a>    <span class="k">def</span> <span class="nf">client_ids_by_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -461,7 +462,7 @@
             <span class="n">clientIDs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">clientIDs</span></div>
 
-<div class="viewcode-block" id="Client.usage_by_client"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.usage_by_client">[docs]</a>    <span class="k">def</span> <span class="nf">usage_by_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.usage_by_client"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.usage_by_client">[docs]</a>    <span class="k">def</span> <span class="nf">usage_by_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -495,7 +496,7 @@
                 <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;api_usage&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Client.write_camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.write_camera">[docs]</a>    <span class="k">def</span> <span class="nf">write_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.write_camera"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.write_camera">[docs]</a>    <span class="k">def</span> <span class="nf">write_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        add or update camera in the database.</span>
@@ -670,7 +671,7 @@
 
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;cameraID&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Client.camera_by_id"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.camera_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">camera_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cameraID</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.camera_by_id"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.camera_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">camera_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cameraID</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method to get a camera object by using camera&#39;s ID</span>
 
@@ -705,7 +706,7 @@
                 <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">Camera</span><span class="o">.</span><span class="n">process_json</span><span class="p">(</span><span class="o">**</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Client.search_camera"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.search_camera">[docs]</a>    <span class="k">def</span> <span class="nf">search_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.search_camera"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.search_camera">[docs]</a>    <span class="k">def</span> <span class="nf">search_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;A method to search camera by attributes and location.</span>
 <span class="sd">        Searching by location requires user to provide coordiantes for a desired center point</span>
@@ -815,7 +816,7 @@
 
         <span class="k">return</span> <span class="n">camera_processed</span></div>
 
-<div class="viewcode-block" id="Client.check_cam_exist"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.check_cam_exist">[docs]</a>    <span class="k">def</span> <span class="nf">check_cam_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camera_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.check_cam_exist"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.check_cam_exist">[docs]</a>    <span class="k">def</span> <span class="nf">check_cam_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camera_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method to get one or more camera object that has the given retrieval method</span>
 <span class="sd">        in the database.</span>
@@ -893,7 +894,7 @@
             <span class="n">camera_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Camera</span><span class="o">.</span><span class="n">process_json</span><span class="p">(</span><span class="o">**</span><span class="n">current_object</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">camera_processed</span></div>
 
-<div class="viewcode-block" id="Client.get_change_log"><a class="viewcode-back" href="../../pythonAPIClient.html#pythonAPIClient.client.Client.get_change_log">[docs]</a>    <span class="k">def</span> <span class="nf">get_change_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.get_change_log"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.get_change_log">[docs]</a>    <span class="k">def</span> <span class="nf">get_change_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

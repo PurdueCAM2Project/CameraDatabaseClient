@@ -10,7 +10,7 @@ CAM2 Database API Client Documentation
    :maxdepth: 2
    :caption: Contents:
    
-   pythonAPIClient.rst
+   CAM2CameraDatabaseAPIClient.rst
 
 
 
