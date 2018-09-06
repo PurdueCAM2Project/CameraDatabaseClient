@@ -190,7 +190,7 @@
 
     <span class="n">_camera_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;reference_url&#39;</span><span class="p">,</span> <span class="s1">&#39;reference_logo&#39;</span><span class="p">,</span> <span class="s1">&#39;timezone_name&#39;</span><span class="p">,</span> <span class="s1">&#39;timezone_id&#39;</span><span class="p">,</span>
                           <span class="s1">&#39;utc_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;resolution_height&#39;</span><span class="p">,</span> <span class="s1">&#39;resolution_width&#39;</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;frame_rate&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span>
                           <span class="s1">&#39;legacy_cameraID&#39;</span><span class="p">,</span> <span class="s1">&#39;m3u8_url&#39;</span><span class="p">,</span> <span class="s1">&#39;snapshot_url&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active_video&#39;</span><span class="p">,</span>
                           <span class="s1">&#39;is_active_image&#39;</span><span class="p">,</span> <span class="s1">&#39;camera_type&#39;</span><span class="p">,</span> <span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">,</span> <span class="s1">&#39;brand&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">,</span>
                           <span class="s1">&#39;image_path&#39;</span><span class="p">,</span> <span class="s1">&#39;video_path&#39;</span><span class="p">,</span> <span class="s1">&#39;cameraID&#39;</span><span class="p">])</span>
@@ -331,7 +331,6 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">InternalError</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;clientID&#39;</span><span class="p">],</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">]</span></div>
-
 
 <div class="viewcode-block" id="Client.update_owner"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.update_owner">[docs]</a>    <span class="k">def</span> <span class="nf">update_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -501,6 +500,62 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        add or update camera in the database.</span>
 
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">            - Adding a camera of type &#39;IP&#39; into the database:</span>
+<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
+<span class="sd">            needed to create the camera:</span>
+<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;ip&#39;, &#39;is_active_image&#39;: True,</span>
+<span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: &#39;127.0.0.1&#39;, &#39;snapshot_url&#39;: None,</span>
+<span class="sd">                          &#39;m3u8_url&#39;: None, &#39;cameraID&#39;: None, ...}</span>
+<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
+<span class="sd">                write_camera(**kwargs)</span>
+
+<span class="sd">            - Updating a camera of type &#39;IP&#39; in the database:</span>
+<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
+<span class="sd">            needed to update the camera (Must provide cameraID):</span>
+<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;ip&#39;, &#39;is_active_image&#39;: True,</span>
+<span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: &#39;127.0.0.2&#39;, &#39;snapshot_url&#39;: None,</span>
+<span class="sd">                          &#39;m3u8_url&#39;: None, &#39;cameraID&#39;: 5ae0ecbd336359291be74c12, ...}</span>
+<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
+<span class="sd">                write_camera(**kwargs)</span>
+<span class="sd">            -------------------------------------------------------------------------------------</span>
+<span class="sd">            - Adding a camera of type &#39;NON_IP&#39; into the database:</span>
+<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
+<span class="sd">            needed to create the camera:</span>
+<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;non_ip&#39;, &#39;is_active_image&#39;: True,</span>
+<span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: None, &#39;snapshot_url&#39;: test_url,</span>
+<span class="sd">                          &#39;m3u8_url&#39;: None, &#39;cameraID&#39;: None, ...}</span>
+<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
+<span class="sd">                write_camera(**kwargs)</span>
+
+<span class="sd">            - Updating a camera of type &#39;NON_IP&#39; in the database:</span>
+<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
+<span class="sd">            needed to update the camera (Must provide cameraID):</span>
+<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;non_ip&#39;, &#39;is_active_image&#39;: True,</span>
+<span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: None, &#39;snapshot_url&#39;: updated_test_url,</span>
+<span class="sd">                          &#39;m3u8_url&#39;: None, &#39;cameraID&#39;: 5ae0ecbd336359291be74c12, ...}</span>
+<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
+<span class="sd">                write_camera(**kwargs)</span>
+<span class="sd">            -------------------------------------------------------------------------------------</span>
+<span class="sd">            - Adding a camera of type &#39;STREAM&#39; into the database:</span>
+<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
+<span class="sd">            needed to create the camera:</span>
+<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;stream&#39;, &#39;is_active_image&#39;: True,</span>
+<span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: None, &#39;snapshot_url&#39;: None,</span>
+<span class="sd">                          &#39;m3u8_url&#39;: test_url, &#39;cameraID&#39;: None, ...}</span>
+<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
+<span class="sd">                write_camera(**kwargs)</span>
+
+<span class="sd">            - Updating a camera of type &#39;STREAM&#39; in the database:</span>
+<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
+<span class="sd">            needed to update the camera (Must provide cameraID):</span>
+<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;stream&#39;, &#39;is_active_image&#39;: True,</span>
+<span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: None, &#39;snapshot_url&#39;: None,</span>
+<span class="sd">                          &#39;m3u8_url&#39;: updated_test_url, &#39;cameraID&#39;: 5ae0ecbd336359291be74c12, ...}</span>
+<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
+<span class="sd">                write_camera(**kwargs)</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            camera_type : str</span>
@@ -538,6 +593,8 @@
 <span class="sd">        ----------------</span>
 <span class="sd">            legacy_cameraID : int, optional</span>
 <span class="sd">                Original ID of the camera in SQL database.</span>
+<span class="sd">            frame_rate : int, optional</span>
+<span class="sd">                Frame-rate of the camera.</span>
 <span class="sd">            source : str, optional</span>
 <span class="sd">                Source of camera.</span>
 <span class="sd">            latitude : int or float, optional</span>
@@ -600,7 +657,7 @@
 <span class="sd">        ----</span>
 <span class="sd">        When adding or updating a camera you must supply the corresponding required parameters</span>
 <span class="sd">        and may also include any number of the optional parameters defined below in</span>
-<span class="sd">        &#39;Other Parameters.</span>
+<span class="sd">        &#39;Other Parameters&#39;.</span>
 
 <span class="sd">        When Adding a new camera:</span>
 <span class="sd">        Do not include any cameraID when adding new cameras to the database.</span>

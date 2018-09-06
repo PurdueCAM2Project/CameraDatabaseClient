@@ -156,11 +156,14 @@
 <p>Represents a camera.</p>
 <dl class="class">
 <dt id="CAM2CameraDatabaseAPIClient.camera.Camera">
-<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">Camera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class representing a general camera.
-.. attribute:: cameraID</p>
-<blockquote>
-<div><em>str</em> – Id of the camera.</div></blockquote>
+<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">Camera</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a general camera.</p>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.cameraID">
+<code class="descname">cameraID</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.cameraID" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Id of the camera.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="CAM2CameraDatabaseAPIClient.camera.Camera.legacy_cameraID">
 <code class="descname">legacy_cameraID</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.legacy_cameraID" title="Permalink to this definition">¶</a></dt>
@@ -177,6 +180,12 @@
 <dt id="CAM2CameraDatabaseAPIClient.camera.Camera.source">
 <code class="descname">source</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.source" title="Permalink to this definition">¶</a></dt>
 <dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.frame_rate">
+<code class="descname">frame_rate</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.frame_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int, optional</em></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -263,26 +272,11 @@
 <dd><p><em>str, optional</em></p>
 </dd></dl>
 
-<p>Client initialization method.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_entries</strong> (<em>dict</em>) – Dictionary of all field values of a camera.</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">User should not construct any camera object on his/her own.
-Camera should only be initialized by results returned from the API.
-Documentation of camera constructor is for CAM2 API team only.</p>
-</div>
 </dd></dl>
 
 <dl class="class">
 <dt id="CAM2CameraDatabaseAPIClient.camera.IPCamera">
-<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">IPCamera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#IPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.IPCamera" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">IPCamera</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#IPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.IPCamera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represent a single ip camera.
 This is a subclass of Camera.</p>
 <dl class="attribute">
@@ -321,26 +315,11 @@ This is a subclass of Camera.</p>
 <dd><p><em>str, optional</em></p>
 </dd></dl>
 
-<p>Client initialization method.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_entries</strong> (<em>dict</em>) – Dictionary of all field values of a camera.</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">User should not construct any camera object on his/her own.
-Camera should only be initialized by results returned from the API.
-Documentation of camera constructor is for CAM2 API team only.</p>
-</div>
 </dd></dl>
 
 <dl class="class">
 <dt id="CAM2CameraDatabaseAPIClient.camera.NonIPCamera">
-<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">NonIPCamera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#NonIPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.NonIPCamera" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">NonIPCamera</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#NonIPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.NonIPCamera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represent a single non-ip camera.
 This is a subclass of Camera.</p>
 <dl class="attribute">
@@ -349,26 +328,11 @@ This is a subclass of Camera.</p>
 <dd><p><em>str</em></p>
 </dd></dl>
 
-<p>Client initialization method.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_entries</strong> (<em>dict</em>) – Dictionary of all field values of a camera.</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">User should not construct any camera object on his/her own.
-Camera should only be initialized by results returned from the API.
-Documentation of camera constructor is for CAM2 API team only.</p>
-</div>
 </dd></dl>
 
 <dl class="class">
 <dt id="CAM2CameraDatabaseAPIClient.camera.StreamCamera">
-<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">StreamCamera</code><span class="sig-paren">(</span><em>**dict_entries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#StreamCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.StreamCamera" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">StreamCamera</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#StreamCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.StreamCamera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represent a single stream camera.
 This is a subclass of Camera.</p>
 <dl class="attribute">
@@ -377,21 +341,6 @@ This is a subclass of Camera.</p>
 <dd><p><em>str</em></p>
 </dd></dl>
 
-<p>Client initialization method.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_entries</strong> (<em>dict</em>) – Dictionary of all field values of a camera.</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">User should not construct any camera object on his/her own.
-Camera should only be initialized by results returned from the API.
-Documentation of camera constructor is for CAM2 API team only.</p>
-</div>
 </dd></dl>
 
 </div>
@@ -589,6 +538,103 @@ Default permission level is ‘user’.</li>
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.write_camera">
 <code class="descname">write_camera</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.write_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.write_camera" title="Permalink to this definition">¶</a></dt>
 <dd><p>add or update camera in the database.</p>
+<p class="rubric">Examples</p>
+<ul class="simple">
+<li>Adding a camera of type ‘IP’ into the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to create the camera:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘ip’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: ‘127.0.0.1’, ‘snapshot_url’: None,
+‘m3u8_url’: None, ‘cameraID’: None, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Updating a camera of type ‘IP’ in the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to update the camera (Must provide cameraID):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘ip’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: ‘127.0.0.2’, ‘snapshot_url’: None,
+‘m3u8_url’: None, ‘cameraID’: 5ae0ecbd336359291be74c12, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Adding a camera of type ‘NON_IP’ into the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to create the camera:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘non_ip’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: test_url,
+‘m3u8_url’: None, ‘cameraID’: None, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Updating a camera of type ‘NON_IP’ in the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to update the camera (Must provide cameraID):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘non_ip’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: updated_test_url,
+‘m3u8_url’: None, ‘cameraID’: 5ae0ecbd336359291be74c12, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Adding a camera of type ‘STREAM’ into the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to create the camera:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘stream’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: None,
+‘m3u8_url’: test_url, ‘cameraID’: None, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Updating a camera of type ‘STREAM’ in the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to update the camera (Must provide cameraID):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘stream’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: None,
+‘m3u8_url’: updated_test_url, ‘cameraID’: 5ae0ecbd336359291be74c12, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs)</dd>
+</dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -629,6 +675,7 @@ Please ensure that the updated information is correct.</p>
 <tr class="field-odd field"><th class="field-name" colspan="2">Other Parameters:</th></tr>
 <tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
 <li><strong>legacy_cameraID</strong> (<em>int, optional</em>) – Original ID of the camera in SQL database.</li>
+<li><strong>frame_rate</strong> (<em>int, optional</em>) – Frame-rate of the camera.</li>
 <li><strong>source</strong> (<em>str, optional</em>) – Source of camera.</li>
 <li><strong>latitude</strong> (<em>int or float, optional</em>) – Latitude of the camera location.</li>
 <li><strong>longitude</strong> (<em>int or float, optional</em>) – Longitude of the camera location.</li>
@@ -678,7 +725,7 @@ in the database.</p>
 <p class="first admonition-title">Note</p>
 <p>When adding or updating a camera you must supply the corresponding required parameters
 and may also include any number of the optional parameters defined below in
-‘Other Parameters.</p>
+‘Other Parameters’.</p>
 <p>When Adding a new camera:
 Do not include any cameraID when adding new cameras to the database.
 When the camera is added to the database, a new cameraID will be assigned and returned
