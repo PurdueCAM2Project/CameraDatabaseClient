@@ -172,10 +172,19 @@ class Client(object):
         str
             Client secret of the newly registered client application.
 
+
         Example
         -------
 
-            client.register('testowner', 'webUI')
+            webUI_client = Client(clientID, clientSecret)
+            # WebUI team developer created an client object
+            webUI_client.register(ownerName, permissionLevel)
+
+            User with webUI permission will use this method to register a client with owner's name and permission level.
+            Scenario:
+                Developer in webUI team wants to register a client for normal user whose name is Bob
+                webUI_client = Client('1', '1')
+                webUI_client.register('Bob', 'user')
 
         """
         url = Client.base_URL + 'apps/register'
@@ -193,7 +202,6 @@ class Client(object):
             else:
                 raise InternalError()
         return response.json()['clientID'], response.json()['clientSecret']
-
 
     def update_owner(self, clientID, owner):
         """
@@ -214,8 +222,13 @@ class Client(object):
 
         Example
         -------
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.update_owner(userClientID, ownerName)
 
-            client.update_owner(self.clientID, 'testowner')
+            User with webUI permission will use this method to update owner of a client given specific clientID.
+            Scenario:
+                Developer in webUI team wants to change the owner of clientID 2123 from 'Bob' to 'Ken'
+                webUI_client.update_owner('2123', 'Ken')
 
         """
         url = Client.base_URL + 'apps/' + clientID
@@ -254,7 +267,13 @@ class Client(object):
         Example
         -------
 
-            client.update_permission(self.clientID, 'admin')
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.update_permission(userClientID, 'webUI')
+
+            User with webUI permission will use this method to update permission of a client given specific clientID.
+            Scenario:
+                Developer in webUI team wants to change the permission of clientID 2123 from 'user' to 'webUI'
+                webUI_client.update_permission('2123', 'webUI')
 
         """
         url = Client.base_URL + 'apps/' + clientID
@@ -291,8 +310,13 @@ class Client(object):
         Example
         -------
 
-            client.reset_secret(self.clientID)
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.reset_secret(userClientID)
 
+            User with webUI permission will use this method to reset secret key of a client given specific clientID.
+            Scenario:
+                Developer in webUI team wants to change the secret key of clientID 2123
+                webUI_client.reset_secret('2123'')
         """
         url = Client.base_URL + 'apps/' + clientID + '/secret'
         if self.token is None:
@@ -331,7 +355,13 @@ class Client(object):
         Example
         -------
 
-            client.client_ids_by_owner('testowner')
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.client_ids_by_owner(ownerName)
+
+            User with webUI permission will use this method to get a list of clientIDs that belongs to a user.
+            Scenario:
+                Developer in webUI team wants to register all clientIDs that belongs to user named 'Bob'
+                webUI_client.client_ids_by_owner('Bob')
 
         """
         url = Client.base_URL + 'apps/by-owner'
@@ -354,6 +384,8 @@ class Client(object):
 
     def usage_by_client(self, clientID, owner):
         """
+        A method to get number of API requests made by a given clientID
+
         Parameters
         ----------
         clientID : str
@@ -370,7 +402,13 @@ class Client(object):
         Example
         -------
 
-            client.usage_by_client(self.clientID, 'testowner')
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.usage_by_client(userClientID, ownerName)
+
+            User with webUI permission will use this method to get number of API requests made by clientID 2123
+            Scenario:
+                Developer in webUI team wants to get number of API requests made by clientID 2123 whose owner is 'Bob'
+                webUI_client.usage_by_client('2123', 'Bob')
 
         """
         url = Client.base_URL + "apps/" + clientID + "/usage"
@@ -584,6 +622,18 @@ class Client(object):
         -------
 
             client.camera_by_id('5ae0ecbc336359291be74c0b')
+
+        Example
+        -------
+
+            user_client = Client(clientID, clientSecret)
+            user_client.camera_by_id(cameraID)
+
+            Programmer with 'user' permission will use this method to get a camera object with specified cameraID
+            Scenario:
+                Normal user wants to get a camera object which has a id of '12938263'
+                user_client.camera_by_id('12938263')
+
 
         """
         if self.token is None:
@@ -824,7 +874,14 @@ class Client(object):
         Example
         -------
 
-            client.get_change_log('2018-08-27T15:53:00', '2018-08-27T16:53:00', 10)
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.get_change_log(start, end, offset)
+
+            Programmer with 'webUI' permission will use this method to get change_log for a specific time period
+            Scenario:
+                Developer in webUI team wants to get 10 activities between the below time frame
+                webUI_client.get_change_log('2018-08-27T15:53:00', '2018-08-27T16:53:00', 10)
+
 
         """
         url = Client.base_URL + 'apps/db-change'
