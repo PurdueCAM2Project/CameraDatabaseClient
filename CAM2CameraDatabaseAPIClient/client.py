@@ -180,7 +180,8 @@ class Client(object):
             # WebUI team developer created an client object
             webUI_client.register(ownerName, permissionLevel)
 
-            User with webUI permission will use this method to register a client with owner's name and permission level.
+            User with webUI permission will use this method to
+            register a client with owner's name and permission level.
             Scenario:
                 Developer in webUI team wants to register a client for normal user whose name is Bob
                 webUI_client = Client('1', '1')
@@ -225,9 +226,11 @@ class Client(object):
             webUI_client = Client(clientID, clientSecret)
             webUI_client.update_owner(userClientID, ownerName)
 
-            User with webUI permission will use this method to update owner of a client given specific clientID.
+            User with webUI permission will use this method to
+            update owner of a client given specific clientID.
             Scenario:
-                Developer in webUI team wants to change the owner of clientID 2123 from 'Bob' to 'Ken'
+                Developer in webUI team wants to change
+                the owner of clientID 2123 from 'Bob' to 'Ken'
                 webUI_client.update_owner('2123', 'Ken')
 
         """
@@ -270,9 +273,11 @@ class Client(object):
             webUI_client = Client(clientID, clientSecret)
             webUI_client.update_permission(userClientID, 'webUI')
 
-            User with webUI permission will use this method to update permission of a client given specific clientID.
+            User with webUI permission will use this method
+            to update permission of a client given specific clientID.
             Scenario:
-                Developer in webUI team wants to change the permission of clientID 2123 from 'user' to 'webUI'
+                Developer in webUI team wants to change
+                the permission of clientID 2123 from 'user' to 'webUI'
                 webUI_client.update_permission('2123', 'webUI')
 
         """
@@ -313,7 +318,8 @@ class Client(object):
             webUI_client = Client(clientID, clientSecret)
             webUI_client.reset_secret(userClientID)
 
-            User with webUI permission will use this method to reset secret key of a client given specific clientID.
+            User with webUI permission will use this method
+            to reset secret key of a client given specific clientID.
             Scenario:
                 Developer in webUI team wants to change the secret key of clientID 2123
                 webUI_client.reset_secret('2123'')
@@ -358,9 +364,11 @@ class Client(object):
             webUI_client = Client(clientID, clientSecret)
             webUI_client.client_ids_by_owner(ownerName)
 
-            User with webUI permission will use this method to get a list of clientIDs that belongs to a user.
+            User with webUI permission will use this method
+            to get a list of clientIDs that belongs to a user.
             Scenario:
-                Developer in webUI team wants to register all clientIDs that belongs to user named 'Bob'
+                Developer in webUI team wants to get
+                all clientIDs that belongs to user named 'Bob'
                 webUI_client.client_ids_by_owner('Bob')
 
         """
@@ -405,9 +413,11 @@ class Client(object):
             webUI_client = Client(clientID, clientSecret)
             webUI_client.usage_by_client(userClientID, ownerName)
 
-            User with webUI permission will use this method to get number of API requests made by clientID 2123
+            User with webUI permission will use this method
+            to get number of API requests made by clientID 2123
             Scenario:
-                Developer in webUI team wants to get number of API requests made by clientID 2123 whose owner is 'Bob'
+                Developer in webUI team wants to get number of API requests
+                made by clientID 2123 whose owner is 'Bob'
                 webUI_client.usage_by_client('2123', 'Bob')
 
         """
@@ -629,7 +639,8 @@ class Client(object):
             user_client = Client(clientID, clientSecret)
             user_client.camera_by_id(cameraID)
 
-            Programmer with 'user' permission will use this method to get a camera object with specified cameraID
+            Programmer with 'user' permission will use this method
+            to get a camera object with specified cameraID
             Scenario:
                 Normal user wants to get a camera object which has a id of '12938263'
                 user_client.camera_by_id('12938263')
@@ -877,7 +888,8 @@ class Client(object):
             webUI_client = Client(clientID, clientSecret)
             webUI_client.get_change_log(start, end, offset)
 
-            Programmer with 'webUI' permission will use this method to get change_log for a specific time period
+            Programmer with 'webUI' permission will use this method
+            to get change_log for a specific time period
             Scenario:
                 Developer in webUI team wants to get 10 activities between the below time frame
                 webUI_client.get_change_log('2018-08-27T15:53:00', '2018-08-27T16:53:00', 10)
