@@ -28,7 +28,7 @@ else
 fi
 
 # Install sphinx
-sudo pip install sphinx
+sudo pip install sphinx==1.7.5
 sudo pip install sphinx_rtd_theme
 # create new site
 mkdir CAM2CameraDatabaseAPIClient
