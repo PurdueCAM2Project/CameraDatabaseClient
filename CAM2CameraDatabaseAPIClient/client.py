@@ -637,7 +637,8 @@ class Client(object):
                 a_client = Client('id', 'pass')
                 a_client.search_camera(**kwargs)
 
-            - Another way to search for cameras with the same parameters can be done by the following code:
+            - Another way to search for cameras with the same parameters can be done by
+            the following code:
                  a_client = Client('id', 'pass')
                  a_client.search_camera(camera_type='ip', city='West Lafayette')
         Parameters
