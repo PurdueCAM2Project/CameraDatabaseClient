@@ -619,6 +619,41 @@ class Client(object):
                 raise InternalError()
         return Camera.process_json(**response.json())
 
+    def camera_by_legacy_id(self, legacy_cameraID):
+        """
+        A method to get a camera object by using camera's ID
+
+        Parameters
+        ----------
+        legacy_cameraID : str
+            legacy_cameraID of the camera in the database.
+
+        Returns
+        -------
+        :obj:`Camera`
+            A camera object.
+
+        """
+        if self.token is None:
+            self._request_token()
+        url = Client.base_URL + "cameras/legacy/" + legacy_cameraID
+        header = self.header_builder()
+        response = self._check_token(response=requests.get(url, headers=header),
+                                     flag='GET', url=url)
+
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            elif response.status_code == 403:
+                raise AuthorizationError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            else:
+                raise InternalError()
+        return Camera.process_json(**response.json())
+
     def search_camera(self, **kwargs):
 
         """A method to search camera by attributes and location.

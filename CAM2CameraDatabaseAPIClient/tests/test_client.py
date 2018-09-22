@@ -906,6 +906,129 @@ class GetCamIDTest(BaseClientTest):
             self.client.camera_by_id('12345')
         mock_get.assert_called_once_with(self.url, headers=self.header)
 
+class GetLegacyCamIDTest(BaseClientTest):
+
+    def setUp(self):
+        super(GetLegacyCamIDTest, self).setUp()
+        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.url = self.base_URL + 'cameras/legacy/12345'
+
+    @mock.patch('CAM2CameraDatabaseAPIClient.client.requests.get')
+    def test_camera_legacy_id_all_correct(self, mock_get):
+        self.client.token = 'correctToken'
+        mock_response = mock.Mock()
+        expected_dict = {
+            'camera_type': 'ip',
+            'ip': '210.1.1.2',
+            'latitude': '44.9087',
+            'longitude': '-129.09',
+            'port': '80'
+        }
+        mock_dict = {
+            "longitude": "-129.09",
+            "latitude": "44.9087",
+            'type': 'ip',
+            'retrieval': {
+                'ip': '210.1.1.2',
+                'port': '80'
+            }
+        }
+        mock_response.json.return_value = mock_dict
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+        self.assertEqual(self.client.camera_by_legacy_id('12345'), expected_dict)
+        mock_get.assert_called_once_with(self.url, headers=self.header)
+
+    @mock.patch('CAM2CameraDatabaseAPIClient.client.requests.get')
+    def test_camera_legacy_id_expired_token_success(self, mock_get):
+        self.client.token = 'ExpiredToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired."
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            "token": "correctToken"
+        }
+        mock_response3 = mock.Mock()
+        mock_response3.status_code = 200
+        expected_dict = {
+            'camera_type': 'ip',
+            'ip': '210.1.1.2',
+            'latitude': '44.9087',
+            'longitude': '-129.09',
+            'port': '80'
+        }
+        mock_dict = {
+            "longitude": "-129.09",
+            "latitude": "44.9087",
+            'type': 'ip',
+            'retrieval': {
+                'ip': '210.1.1.2',
+                'port': '80'
+            }
+        }
+        mock_response3.json.return_value = mock_dict
+        mock_get.side_effect = [mock_response, mock_response2, mock_response3]
+        self.assertEqual(self.client.camera_by_legacy_id('12345'), expected_dict)
+        self.assertEqual(3, mock_get.call_count)
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        call_list = [mock.call(self.url, headers=headers),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=None)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
+    @mock.patch('CAM2CameraDatabaseAPIClient.client.requests.get')
+    def test_camera_legacy_id_expired_token_failure(self, mock_get):
+        self.client.token = 'ExpiredToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 401
+        mock_response.json.return_value = {
+            "message": "Token expired."
+        }
+        mock_response2 = mock.Mock()
+        mock_response2.status_code = 200
+        mock_response2.json.return_value = {
+            "token": "correctToken"
+        }
+        mock_get.side_effect = [mock_response, mock_response2, mock_response,
+                                mock_response2, mock_response]
+        with self.assertRaises(AuthenticationError):
+            self.client.camera_by_legacy_id('12345')
+        headers = {'Authorization': 'Bearer ExpiredToken'}
+        call_list = [mock.call(self.url, headers=headers),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=None),
+                     mock.call(self.token_url, params=self.token_params),
+                     mock.call(self.url, headers=self.header, params=None)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
+    @mock.patch('CAM2CameraDatabaseAPIClient.client.requests.get')
+    def test_camera_legacy_id_format_error(self, mock_get):
+        self.client.token = 'correctToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 422
+        mock_response.json.return_value = {
+            'message': 'Format Error'
+        }
+        mock_get.return_value = mock_response
+        with self.assertRaises(FormatError):
+            self.client.camera_by_legacy_id('12345')
+        mock_get.assert_called_once_with(self.url, headers=self.header)
+
+    @mock.patch('CAM2CameraDatabaseAPIClient.client.requests.get')
+    def test_camera_legacy_id_internal_error(self, mock_get):
+        self.client.token = 'correctToken'
+        mock_response = mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+        with self.assertRaises(InternalError):
+            self.client.camera_by_legacy_id('12345')
+        mock_get.assert_called_once_with(self.url, headers=self.header)
+
 class SearchCamTest(BaseClientTest):
 
     def setUp(self):
