@@ -654,7 +654,7 @@ class Client(object):
                 raise InternalError()
         return Camera.process_json(**response.json())
 
-    def camera_by_list_id(self, cameraIDList, legacy_cameraIDList ):
+    def camera_by_list_id(self, cameraIDList, legacy_cameraIDList):
         """
         A method to get a list of camera object by using a list of camera's legacy ID or ID.
 
