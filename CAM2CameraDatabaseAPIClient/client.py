@@ -621,7 +621,7 @@ class Client(object):
 
     def camera_by_legacy_id(self, legacy_cameraID):
         """
-        A method to get a camera object by using camera's ID
+        A method to get a camera object by using camera's legacy ID
 
         Parameters
         ----------
@@ -653,6 +653,32 @@ class Client(object):
             else:
                 raise InternalError()
         return Camera.process_json(**response.json())
+
+    def camera_by_list_id(self, cameraIDList, legacy_cameraIDList ):
+        """
+        A method to get a list of camera object by using a list of camera's legacy ID or ID.
+
+        Parameters
+        ----------
+        legacy_cameraIDList : List
+            legacy_cameraIDs of the cameras in the database.
+
+        cameraIDList : List
+            cameraIDs of the cameras in the database.
+
+        Returns
+        -------
+        :obj:`list` of :obj:`Camera`
+            List of cameras that satisfy the search criteria.
+
+        """
+        camera_processed = []
+        for ID in cameraIDList:
+            camera_processed.append(self.camera_by_id(ID))
+        for legacyID in legacy_cameraIDList:
+            camera_processed.append(self.camera_by_legacy_id(legacyID))
+
+        return camera_processed
 
     def search_camera(self, **kwargs):
 

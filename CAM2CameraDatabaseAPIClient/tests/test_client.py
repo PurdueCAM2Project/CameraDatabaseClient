@@ -1029,6 +1029,60 @@ class GetLegacyCamIDTest(BaseClientTest):
             self.client.camera_by_legacy_id('12345')
         mock_get.assert_called_once_with(self.url, headers=self.header)
 
+class GetListCameraIDOrLegacyCameraIDTest(BaseClientTest):
+
+    def setUp(self):
+        super(GetListCameraIDOrLegacyCameraIDTest, self).setUp()
+        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.header = {'Authorization': 'Bearer correctToken'}
+        self.legacy_url = self.base_URL + 'cameras/legacy/12345'
+        self.url = self.base_URL + 'cameras/12345'
+
+    @mock.patch('CAM2CameraDatabaseAPIClient.client.requests.get')
+    def test_camera_by_list_id_all_correct(self, mock_get):
+        self.client.token = 'correctToken'
+        mock_response = mock.Mock()
+        expected_dict = [{'camera_type': 'ip',
+                          'ip': '210.1.1.2',
+                          'latitude': '44.9087',
+                          'longitude': '-129.09',
+                          'port': '80'},
+                         {'camera_type': 'ip',
+                          'ip': '210.1.1.3',
+                          'latitude': '44.9087',
+                          'longitude': '-129.09',
+                          'port': '80'}]
+        mock_dict = {
+            "longitude": "-129.09",
+            "latitude": "44.9087",
+            'type': 'ip',
+            'retrieval': {
+                'ip': '210.1.1.2',
+                'port': '80'
+            }
+        }
+        mock_response.json.return_value = mock_dict
+        mock_response.status_code = 200
+
+        mock_response1 = mock.Mock()
+        mock_dict1 = {
+            "longitude": "-129.09",
+            "latitude": "44.9087",
+            'type': 'ip',
+            'retrieval': {
+                'ip': '210.1.1.3',
+                'port': '80'
+            }
+        }
+        mock_response1.json.return_value = mock_dict1
+        mock_response1.status_code = 200
+        mock_get.side_effect = [mock_response, mock_response1]
+        self.assertEqual(self.client.camera_by_list_id(["12345"], ["12345"]), expected_dict)
+        self.assertEqual(2, mock_get.call_count)
+        call_list = [mock.call(self.url, headers=self.header),
+                     mock.call(self.legacy_url, headers=self.header)]
+        self.assertEqual(mock_get.call_args_list, call_list)
+
 class SearchCamTest(BaseClientTest):
 
     def setUp(self):
