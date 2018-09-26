@@ -654,16 +654,16 @@ class Client(object):
                 raise InternalError()
         return Camera.process_json(**response.json())
 
-    def camera_by_list_id(self, cameraIDList, legacy_cameraIDList):
+    def camera_by_list_id(self, cameraID_list=None, legacy_cameraID_list=None):
         """
         A method to get a list of camera object by using a list of camera's legacy ID or ID.
 
         Parameters
         ----------
-        legacy_cameraIDList : List
+        legacy_cameraID_list : List
             legacy_cameraIDs of the cameras in the database.
 
-        cameraIDList : List
+        cameraID_list : List
             cameraIDs of the cameras in the database.
 
         Returns
@@ -673,10 +673,10 @@ class Client(object):
 
         """
         camera_processed = []
-        for ID in cameraIDList:
+        for ID in cameraID_list:
             camera_processed.append(self.camera_by_id(ID))
-        for legacyID in legacy_cameraIDList:
-            camera_processed.append(self.camera_by_legacy_id(legacyID))
+        for legacy_ID in legacy_cameraID_list:
+            camera_processed.append(self.camera_by_legacy_id(legacy_ID))
 
         return camera_processed
 
