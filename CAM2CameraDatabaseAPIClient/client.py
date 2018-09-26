@@ -627,6 +627,20 @@ class Client(object):
         Each time, this function can return a maximum of 100 cameras. Getting more cameras can
         be achieved by calling this function multiple times with offest parameter.
 
+        Examples
+        --------
+            - Searching a camera of type 'IP' into the database with city as 'West Lafayette'
+            Create a keyword arguments dictionary which contains all the parameters
+            needed to search the camera:
+                kwargs = {'camera_type': 'ip', 'city': 'West Lafayette'}
+            Pass the keyword arguments dictionary to the search_camera function:
+                a_client = Client('id', 'pass')
+                a_client.search_camera(**kwargs)
+
+            - Another way to search for cameras with the same parameters can be done by
+            the following code:
+                 a_client = Client('id', 'pass')
+                 a_client.search_camera(camera_type='ip', city='West Lafayette')
         Parameters
         ----------
 
