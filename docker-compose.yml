@@ -4,9 +4,9 @@ services:
   tests:
     build: .
     container_name: tests
-    restart: "no"
+    restart: always
 
   pylint:
     build: .
     container_name: pylint
-    restart: "no"
+    restart: always
