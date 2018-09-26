@@ -771,6 +771,20 @@
 <span class="sd">        Each time, this function can return a maximum of 100 cameras. Getting more cameras can</span>
 <span class="sd">        be achieved by calling this function multiple times with offest parameter.</span>
 
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">            - Searching a camera of type &#39;IP&#39; into the database with city as &#39;West Lafayette&#39;</span>
+<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
+<span class="sd">            needed to search the camera:</span>
+<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;ip&#39;, &#39;city&#39;: &#39;West Lafayette&#39;}</span>
+<span class="sd">            Pass the keyword arguments dictionary to the search_camera function:</span>
+<span class="sd">                a_client = Client(&#39;id&#39;, &#39;pass&#39;)</span>
+<span class="sd">                a_client.search_camera(**kwargs)</span>
+
+<span class="sd">            - Another way to search for cameras with the same parameters can be done by</span>
+<span class="sd">            the following code:</span>
+<span class="sd">                 a_client = Client(&#39;id&#39;, &#39;pass&#39;)</span>
+<span class="sd">                 a_client.search_camera(camera_type=&#39;ip&#39;, city=&#39;West Lafayette&#39;)</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 

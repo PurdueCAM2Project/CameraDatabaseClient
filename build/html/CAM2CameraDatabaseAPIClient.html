@@ -767,6 +767,27 @@ Searching by location requires user to provide coordiantes for a desired center 
 and a radius in meters. The search will carry out in the area bounded by the circle.
 Each time, this function can return a maximum of 100 cameras. Getting more cameras can
 be achieved by calling this function multiple times with offest parameter.</p>
+<p class="rubric">Examples</p>
+<ul class="simple">
+<li>Searching a camera of type ‘IP’ into the database with city as ‘West Lafayette’</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to search the camera:</p>
+<blockquote>
+<div>kwargs = {‘camera_type’: ‘ip’, ‘city’: ‘West Lafayette’}</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the search_camera function:</dt>
+<dd>a_client = Client(‘id’, ‘pass’)
+a_client.search_camera(<a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Another way to search for cameras with the same parameters can be done by</li>
+</ul>
+<dl class="docutils">
+<dt>the following code:</dt>
+<dd>a_client = Client(‘id’, ‘pass’)
+a_client.search_camera(camera_type=’ip’, city=’West Lafayette’)</dd>
+</dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
