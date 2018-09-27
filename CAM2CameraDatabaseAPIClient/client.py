@@ -153,7 +153,8 @@ class Client(object):
     # Functions for webUI
 
     def register(self, owner, permissionLevel='user'):
-        """Client initialization method.
+        """
+        Create a client to use CamraDatabaseAPI
 
         Parameters
         ----------
@@ -170,6 +171,21 @@ class Client(object):
             Client id of the newly registered client application.
         str
             Client secret of the newly registered client application.
+
+
+        Example
+        -------
+
+            webUI_client = Client(clientID, clientSecret)
+            # WebUI team developer created an client object
+            webUI_client.register(ownerName, permissionLevel)
+
+            User with webUI permission will use this method to
+            register a client with owner's name and permission level.
+            Scenario:
+                Developer in webUI team wants to register a client for normal user whose name is Bob
+                webUI_client = Client('1', '1')
+                webUI_client.register('Bob', 'user')
 
         """
         url = Client.base_URL + 'apps/register'
@@ -190,6 +206,8 @@ class Client(object):
 
     def update_owner(self, clientID, owner):
         """
+        Update owner's username for the given clientID
+
         Parameters
         ----------
         clientID : str
@@ -202,6 +220,18 @@ class Client(object):
         -------
         str
             Success message.
+
+        Example
+        -------
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.update_owner(userClientID, ownerName)
+
+            User with webUI permission will use this method to
+            update owner of a client given specific clientID.
+            Scenario:
+                Developer in webUI team wants to change
+                the owner of clientID 2123 from 'Bob' to 'Ken'
+                webUI_client.update_owner('2123', 'Ken')
 
         """
         url = Client.base_URL + 'apps/' + clientID
@@ -222,6 +252,8 @@ class Client(object):
 
     def update_permission(self, clientID, permissionLevel):
         """
+        Update owner's permissionLevel for the given clientID
+
         Parameters
         ----------
         clientID : str
@@ -234,6 +266,19 @@ class Client(object):
         -------
         str
             Success message.
+
+        Example
+        -------
+
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.update_permission(userClientID, 'webUI')
+
+            User with webUI permission will use this method
+            to update permission of a client given specific clientID.
+            Scenario:
+                Developer in webUI team wants to change
+                the permission of clientID 2123 from 'user' to 'webUI'
+                webUI_client.update_permission('2123', 'webUI')
 
         """
         url = Client.base_URL + 'apps/' + clientID
@@ -254,6 +299,8 @@ class Client(object):
 
     def reset_secret(self, clientID):
         """
+        A method to reset client secret
+
         Parameters
         ----------
 
@@ -265,6 +312,17 @@ class Client(object):
         str
             New clientSecret
 
+        Example
+        -------
+
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.reset_secret(userClientID)
+
+            User with webUI permission will use this method
+            to reset secret key of a client given specific clientID.
+            Scenario:
+                Developer in webUI team wants to change the secret key of clientID 2123
+                webUI_client.reset_secret('2123'')
         """
         url = Client.base_URL + 'apps/' + clientID + '/secret'
         if self.token is None:
@@ -288,6 +346,8 @@ class Client(object):
 
     def client_ids_by_owner(self, owner):
         """
+        A method to get all client ids for a specific owner
+
         Parameters
         ----------
         owner : str
@@ -297,6 +357,19 @@ class Client(object):
         -------
         list of str
             A list of client's ID owned by the user.
+
+        Example
+        -------
+
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.client_ids_by_owner(ownerName)
+
+            User with webUI permission will use this method
+            to get a list of clientIDs that belongs to a user.
+            Scenario:
+                Developer in webUI team wants to get
+                all clientIDs that belongs to user named 'Bob'
+                webUI_client.client_ids_by_owner('Bob')
 
         """
         url = Client.base_URL + 'apps/by-owner'
@@ -319,6 +392,8 @@ class Client(object):
 
     def usage_by_client(self, clientID, owner):
         """
+        A method to get number of API requests made by a given clientID
+
         Parameters
         ----------
         clientID : str
@@ -331,6 +406,19 @@ class Client(object):
         -------
         int
             The number of requests made by the client.
+
+        Example
+        -------
+
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.usage_by_client(userClientID, ownerName)
+
+            User with webUI permission will use this method
+            to get number of API requests made by clientID 2123
+            Scenario:
+                Developer in webUI team wants to get number of API requests
+                made by clientID 2123 whose owner is 'Bob'
+                webUI_client.usage_by_client('2123', 'Bob')
 
         """
         url = Client.base_URL + "apps/" + clientID + "/usage"
@@ -598,6 +686,24 @@ class Client(object):
         :obj:`Camera`
             A camera object.
 
+        Example
+        -------
+
+            client.camera_by_id('5ae0ecbc336359291be74c0b')
+
+        Example
+        -------
+
+            user_client = Client(clientID, clientSecret)
+            user_client.camera_by_id(cameraID)
+
+            Programmer with 'user' permission will use this method
+            to get a camera object with specified cameraID
+            Scenario:
+                Normal user wants to get a camera object which has a id of '12938263'
+                user_client.camera_by_id('12938263')
+
+
         """
         if self.token is None:
             self._request_token()
@@ -823,6 +929,8 @@ class Client(object):
 
     def get_change_log(self, start=None, end=None, offset=None):
         """
+        A method to get change_log for a specific time period
+
         Parameters
         ----------
         start : str, optional
@@ -845,6 +953,19 @@ class Client(object):
             If there is an API internal error.
         FormatError
             If type of argument value is not expected for the given field.
+
+        Example
+        -------
+
+            webUI_client = Client(clientID, clientSecret)
+            webUI_client.get_change_log(start, end, offset)
+
+            Programmer with 'webUI' permission will use this method
+            to get change_log for a specific time period
+            Scenario:
+                Developer in webUI team wants to get 10 activities between the below time frame
+                webUI_client.get_change_log('2018-08-27T15:53:00', '2018-08-27T16:53:00', 10)
+
 
         """
         url = Client.base_URL + 'apps/db-change'
