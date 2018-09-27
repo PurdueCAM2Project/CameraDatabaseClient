@@ -297,7 +297,8 @@
     <span class="c1"># Functions for webUI</span>
 
 <div class="viewcode-block" id="Client.register"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">permissionLevel</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Client initialization method.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a client to use CamraDatabaseAPI</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -314,6 +315,21 @@
 <span class="sd">            Client id of the newly registered client application.</span>
 <span class="sd">        str</span>
 <span class="sd">            Client secret of the newly registered client application.</span>
+
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">            webUI_client = Client(clientID, clientSecret)</span>
+<span class="sd">            # WebUI team developer created an client object</span>
+<span class="sd">            webUI_client.register(ownerName, permissionLevel)</span>
+
+<span class="sd">            User with webUI permission will use this method to</span>
+<span class="sd">            register a client with owner&#39;s name and permission level.</span>
+<span class="sd">            Scenario:</span>
+<span class="sd">                Developer in webUI team wants to register a client for normal user whose name is Bob</span>
+<span class="sd">                webUI_client = Client(&#39;1&#39;, &#39;1&#39;)</span>
+<span class="sd">                webUI_client.register(&#39;Bob&#39;, &#39;user&#39;)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/register&#39;</span>
@@ -334,6 +350,8 @@
 
 <div class="viewcode-block" id="Client.update_owner"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.update_owner">[docs]</a>    <span class="k">def</span> <span class="nf">update_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update owner&#39;s username for the given clientID</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        clientID : str</span>
@@ -346,6 +364,18 @@
 <span class="sd">        -------</span>
 <span class="sd">        str</span>
 <span class="sd">            Success message.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">            webUI_client = Client(clientID, clientSecret)</span>
+<span class="sd">            webUI_client.update_owner(userClientID, ownerName)</span>
+
+<span class="sd">            User with webUI permission will use this method to</span>
+<span class="sd">            update owner of a client given specific clientID.</span>
+<span class="sd">            Scenario:</span>
+<span class="sd">                Developer in webUI team wants to change</span>
+<span class="sd">                the owner of clientID 2123 from &#39;Bob&#39; to &#39;Ken&#39;</span>
+<span class="sd">                webUI_client.update_owner(&#39;2123&#39;, &#39;Ken&#39;)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/&#39;</span> <span class="o">+</span> <span class="n">clientID</span>
@@ -366,6 +396,8 @@
 
 <div class="viewcode-block" id="Client.update_permission"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.update_permission">[docs]</a>    <span class="k">def</span> <span class="nf">update_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">permissionLevel</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update owner&#39;s permissionLevel for the given clientID</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        clientID : str</span>
@@ -378,6 +410,19 @@
 <span class="sd">        -------</span>
 <span class="sd">        str</span>
 <span class="sd">            Success message.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">            webUI_client = Client(clientID, clientSecret)</span>
+<span class="sd">            webUI_client.update_permission(userClientID, &#39;webUI&#39;)</span>
+
+<span class="sd">            User with webUI permission will use this method</span>
+<span class="sd">            to update permission of a client given specific clientID.</span>
+<span class="sd">            Scenario:</span>
+<span class="sd">                Developer in webUI team wants to change</span>
+<span class="sd">                the permission of clientID 2123 from &#39;user&#39; to &#39;webUI&#39;</span>
+<span class="sd">                webUI_client.update_permission(&#39;2123&#39;, &#39;webUI&#39;)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/&#39;</span> <span class="o">+</span> <span class="n">clientID</span>
@@ -398,6 +443,8 @@
 
 <div class="viewcode-block" id="Client.reset_secret"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.reset_secret">[docs]</a>    <span class="k">def</span> <span class="nf">reset_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A method to reset client secret</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
@@ -409,6 +456,17 @@
 <span class="sd">        str</span>
 <span class="sd">            New clientSecret</span>
 
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">            webUI_client = Client(clientID, clientSecret)</span>
+<span class="sd">            webUI_client.reset_secret(userClientID)</span>
+
+<span class="sd">            User with webUI permission will use this method</span>
+<span class="sd">            to reset secret key of a client given specific clientID.</span>
+<span class="sd">            Scenario:</span>
+<span class="sd">                Developer in webUI team wants to change the secret key of clientID 2123</span>
+<span class="sd">                webUI_client.reset_secret(&#39;2123&#39;&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/&#39;</span> <span class="o">+</span> <span class="n">clientID</span> <span class="o">+</span> <span class="s1">&#39;/secret&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -432,6 +490,8 @@
 
 <div class="viewcode-block" id="Client.client_ids_by_owner"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.client_ids_by_owner">[docs]</a>    <span class="k">def</span> <span class="nf">client_ids_by_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A method to get all client ids for a specific owner</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        owner : str</span>
@@ -441,6 +501,19 @@
 <span class="sd">        -------</span>
 <span class="sd">        list of str</span>
 <span class="sd">            A list of client&#39;s ID owned by the user.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">            webUI_client = Client(clientID, clientSecret)</span>
+<span class="sd">            webUI_client.client_ids_by_owner(ownerName)</span>
+
+<span class="sd">            User with webUI permission will use this method</span>
+<span class="sd">            to get a list of clientIDs that belongs to a user.</span>
+<span class="sd">            Scenario:</span>
+<span class="sd">                Developer in webUI team wants to get</span>
+<span class="sd">                all clientIDs that belongs to user named &#39;Bob&#39;</span>
+<span class="sd">                webUI_client.client_ids_by_owner(&#39;Bob&#39;)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/by-owner&#39;</span>
@@ -463,6 +536,8 @@
 
 <div class="viewcode-block" id="Client.usage_by_client"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.usage_by_client">[docs]</a>    <span class="k">def</span> <span class="nf">usage_by_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A method to get number of API requests made by a given clientID</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        clientID : str</span>
@@ -475,6 +550,19 @@
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
 <span class="sd">            The number of requests made by the client.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">            webUI_client = Client(clientID, clientSecret)</span>
+<span class="sd">            webUI_client.usage_by_client(userClientID, ownerName)</span>
+
+<span class="sd">            User with webUI permission will use this method</span>
+<span class="sd">            to get number of API requests made by clientID 2123</span>
+<span class="sd">            Scenario:</span>
+<span class="sd">                Developer in webUI team wants to get number of API requests</span>
+<span class="sd">                made by clientID 2123 whose owner is &#39;Bob&#39;</span>
+<span class="sd">                webUI_client.usage_by_client(&#39;2123&#39;, &#39;Bob&#39;)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s2">&quot;apps/&quot;</span> <span class="o">+</span> <span class="n">clientID</span> <span class="o">+</span> <span class="s2">&quot;/usage&quot;</span>
@@ -742,6 +830,24 @@
 <span class="sd">        :obj:`Camera`</span>
 <span class="sd">            A camera object.</span>
 
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">            client.camera_by_id(&#39;5ae0ecbc336359291be74c0b&#39;)</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">            user_client = Client(clientID, clientSecret)</span>
+<span class="sd">            user_client.camera_by_id(cameraID)</span>
+
+<span class="sd">            Programmer with &#39;user&#39; permission will use this method</span>
+<span class="sd">            to get a camera object with specified cameraID</span>
+<span class="sd">            Scenario:</span>
+<span class="sd">                Normal user wants to get a camera object which has a id of &#39;12938263&#39;</span>
+<span class="sd">                user_client.camera_by_id(&#39;12938263&#39;)</span>
+
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_request_token</span><span class="p">()</span>
@@ -967,6 +1073,8 @@
 
 <div class="viewcode-block" id="Client.get_change_log"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.client.Client.get_change_log">[docs]</a>    <span class="k">def</span> <span class="nf">get_change_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A method to get change_log for a specific time period</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        start : str, optional</span>
@@ -989,6 +1097,19 @@
 <span class="sd">            If there is an API internal error.</span>
 <span class="sd">        FormatError</span>
 <span class="sd">            If type of argument value is not expected for the given field.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">            webUI_client = Client(clientID, clientSecret)</span>
+<span class="sd">            webUI_client.get_change_log(start, end, offset)</span>
+
+<span class="sd">            Programmer with &#39;webUI&#39; permission will use this method</span>
+<span class="sd">            to get change_log for a specific time period</span>
+<span class="sd">            Scenario:</span>
+<span class="sd">                Developer in webUI team wants to get 10 activities between the below time frame</span>
+<span class="sd">                webUI_client.get_change_log(&#39;2018-08-27T15:53:00&#39;, &#39;2018-08-27T16:53:00&#39;, 10)</span>
+
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">base_URL</span> <span class="o">+</span> <span class="s1">&#39;apps/db-change&#39;</span>
