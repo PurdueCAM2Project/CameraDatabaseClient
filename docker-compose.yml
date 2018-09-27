@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  tests:
+    build: .
+    container_name: tests
+    restart: always
+
+  pylint:
+    build: .
+    container_name: pylint
+    restart: always
