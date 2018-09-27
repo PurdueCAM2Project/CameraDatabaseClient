@@ -1077,8 +1077,7 @@ class GetCameraByListIDTest(BaseClientTest):
         mock_response1.json.return_value = mock_dict1
         mock_response1.status_code = 200
         mock_get.side_effect = [mock_response, mock_response1]
-        self.assertEqual(self.client.camera_by_list_id(cameraID_list=["12345"],
-                                           legacy_cameraID_list=["12345"]), expected_dict)
+        self.assertEqual(self.client.camera_by_list_id(["12345"],["12345"]), expected_dict)
         self.assertEqual(2, mock_get.call_count)
         call_list = [mock.call(self.url, headers=self.header),
                      mock.call(self.legacy_url, headers=self.header)]
