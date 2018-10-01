@@ -82,11 +82,9 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#client-module">Client Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#searching-by-camera">Searching by Camera</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-CAM2CameraDatabaseAPIClient.camera">Camera Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-CAM2CameraDatabaseAPIClient.client">Client Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-CAM2CameraDatabaseAPIClient.error">Error Module</a></li>
 </ul>
 </li>
 </ul>
@@ -155,119 +153,6 @@
             
   <div class="section" id="documentation">
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">camera_by_id</span></code>(cameraID)</td>
-<td>A method to get a camera object by using camera’s ID</td>
-</tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_cam_exist</span></code>(camera_type,&nbsp;**kwargs)</td>
-<td>A method to get one or more camera object that has the given retrieval method in the database.</td>
-</tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">client_ids_by_owner</span></code>(owner)</td>
-<td>A method to get all client ids for a specific owner</td>
-</tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_change_log</span></code>([start,&nbsp;end,&nbsp;offset])</td>
-<td>A method to get change_log for a specific time period</td>
-</tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">header_builder</span></code>()</td>
-<td></td>
-</tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code>(owner[,&nbsp;permissionLevel])</td>
-<td>Create a client to use CamraDatabaseAPI</td>
-</tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_secret</span></code>(clientID)</td>
-<td>A method to reset client secret</td>
-</tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">search_camera</span></code>(**kwargs)</td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_owner</span></code>(clientID,&nbsp;owner)</td>
-<td>Update owner’s username for the given clientID</td>
-</tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_permission</span></code>(clientID,&nbsp;permissionLevel)</td>
-<td>Update owner’s permissionLevel for the given clientID</td>
-</tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">usage_by_client</span></code>(clientID,&nbsp;owner)</td>
-<td>A method to get number of API requests made by a given clientID</td>
-</tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_camera</span></code>(**kwargs)</td>
-<td>add or update camera in the database.</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-</tbody>
-</table>
-<div class="section" id="client-module">
-<h2>Client Module<a class="headerlink" href="#client-module" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="CAM2CameraDatabaseAPIClient.client.Client">
-<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>clientID</em>, <em>clientSecret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class representing a CAM2 client application.</p>
-<p>[More detailed description of what client object do.]</p>
-<dl class="attribute">
-<dt id="CAM2CameraDatabaseAPIClient.client.Client.clientID">
-<code class="descname">clientID</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.clientID" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – Id of the client application.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="CAM2CameraDatabaseAPIClient.client.Client.clientSecret">
-<code class="descname">clientSecret</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.clientSecret" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – Secret of the client application.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="CAM2CameraDatabaseAPIClient.client.Client.token">
-<code class="descname">token</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.token" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – Token for the client to access the CAM2 database.
-Each token expires in 5 minutes.</p>
-<p>[User does not need to provide this attribute]</p>
-</dd></dl>
-
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">In order to access the package, register a new application by contacting the CAM2 team
-at <a class="reference external" href="https://www.cam2project.net/">https://www.cam2project.net/</a>.</p>
-</div>
-<p>Client initialization method.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>clientID</strong> (<em>str</em>) – Id of the client application.</li>
-<li><strong>clientSecret</strong> (<em>str</em>) – Secret of the client application.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidClientIdError</span></code> – If the clientID is not in the correct format.
-ClientID should have a fixed length of 96 characters.</li>
-<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidClientSecretError</span></code> – If the client secret is not in the correct format.
-Client secret should have a length of at least 71 characters.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div class="section" id="searching-by-camera">
-<h3>Searching by Camera<a class="headerlink" href="#searching-by-camera" title="Permalink to this headline">¶</a></h3>
-</div>
-</div>
 <div class="section" id="module-CAM2CameraDatabaseAPIClient.camera">
 <span id="camera-module"></span><h2>Camera Module<a class="headerlink" href="#module-CAM2CameraDatabaseAPIClient.camera" title="Permalink to this headline">¶</a></h2>
 <p>Represents a camera.</p>
@@ -458,6 +343,764 @@ This is a subclass of Camera.</p>
 <dd><p><em>str</em></p>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-CAM2CameraDatabaseAPIClient.client">
+<span id="client-module"></span><h2>Client Module<a class="headerlink" href="#module-CAM2CameraDatabaseAPIClient.client" title="Permalink to this headline">¶</a></h2>
+<p>Represents a CAM2 client application.</p>
+<dl class="class">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client">
+<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>clientID</em>, <em>clientSecret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a CAM2 client application.</p>
+<p>[More detailed description of what client object do.]</p>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.clientID">
+<code class="descname">clientID</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.clientID" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Id of the client application.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.clientSecret">
+<code class="descname">clientSecret</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.clientSecret" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Secret of the client application.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.token">
+<code class="descname">token</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.token" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Token for the client to access the CAM2 database.
+Each token expires in 5 minutes.</p>
+<p>[User does not need to provide this attribute]</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In order to access the package, register a new application by contacting the CAM2 team
+at <a class="reference external" href="https://www.cam2project.net/">https://www.cam2project.net/</a>.</p>
+</div>
+<p>Client initialization method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>clientID</strong> (<em>str</em>) – Id of the client application.</li>
+<li><strong>clientSecret</strong> (<em>str</em>) – Secret of the client application.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidClientIdError</span></code> – If the clientID is not in the correct format.
+ClientID should have a fixed length of 96 characters.</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidClientSecretError</span></code> – If the client secret is not in the correct format.
+Client secret should have a length of at least 71 characters.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.base_URL">
+<code class="descname">base_URL</code><em class="property"> = 'https://cam2-api.herokuapp.com/'</em><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.base_URL" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Static variable to store the base URL.</p>
+<p>This is the URL of CAM2 Database API. User is able to send API calls directly to this URL.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>owner</em>, <em>permissionLevel='user'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a client to use CamraDatabaseAPI</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>owner</strong> (<em>str</em>) – Username of the owner of the client application.</li>
+<li><strong>permissionLevel</strong> (<em>str</em><em>, </em><em>optional</em>) – Permission level of the owner of the client application.
+Default permission level is ‘user’.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>str</em> – Client id of the newly registered client application.</li>
+<li><em>str</em> – Client secret of the newly registered client application.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>webUI_client = Client(clientID, clientSecret)
+# WebUI team developer created an client object
+webUI_client.register(ownerName, permissionLevel)</p>
+<p>User with webUI permission will use this method to
+register a client with owner’s name and permission level.
+Scenario:</p>
+<blockquote>
+<div>Developer in webUI team wants to register a client for normal user whose name is Bob
+webUI_client = Client(‘1’, ‘1’)
+webUI_client.register(‘Bob’, ‘user’)</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.update_owner">
+<code class="descname">update_owner</code><span class="sig-paren">(</span><em>clientID</em>, <em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.update_owner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.update_owner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update owner’s username for the given clientID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>clientID</strong> (<em>str</em>) – Client Id of the application.</li>
+<li><strong>owner</strong> (<em>str</em><em>, </em><em>optional</em>) – (Optional) Username of owner.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Success message.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>webUI_client = Client(clientID, clientSecret)
+webUI_client.update_owner(userClientID, ownerName)</p>
+<p>User with webUI permission will use this method to
+update owner of a client given specific clientID.
+Scenario:</p>
+<blockquote>
+<div>Developer in webUI team wants to change
+the owner of clientID 2123 from ‘Bob’ to ‘Ken’
+webUI_client.update_owner(‘2123’, ‘Ken’)</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.update_permission">
+<code class="descname">update_permission</code><span class="sig-paren">(</span><em>clientID</em>, <em>permissionLevel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.update_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.update_permission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update owner’s permissionLevel for the given clientID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>clientID</strong> (<em>str</em>) – Client Id of the application.</li>
+<li><strong>permissionLevel</strong> (<em>str</em><em>, </em><em>optional</em>) – Permission level of client.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Success message.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>webUI_client = Client(clientID, clientSecret)
+webUI_client.update_permission(userClientID, ‘webUI’)</p>
+<p>User with webUI permission will use this method
+to update permission of a client given specific clientID.
+Scenario:</p>
+<blockquote>
+<div>Developer in webUI team wants to change
+the permission of clientID 2123 from ‘user’ to ‘webUI’
+webUI_client.update_permission(‘2123’, ‘webUI’)</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.reset_secret">
+<code class="descname">reset_secret</code><span class="sig-paren">(</span><em>clientID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.reset_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.reset_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to reset client secret</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>clientID</strong> (<em>str</em>) – Client Id of the application.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">New clientSecret</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>webUI_client = Client(clientID, clientSecret)
+webUI_client.reset_secret(userClientID)</p>
+<p>User with webUI permission will use this method
+to reset secret key of a client given specific clientID.
+Scenario:</p>
+<blockquote>
+<div>Developer in webUI team wants to change the secret key of clientID 2123
+webUI_client.reset_secret(‘2123’‘)</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.client_ids_by_owner">
+<code class="descname">client_ids_by_owner</code><span class="sig-paren">(</span><em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.client_ids_by_owner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.client_ids_by_owner" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to get all client ids for a specific owner</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>owner</strong> (<em>str</em>) – Username of the owner of the client application.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of client’s ID owned by the user.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>webUI_client = Client(clientID, clientSecret)
+webUI_client.client_ids_by_owner(ownerName)</p>
+<p>User with webUI permission will use this method
+to get a list of clientIDs that belongs to a user.
+Scenario:</p>
+<blockquote>
+<div>Developer in webUI team wants to get
+all clientIDs that belongs to user named ‘Bob’
+webUI_client.client_ids_by_owner(‘Bob’)</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.usage_by_client">
+<code class="descname">usage_by_client</code><span class="sig-paren">(</span><em>clientID</em>, <em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.usage_by_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.usage_by_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to get number of API requests made by a given clientID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>clientID</strong> (<em>str</em>) – Client’s ID of the application.</li>
+<li><strong>owner</strong> (<em>str</em>) – Username of the owner of the client application.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The number of requests made by the client.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>webUI_client = Client(clientID, clientSecret)
+webUI_client.usage_by_client(userClientID, ownerName)</p>
+<p>User with webUI permission will use this method
+to get number of API requests made by clientID 2123
+Scenario:</p>
+<blockquote>
+<div>Developer in webUI team wants to get number of API requests
+made by clientID 2123 whose owner is ‘Bob’
+webUI_client.usage_by_client(‘2123’, ‘Bob’)</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.write_camera">
+<code class="descname">write_camera</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.write_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.write_camera" title="Permalink to this definition">¶</a></dt>
+<dd><p>add or update camera in the database.</p>
+<p class="rubric">Examples</p>
+<ul class="simple">
+<li>Adding a camera of type ‘IP’ into the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to create the camera:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘ip’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: ‘127.0.0.1’, ‘snapshot_url’: None,
+‘m3u8_url’: None, ‘cameraID’: None, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Updating a camera of type ‘IP’ in the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to update the camera (Must provide cameraID):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘ip’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: ‘127.0.0.2’, ‘snapshot_url’: None,
+‘m3u8_url’: None, ‘cameraID’: 5ae0ecbd336359291be74c12, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Adding a camera of type ‘NON_IP’ into the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to create the camera:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘non_ip’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: test_url,
+‘m3u8_url’: None, ‘cameraID’: None, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Updating a camera of type ‘NON_IP’ in the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to update the camera (Must provide cameraID):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘non_ip’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: updated_test_url,
+‘m3u8_url’: None, ‘cameraID’: 5ae0ecbd336359291be74c12, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Adding a camera of type ‘STREAM’ into the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to create the camera:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘stream’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: None,
+‘m3u8_url’: test_url, ‘cameraID’: None, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Updating a camera of type ‘STREAM’ in the database:</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to update the camera (Must provide cameraID):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>kwargs = {‘camera_type’: ‘stream’, ‘is_active_image’: True,</dt>
+<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: None,
+‘m3u8_url’: updated_test_url, ‘cameraID’: 5ae0ecbd336359291be74c12, …}</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
+<dd>write_camera(<a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs)</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>camera_type</strong> (<em>str</em>) – Type of camera.
+Allowed values: ‘ip’, ‘non_ip’, ‘stream’.
+|  This parameter is required for adding camera.</li>
+<li><strong>is_active_image</strong> (<em>bool</em>) – Whether the camera is active and can get images.
+This field can identify true/false case-insensitively and 0/1.
+|  This parameter is required for adding camera.</li>
+<li><strong>is_active_video</strong> (<em>bool</em>) – Whether the camera is active and can get video.
+This field can identify true/false case-insensitively and 0/1.
+|  This parameter is required for adding camera.</li>
+<li><strong>ip</strong> (<em>str</em>) – (IP camera only) IP address of the camera.
+|  This parameter is required for adding an IP camera.</li>
+<li><strong>snapshot_url</strong> (<em>str</em>) – (non-IP camera only) Url to retrieve snapshots from the camera.
+|  This parameter is required for adding a non-IP camera.</li>
+<li><strong>m3u8_url</strong> (<em>str</em>) – (Stream camera only) Url to retrieve stream from the camera.
+|  This parameter is required for adding a stream camera.</li>
+<li><strong>cameraID</strong> (<em>str</em>) – CameraID of the camera to be updated.
+|  This parameter is required for updating camera.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Including a cameraID in your write_camera request will update and overwrite the
+corresponding camera information in the database.
+Please ensure that the updated information is correct.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Other Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>legacy_cameraID</strong> (<em>int, optional</em>) – Original ID of the camera in SQL database.</li>
+<li><strong>frame_rate</strong> (<em>int, optional</em>) – Frame-rate of the camera.</li>
+<li><strong>source</strong> (<em>str, optional</em>) – Source of camera.</li>
+<li><strong>latitude</strong> (<em>int or float, optional</em>) – Latitude of the camera location.</li>
+<li><strong>longitude</strong> (<em>int or float, optional</em>) – Longitude of the camera location.</li>
+<li><strong>country</strong> (<em>str, optional</em>) – Country which the camera locates at.</li>
+<li><strong>state</strong> (<em>str, optional</em>) – State which the camera locates at.</li>
+<li><strong>city</strong> (<em>str, optional</em>) – City which the camera locates at.</li>
+<li><strong>resolution_width</strong> (<em>int, optional</em>) – Resolution width of the camera.</li>
+<li><strong>resolution_height</strong> (<em>int, optional</em>) – Resolution height of the camera.</li>
+<li><strong>utc_offset</strong> (<em>int, optional</em>) – Time difference between UTC and the camera location.</li>
+<li><strong>timezone_id</strong> (<em>str, optional</em>) – Time zone ID of the camera location.</li>
+<li><strong>timezone_name</strong> (<em>str, optional</em>) – Time zone name of the camera location.</li>
+<li><strong>reference_logo</strong> (<em>str, optional</em>) – Reference logo of the camera.</li>
+<li><strong>reference_url</strong> (<em>str, optional</em>) – Reference url of the camera.</li>
+<li><strong>port</strong> (<em>str or int, optional</em>) – (ip_camera only) Port to connect to camera.</li>
+<li><strong>brand</strong> (<em>str, optional</em>) – (ip_camera only) Brand of the camera.</li>
+<li><strong>model</strong> (<em>str, optional</em>) – (ip_camera only) Model of the camera.</li>
+<li><strong>image_path</strong> (<em>str, optional</em>) – (ip_camera only) Path to retrieve images from the camera.</li>
+<li><strong>video_path</strong> (<em>str, optional</em>) – (ip_camera only) Path to retrieve video from the camera.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AuthenticationError</span></code> – If the client secret of this client object does not match the clientID.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">FormatError</span></code> – Informartion of invalid parameter or unexpected paramters.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ResourceConflictError</span></code> – The legacy_cameraID already exist in the database.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InternalError</span></code> – If there is an API internal error.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ResourceNotFoundError</span></code> – If no camera exists with the cameraID specified in the parameter.</p>
+<p>Or If the client id of this client object does not match any client
+in the database.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The camera ID for the successfully added or updated camera.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>When adding or updating a camera you must supply the corresponding required parameters
+and may also include any number of the optional parameters defined below in
+‘Other Parameters’.</p>
+<p>When Adding a new camera:
+Do not include any cameraID when adding new cameras to the database.
+When the camera is added to the database, a new cameraID will be assigned and returned
+to the user.</p>
+<p class="last">When updating an existing camera in the database you must include the corresponding
+cameraID and any fields you wish to update.
+If in any occasion you need to change an existing camera to a different type,
+you must include the corresponding retrieval method data.
+(i.e. To change an IP camera to non-ip camera, you must include values of snapshot_url
+and camera_type) Updating field in retrieval method requires you to also specify the
+type of camera. (i.e. To change the image_path of an IP camera, you should specify the
+camera_type and image_path)</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.camera_by_id">
+<code class="descname">camera_by_id</code><span class="sig-paren">(</span><em>cameraID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.camera_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.camera_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to get a camera object by using camera’s ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cameraID</strong> (<em>str</em>) – Id of the camera in the database.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A camera object.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Camera</span></code></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>client.camera_by_id(‘5ae0ecbc336359291be74c0b’)</p>
+<p class="rubric">Example</p>
+<p>user_client = Client(clientID, clientSecret)
+user_client.camera_by_id(cameraID)</p>
+<p>Programmer with ‘user’ permission will use this method
+to get a camera object with specified cameraID
+Scenario:</p>
+<blockquote>
+<div>Normal user wants to get a camera object which has a id of ‘12938263’
+user_client.camera_by_id(‘12938263’)</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.search_camera">
+<code class="descname">search_camera</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.search_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.search_camera" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to search camera by attributes and location.
+Searching by location requires user to provide coordiantes for a desired center point
+and a radius in meters. The search will carry out in the area bounded by the circle.
+Each time, this function can return a maximum of 100 cameras. Getting more cameras can
+be achieved by calling this function multiple times with offest parameter.</p>
+<p class="rubric">Examples</p>
+<ul class="simple">
+<li>Searching a camera of type ‘IP’ into the database with city as ‘West Lafayette’</li>
+</ul>
+<p>Create a keyword arguments dictionary which contains all the parameters
+needed to search the camera:</p>
+<blockquote>
+<div>kwargs = {‘camera_type’: ‘ip’, ‘city’: ‘West Lafayette’}</div></blockquote>
+<dl class="docutils">
+<dt>Pass the keyword arguments dictionary to the search_camera function:</dt>
+<dd>a_client = Client(‘id’, ‘pass’)
+a_client.search_camera(<a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs)</dd>
+</dl>
+<ul class="simple">
+<li>Another way to search for cameras with the same parameters can be done by</li>
+</ul>
+<dl class="docutils">
+<dt>the following code:</dt>
+<dd>a_client = Client(‘id’, ‘pass’)
+a_client.search_camera(camera_type=’ip’, city=’West Lafayette’)</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>latitude</strong> (<em>float</em><em>, </em><em>optional</em>) – <p>Latitude of the center of the circle area to be searched.
+Latitude ranges between +90 and -90.</p>
+<p>Please specify longitude and radius if this parameter value is provided.</p>
+</li>
+<li><strong>longitude</strong> (<em>float</em><em>, </em><em>optional</em>) – <p>Longitude of the center of the circle area to be searched.
+Longitude ranges between +180 and -180.</p>
+<p>Please specify latitude and radius if this parameter value is provided.</p>
+</li>
+<li><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – <p>Radius in km of the circle area to be searched. Radius should be positive</p>
+<p>Please specify latitude and longitude if this parameter value is provided.</p>
+</li>
+<li><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of cameras skipped. Since each time this function can return max 100 cameras,
+calling this function the second time adding <cite>offset=100</cite> will get the second 100
+cameras beyond the first list of 100 cameras.</li>
+<li><strong>camera_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of camera.
+Allowed values: ‘ip’, ‘non_ip’, ‘stream’.</li>
+<li><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – Source of the camera.</li>
+<li><strong>country</strong> (<em>str</em><em>, </em><em>optional</em>) – Country which the camera locates at.</li>
+<li><strong>state</strong> (<em>str</em><em>, </em><em>optional</em>) – State which the camera locates at.</li>
+<li><strong>city</strong> (<em>str</em><em>, </em><em>optional</em>) – City which the camera locates at.</li>
+<li><strong>resolution_width</strong> (<em>int</em><em>, </em><em>optional</em>) – Resolution width of the camera. It has to be positive.</li>
+<li><strong>resolution_height</strong> (<em>int</em><em>, </em><em>optional</em>) – Resolution height of the camera. It has to be positive.</li>
+<li><strong>is_active_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – If the camera is active and can get images.
+This field can identify true/false case-insensitively and 0/1.</li>
+<li><strong>is_active_video</strong> (<em>bool</em><em>, </em><em>optional</em>) – If the camera is active and can get video.
+This field can identify true/false case-insensitively and 0/1.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of cameras that satisfy the search criteria.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Camera</span></code></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">FormatError</span></code> – If type of argument value is not expected for the given field.</p>
+<p>Or there are unexpected keywords in kwargs.</p>
+<p>Or radius cannot is less than 0.</p>
+<p>Or incorrect latitude range. (it should be between +90 and -90)</p>
+<p>Or incorrect longitude range. (it should be between +180 and -180)</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AuthenticationError</span></code> – If the client secret of this client object does not match the clientID.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ResourceNotFoundError</span></code> – If the client id of this client object does not match any client
+in the database.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InternalError</span></code> – If there is an API internal error.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.check_cam_exist">
+<code class="descname">check_cam_exist</code><span class="sig-paren">(</span><em>camera_type</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.check_cam_exist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.check_cam_exist" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to get one or more camera object that has the given retrieval method
+in the database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>camera_type</strong> (<em>str</em>) – Type of the camera. Type can only be ‘ip’, ‘non_ip’, or ‘stream’.</li>
+<li><strong>ip</strong> (<em>str</em><em>, </em><em>optional</em>) – [for IP camera] Ip address of the camera. Although marked as optional,
+this field is required when the camera type is ‘ip’.</li>
+<li><strong>port</strong> (<em>Int</em><em>, </em><em>optional</em>) – [for IP camera] Port of the camera. If no port provided, it will be set to default 80.</li>
+<li><strong>image_path</strong> (<em>str</em><em>, </em><em>optional</em>) – [for IP camera] Path to retrieve images from the camera.</li>
+<li><strong>video_path</strong> (<em>str</em><em>, </em><em>optinal</em>) – [for IP camera] Path to retrievae vidoe from the camera.</li>
+<li><strong>snapshot_url</strong> (<em>str</em><em>, </em><em>optional</em>) – [for non_IP camera] Url to retrieval image frames from the camera.
+Although marked as optional, this field is required when the camera type is ‘non_ip’.</li>
+<li><strong>m3u8_url</strong> (<em>str</em><em>, </em><em>optional</em>) – [for stream camera] Url to retrieval video stream from the camera.
+Although marked as optional, this field is required when the camera type is ‘stream’.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of camera objects that has the given retrieval method. If there are no cameras
+matches the provided retrieval information, an empty list will be returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Camera</span></code></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">FormatError</span></code> – If camera type is not valid.</p>
+<p>Or camera type is not provided.</p>
+<p>Or ip is not provided when the camera type is ‘ip’.</p>
+<p>Or snapshot_url is not provided when the camera type is ‘non_ip’.</p>
+<p>Or m3u8_url is not provided when the camera ytpe is ‘stream’.</p>
+<p>Or there are unexpected keywords in kwargs.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AuthenticationError</span></code> – If the client secret of this client object does not match the clientID.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ResourceNotFoundError</span></code> – If the client id of this client object does not match any client
+in the database.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InternalError</span></code> – If there is an API internal error.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAM2CameraDatabaseAPIClient.client.Client.get_change_log">
+<code class="descname">get_change_log</code><span class="sig-paren">(</span><em>start=None</em>, <em>end=None</em>, <em>offset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.get_change_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.get_change_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to get change_log for a specific time period</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>str</em><em>, </em><em>optional</em>) – Start time of the log user desires to query</li>
+<li><strong>end</strong> (<em>str</em><em>, </em><em>optional</em>) – End time of the log user desires to query</li>
+<li><strong>offset</strong> (<em>str</em><em>, </em><em>optional</em>) – How many logs to skip</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of objects containing cameraID and creation time of the log.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of dict</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">AuthenticationError</span></code> – If the client secret of this client object does not match the clientID.</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">InternalError</span></code> – If there is an API internal error.</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">FormatError</span></code> – If type of argument value is not expected for the given field.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>webUI_client = Client(clientID, clientSecret)
+webUI_client.get_change_log(start, end, offset)</p>
+<p>Programmer with ‘webUI’ permission will use this method
+to get change_log for a specific time period
+Scenario:</p>
+<blockquote>
+<div>Developer in webUI team wants to get 10 activities between the below time frame
+webUI_client.get_change_log(‘2018-08-27T15:53:00’, ‘2018-08-27T16:53:00’, 10)</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-CAM2CameraDatabaseAPIClient.error">
+<span id="error-module"></span><h2>Error Module<a class="headerlink" href="#module-CAM2CameraDatabaseAPIClient.error" title="Permalink to this headline">¶</a></h2>
+<p>This file defines all the custom errors.</p>
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.Error">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">Error</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent a generic error.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.FormatError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">FormatError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#FormatError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.FormatError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing format error.</p>
+<p>Detailed error message of the error can be shown by printing the error object.</p>
+<p>This corresponends to 422 RequestFormatError in CAM2 Database API.</p>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.error.FormatError.message">
+<code class="descname">message</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.FormatError.message" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Detailed error message</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.ResourceNotFoundError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">ResourceNotFoundError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#ResourceNotFoundError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.ResourceNotFoundError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 404 ResourceNotFoundError in API.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.AuthenticationError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">AuthenticationError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#AuthenticationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.AuthenticationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 401 AuthenticationError in API.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.InternalError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">InternalError</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#InternalError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.InternalError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 500 InternalError in API.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.ResourceConflictError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">ResourceConflictError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#ResourceConflictError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.ResourceConflictError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 409 ResourceConflictError in API.
+It is used in POST /cameras/create and PUT /cameras/{:camerID} route
+signaling ‘legacyCameraIDAlreadyExist’</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.AuthorizationError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">AuthorizationError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#AuthorizationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.AuthorizationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 403 AuthorizationError in API.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.InvalidClientIdError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">InvalidClientIdError</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#InvalidClientIdError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.InvalidClientIdError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 403 AuthorizationError in API.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.InvalidClientSecretError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">InvalidClientSecretError</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#InvalidClientSecretError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.InvalidClientSecretError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing invalid clientSecret format error.</p>
+<p>A valid client secret should have a length of at least 71 characters.</p>
+<p>This corresponends to 422 RequestFormatError in CAM2 Database API.</p>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.error.InvalidClientSecretError.message">
+<code class="descname">message</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.InvalidClientSecretError.message" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Detailed error message</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not throwing this error does not mean the client secret is correct.
+The actual authentication happens when you call client functions.</p>
+</div>
 </dd></dl>
 
 </div>
