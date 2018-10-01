@@ -49,6 +49,7 @@ u'/axis-cgi/jpg/image.cgi'
 
 A full list of camera object attributes and their descriptions can be found in :class:`~CAM2CameraDatabaseAPIClient.camera.Camera` class.
 
+.. _image-archiver-ref:
 
 Using the Client In Conjunction With the CAM2 Image Archiver 
 ------------------------------------------------------------

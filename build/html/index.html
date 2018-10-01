@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tutorial" href="tutorial.html" /> 
+    <link rel="next" title="Installation" href="INSTALL.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -78,6 +78,9 @@
             
             
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="INSTALL.html">Installation</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 </ul>
 <ul>
@@ -148,14 +151,29 @@
             
   <div class="section" id="cam2-database-api-client-documentation">
 <h1>CAM2 Database API Client Documentation<a class="headerlink" href="#cam2-database-api-client-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Welcome to the CAM2 Database API Client Documentation! This is documentation for the
-<a class="reference external" href="https://purduecam2project.github.io/CameraDatabaseAPI/">CAM2 Camera Database API</a> Python Client.
-Which is part of the <a class="reference external" href="https://www.cam2project.net/">CAM2 Project</a>.</p>
-<p><strong>A discription of what the Client Does in simple terms</strong></p>
+<p>Welcome to the CAM2 Database API Client Documentation!</p>
+<p>This is documentation for the
+<a class="reference external" href="https://purduecam2project.github.io/CameraDatabaseAPI/">CAM2 Camera Database API</a> Python Client, which is part of the <a class="reference external" href="https://www.cam2project.net/">CAM2 Project</a>.</p>
+<p>Thousands of network cameras are connected to the Internet and provide real-time visual data (image or video). Even though the data is publicly available to anyone interested seeing, there are several problems that prevents researchers and developers from effeciently query or retrievel camera information and their data.</p>
+<p>First, there is no central repository where network cameras must register. Thus, significant efforts must be taken to find various sources of data. Second, different brands of network cameras need different methods to retrieve the data. The cameras may also provide different data formats. Also, Many organizations (such as departments of transportation) aggregate streams of multiple cameras and put these streams on web sites. However, these web sites have different formats and styles, making it hard to locate network camera metadata.</p>
+<p>To solve these problems, researchers at Purdue University maintains a network camera database and develops API to retrieve data from heterogeneous sources.</p>
+<p>The Python Client of CAM2 Database API allows developers and researchers to access the large collection of public network camera data with ease. CAM2 team could also manage camera data and accesses to the database through this client.</p>
+<p>External users and researchers will be able to query desired network cameras using filters such as coordinates, timezone, type of camera, etc. We are also building a package to retrieve visual data from camera information in alias to the the CAM2 Camera Database API Client.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">For more information on retrieving images and/or video from network cameras, please see the below section on :ref`image-archiver-ref`, and <a class="reference external" href="https://purduecam2project.github.io/CAM2ImageArchiver/">CAM2 Image Archiver</a>.</p>
+</div>
 </div>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="INSTALL.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="INSTALL.html#installation-from-pip-package">Installation from PIP Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="INSTALL.html#installation-from-python-source">Installation from Python Source</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 <div class="section" id="usage">
@@ -205,7 +223,7 @@ Which is part of the <a class="reference external" href="https://www.cam2project
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="INSTALL.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>

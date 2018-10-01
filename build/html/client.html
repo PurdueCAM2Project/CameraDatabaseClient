@@ -218,7 +218,7 @@ Client secret should have a length of at least 71 characters.</li>
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.register">
 <code class="descname">register</code><span class="sig-paren">(</span><em>owner</em>, <em>permissionLevel='user'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.register" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a client to use CamraDatabaseAPI</p>
+<dd><p>Client initialization method.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -239,24 +239,12 @@ Default permission level is ‘user’.</li>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Example</p>
-<p>webUI_client = Client(clientID, clientSecret)
-# WebUI team developer created an client object
-webUI_client.register(ownerName, permissionLevel)</p>
-<p>User with webUI permission will use this method to
-register a client with owner’s name and permission level.
-Scenario:</p>
-<blockquote>
-<div>Developer in webUI team wants to register a client for normal user whose name is Bob
-webUI_client = Client(‘1’, ‘1’)
-webUI_client.register(‘Bob’, ‘user’)</div></blockquote>
 </dd></dl>
 
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.update_owner">
 <code class="descname">update_owner</code><span class="sig-paren">(</span><em>clientID</em>, <em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.update_owner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.update_owner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update owner’s username for the given clientID</p>
-<table class="docutils field-list" frame="void" rules="none">
+<dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -274,23 +262,12 @@ webUI_client.register(‘Bob’, ‘user’)</div></blockquote>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Example</p>
-<p>webUI_client = Client(clientID, clientSecret)
-webUI_client.update_owner(userClientID, ownerName)</p>
-<p>User with webUI permission will use this method to
-update owner of a client given specific clientID.
-Scenario:</p>
-<blockquote>
-<div>Developer in webUI team wants to change
-the owner of clientID 2123 from ‘Bob’ to ‘Ken’
-webUI_client.update_owner(‘2123’, ‘Ken’)</div></blockquote>
 </dd></dl>
 
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.update_permission">
 <code class="descname">update_permission</code><span class="sig-paren">(</span><em>clientID</em>, <em>permissionLevel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.update_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.update_permission" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update owner’s permissionLevel for the given clientID</p>
-<table class="docutils field-list" frame="void" rules="none">
+<dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -308,23 +285,12 @@ webUI_client.update_owner(‘2123’, ‘Ken’)</div></blockquote>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Example</p>
-<p>webUI_client = Client(clientID, clientSecret)
-webUI_client.update_permission(userClientID, ‘webUI’)</p>
-<p>User with webUI permission will use this method
-to update permission of a client given specific clientID.
-Scenario:</p>
-<blockquote>
-<div>Developer in webUI team wants to change
-the permission of clientID 2123 from ‘user’ to ‘webUI’
-webUI_client.update_permission(‘2123’, ‘webUI’)</div></blockquote>
 </dd></dl>
 
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.reset_secret">
 <code class="descname">reset_secret</code><span class="sig-paren">(</span><em>clientID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.reset_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.reset_secret" title="Permalink to this definition">¶</a></dt>
-<dd><p>A method to reset client secret</p>
-<table class="docutils field-list" frame="void" rules="none">
+<dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -336,22 +302,12 @@ webUI_client.update_permission(‘2123’, ‘webUI’)</div></blockquote>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Example</p>
-<p>webUI_client = Client(clientID, clientSecret)
-webUI_client.reset_secret(userClientID)</p>
-<p>User with webUI permission will use this method
-to reset secret key of a client given specific clientID.
-Scenario:</p>
-<blockquote>
-<div>Developer in webUI team wants to change the secret key of clientID 2123
-webUI_client.reset_secret(‘2123’‘)</div></blockquote>
 </dd></dl>
 
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.client_ids_by_owner">
 <code class="descname">client_ids_by_owner</code><span class="sig-paren">(</span><em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.client_ids_by_owner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.client_ids_by_owner" title="Permalink to this definition">¶</a></dt>
-<dd><p>A method to get all client ids for a specific owner</p>
-<table class="docutils field-list" frame="void" rules="none">
+<dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -363,23 +319,12 @@ webUI_client.reset_secret(‘2123’‘)</div></blockquote>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Example</p>
-<p>webUI_client = Client(clientID, clientSecret)
-webUI_client.client_ids_by_owner(ownerName)</p>
-<p>User with webUI permission will use this method
-to get a list of clientIDs that belongs to a user.
-Scenario:</p>
-<blockquote>
-<div>Developer in webUI team wants to get
-all clientIDs that belongs to user named ‘Bob’
-webUI_client.client_ids_by_owner(‘Bob’)</div></blockquote>
 </dd></dl>
 
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.usage_by_client">
 <code class="descname">usage_by_client</code><span class="sig-paren">(</span><em>clientID</em>, <em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.usage_by_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.usage_by_client" title="Permalink to this definition">¶</a></dt>
-<dd><p>A method to get number of API requests made by a given clientID</p>
-<table class="docutils field-list" frame="void" rules="none">
+<dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -397,16 +342,6 @@ webUI_client.client_ids_by_owner(‘Bob’)</div></blockquote>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Example</p>
-<p>webUI_client = Client(clientID, clientSecret)
-webUI_client.usage_by_client(userClientID, ownerName)</p>
-<p>User with webUI permission will use this method
-to get number of API requests made by clientID 2123
-Scenario:</p>
-<blockquote>
-<div>Developer in webUI team wants to get number of API requests
-made by clientID 2123 whose owner is ‘Bob’
-webUI_client.usage_by_client(‘2123’, ‘Bob’)</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -632,17 +567,6 @@ camera_type and image_path)</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Example</p>
-<p>client.camera_by_id(‘5ae0ecbc336359291be74c0b’)</p>
-<p class="rubric">Example</p>
-<p>user_client = Client(clientID, clientSecret)
-user_client.camera_by_id(cameraID)</p>
-<p>Programmer with ‘user’ permission will use this method
-to get a camera object with specified cameraID
-Scenario:</p>
-<blockquote>
-<div>Normal user wants to get a camera object which has a id of ‘12938263’
-user_client.camera_by_id(‘12938263’)</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -653,27 +577,6 @@ Searching by location requires user to provide coordiantes for a desired center 
 and a radius in meters. The search will carry out in the area bounded by the circle.
 Each time, this function can return a maximum of 100 cameras. Getting more cameras can
 be achieved by calling this function multiple times with offest parameter.</p>
-<p class="rubric">Examples</p>
-<ul class="simple">
-<li>Searching a camera of type ‘IP’ into the database with city as ‘West Lafayette’</li>
-</ul>
-<p>Create a keyword arguments dictionary which contains all the parameters
-needed to search the camera:</p>
-<blockquote>
-<div>kwargs = {‘camera_type’: ‘ip’, ‘city’: ‘West Lafayette’}</div></blockquote>
-<dl class="docutils">
-<dt>Pass the keyword arguments dictionary to the search_camera function:</dt>
-<dd>a_client = Client(‘id’, ‘pass’)
-a_client.search_camera(<a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs)</dd>
-</dl>
-<ul class="simple">
-<li>Another way to search for cameras with the same parameters can be done by</li>
-</ul>
-<dl class="docutils">
-<dt>the following code:</dt>
-<dd>a_client = Client(‘id’, ‘pass’)
-a_client.search_camera(camera_type=’ip’, city=’West Lafayette’)</dd>
-</dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -790,8 +693,7 @@ in the database.</p>
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.get_change_log">
 <code class="descname">get_change_log</code><span class="sig-paren">(</span><em>start=None</em>, <em>end=None</em>, <em>offset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.get_change_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.get_change_log" title="Permalink to this definition">¶</a></dt>
-<dd><p>A method to get change_log for a specific time period</p>
-<table class="docutils field-list" frame="void" rules="none">
+<dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -817,15 +719,6 @@ in the database.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Example</p>
-<p>webUI_client = Client(clientID, clientSecret)
-webUI_client.get_change_log(start, end, offset)</p>
-<p>Programmer with ‘webUI’ permission will use this method
-to get change_log for a specific time period
-Scenario:</p>
-<blockquote>
-<div>Developer in webUI team wants to get 10 activities between the below time frame
-webUI_client.get_change_log(‘2018-08-27T15:53:00’, ‘2018-08-27T16:53:00’, 10)</div></blockquote>
 </dd></dl>
 
 </dd></dl>
