@@ -47,7 +47,7 @@ To make accessing camera attributes simple, the :class:`~CAM2CameraDatabaseAPICl
 >>> cameras[0]['image_path']
 u'/axis-cgi/jpg/image.cgi'
 
-A full list of camera object attributes and their descriptions can be found in :class:`~CAM2CameraDatabaseAPIClient.camera.Camera`
+A full list of camera object attributes and their descriptions can be found in :class:`~CAM2CameraDatabaseAPIClient.camera.Camera` class.
 
 
 Using the Client In Conjunction With the CAM2 Image Archiver 
