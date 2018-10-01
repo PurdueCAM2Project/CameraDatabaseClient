@@ -1,20 +1,24 @@
-CAM2CameraDatabaseAPIClient package
+Documentation
 ===================================
 
+This is documentation...
 
-CAM2CameraDatabaseAPIClient.camera module
+.. autosummary::CAM2CameraDatabaseAPIClient.client.Client
+	:members:
+
+Camera Module
 -----------------------------------------
 
 .. automodule:: CAM2CameraDatabaseAPIClient.camera
     :members:
 
-CAM2CameraDatabaseAPIClient.client module
+Client Module
 -----------------------------------------
 
 .. automodule:: CAM2CameraDatabaseAPIClient.client
     :members:
 
-CAM2CameraDatabaseAPIClient.error module
+Error Module
 ----------------------------------------
 
 .. automodule:: CAM2CameraDatabaseAPIClient.error
