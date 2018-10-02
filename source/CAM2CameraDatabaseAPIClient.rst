@@ -1,20 +1,11 @@
 Documentation
 ===================================
 
-Camera Module
------------------------------------------
 
-.. automodule:: CAM2CameraDatabaseAPIClient.camera
-    :members:
+.. toctree::
+   :maxdepth: 2
 
-Client Module
------------------------------------------
+   camera
+   client
+   error
 
-.. automodule:: CAM2CameraDatabaseAPIClient.client
-    :members:
-
-Error Module
-----------------------------------------
-
-.. automodule:: CAM2CameraDatabaseAPIClient.error
-    :members:
