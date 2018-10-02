@@ -9,7 +9,18 @@ CAM2 Database API Client Documentation
 Welcome to the CAM2 Database API Client Documentation! 
 
 This is documentation for the
-`CAM2 Camera Database API <https://purduecam2project.github.io/CameraDatabaseAPI/>`_ Python Client, which is part of the `CAM2 Project <https://www.cam2project.net/>`_.
+`CAM2 Camera Database API <https://purduecam2project.github.io/CameraDatabaseAPI/>`_ Python Client, which is part of the `CAM2 Project <https://www.cam2project.net/>`_. 
+
+.. _API-access-ref: 
+
+.. Note::
+
+	**Obtaining API Access:** 
+	
+	To get access to CAM2 Camera Database API, please register in `CAM2 Project website <https://www.cam2project.net/>`_ and send a request through `developers->API access`. 
+
+Overview
+---------
 
 Thousands of network cameras are connected to the Internet and provide real-time visual data (image or video). Even though the data is publicly available to anyone interested seeing, there are several problems that prevents researchers and developers from effeciently query or retrievel camera information and their data. 
 
@@ -19,11 +30,13 @@ To solve these problems, researchers at Purdue University maintains a network ca
 
 The Python Client of CAM2 Database API allows developers and researchers to access the large collection of public network camera data with ease. CAM2 team could also manage camera data and accesses to the database through this client.
 
-External users and researchers will be able to query desired network cameras using filters such as coordinates, timezone, type of camera, etc. We are also building a package to retrieve visual data from camera information in alias to the the CAM2 Camera Database API Client. 
+Apart from wrapping all functionalities of CAM2 Camera Database API, the Python Client simplifies data quering process by automatically getting API access token and refreshing token after reaching the 5-minute limit of the token. 
+
+External users and researchers will be able to query desired network cameras using filters such as coordinates, timezone, type of camera, etc. We are also building a package to retrieve visual data from camera information in alliance with the the CAM2 Camera Database API Client. 
 
 .. seealso::
 
-    For more information on retrieving images and/or video from network cameras, please see the below section on :ref`image-archiver-ref`, and `CAM2 Image Archiver <https://purduecam2project.github.io/CAM2ImageArchiver/>`_.
+    For more information on retrieving images and/or video from network cameras, please see the below section on :ref:`image-archiver-ref`, and `CAM2 Image Archiver Documentation <https://purduecam2project.github.io/CAM2ImageArchiver/>`_.
 
 
 

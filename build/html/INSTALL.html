@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="next" title="Quickstart" href="tutorial.html" />
     <link rel="prev" title="CAM2 Database API Client Documentation" href="index.html" /> 
 
   
@@ -86,7 +86,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Quickstart</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="CAM2CameraDatabaseAPIClient.html">Documentation</a></li>
@@ -155,14 +155,30 @@
            <div itemprop="articleBody">
             
   <div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<span id="install-ref"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="installation-from-pip-package">
 <h2>Installation from PIP Package<a class="headerlink" href="#installation-from-pip-package" title="Permalink to this headline">¶</a></h2>
-<p>This explains how to install the client using a PIP package.</p>
+<p>The built package of CAM2 Camera Database API Client is uploaded in Pypi. You can check <a class="reference external" href="https://placeholder">Pypi page of the package</a> for specific environment requirements.</p>
+<p>To install CAM2 Camera Database API Client, simply run the following command to install the latest version:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install CAM2CameraDatabaseClient
+</pre></div>
+</div>
+<p>To install a specific version, run command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install CAM2CameraDatabaseClient==&lt;desired_version_number&gt;
+</pre></div>
+</div>
 </div>
 <div class="section" id="installation-from-python-source">
 <h2>Installation from Python Source<a class="headerlink" href="#installation-from-python-source" title="Permalink to this headline">¶</a></h2>
-<p>This explains how to install the client from source.</p>
+<p>Source code of CAM2 Camera Database API Client is public on <a class="reference external" href="https://github.com/PurdueCAM2Project/CameraDatabaseClient">GitHub</a>. You can always install the package from source code by either downloading the zip file or clone the repository with command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:PurdueCAM2Project/CameraDatabaseClient.git
+</pre></div>
+</div>
+<p>You can add the downloaded source code in your own python package and use CAM2 Camera Database API Client modules by importing them.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">We are continuously developing the Python client and updating the code. Downloading or cloning the source code will not guarantee you will a stable software to use.</p>
+</div>
 </div>
 </div>
 
@@ -174,7 +190,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="CAM2 Database API Client Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

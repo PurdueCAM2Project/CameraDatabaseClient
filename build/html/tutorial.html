@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tutorial &mdash; CAM2 Database API Client  documentation</title>
+  <title>Quickstart &mdash; CAM2 Database API Client  documentation</title>
   
 
   
@@ -29,7 +29,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Documentation" href="CAM2CameraDatabaseAPIClient.html" />
-    <link rel="prev" title="CAM2 Database API Client Documentation" href="index.html" /> 
+    <link rel="prev" title="Installation" href="INSTALL.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -78,16 +78,15 @@
               
             
             
-              <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#a-simple-example">A simple example</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#importing-the-cam2-camera-api-client-packages">Importing the CAM2 Camera API Client Packages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#creating-client-instance">Creating Client Instance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#querying-the-cam2-camera-api-by-city">Querying the CAM2 Camera API by City</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#accessing-camera-attributes">Accessing Camera Attributes</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="INSTALL.html">Installation</a></li>
 </ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#using-the-client-in-conjunction-with-the-cam2-image-archiver">Using the Client In Conjunction With the CAM2 Image Archiver</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-client-instance">Create Client Instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#query-camera-by-city">Query Camera by City</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#access-camera-attributes">Access Camera Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-client-with-cam2-image-archiver">Use Client with CAM2 Image Archiver</a></li>
 </ul>
 </li>
 </ul>
@@ -138,7 +137,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Tutorial</li>
+      <li>Quickstart</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -157,41 +156,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="a-simple-example">
-<h2>A simple example<a class="headerlink" href="#a-simple-example" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="importing-the-cam2-camera-api-client-packages">
-<h3>Importing the CAM2 Camera API Client Packages<a class="headerlink" href="#importing-the-cam2-camera-api-client-packages" title="Permalink to this headline">¶</a></h3>
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<p>We will present here some basic usage examples, please see the full documentation for</p>
+<p>First, make sure that CAM2 Camera Database API Client is successfully installed, and a pair of valid client ID and secret to access the API has been issued to you.</p>
+<p>You can refer to <a class="reference internal" href="INSTALL.html#install-ref"><span class="std std-ref">Installation</span></a> and <a class="reference internal" href="index.html#api-access-ref"><span class="std std-ref">Obtaining API Access</span></a>.</p>
+<div class="section" id="create-client-instance">
+<h2>Create Client Instance<a class="headerlink" href="#create-client-instance" title="Permalink to this headline">¶</a></h2>
+<p>Begin be import CAM2 Camera Database API Client package.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">CAM2CameraDatabaseAPIClient.client</span> <span class="k">import</span> <span class="n">Client</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="creating-client-instance">
-<h3>Creating Client Instance<a class="headerlink" href="#creating-client-instance" title="Permalink to this headline">¶</a></h3>
-<p>You can request a Client ID and Client Secret from your user account on the <a class="reference external" href="https://www.cam2project.net/">CAM2 Website</a>.</p>
+<p>Then, create a Client object using client ID and secret to access the Camera Database API. Creating a valid Client object is the prerequsite of calling any functions for getting camera data or managing user clients.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clientID</span> <span class="o">=</span> <span class="o">&lt;</span><span class="mi">96</span> <span class="n">Character</span> <span class="n">Client</span> <span class="n">ID</span><span class="o">&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clientSecret</span> <span class="o">=</span> <span class="o">&lt;</span><span class="mi">71</span> <span class="n">Character</span> <span class="n">Client</span> <span class="n">Secret</span><span class="o">&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">clientID</span><span class="p">,</span> <span class="n">clientSecret</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="querying-the-cam2-camera-api-by-city">
-<h3>Querying the CAM2 Camera API by City<a class="headerlink" href="#querying-the-cam2-camera-api-by-city" title="Permalink to this headline">¶</a></h3>
-<p>We can query the CAM2 API by using the <a class="reference internal" href="client.html#CAM2CameraDatabaseAPIClient.client.Client.search_camera" title="CAM2CameraDatabaseAPIClient.client.Client.search_camera"><code class="xref py py-meth docutils literal notranslate"><span class="pre">search_camera()</span></code></a> method.</p>
+<div class="section" id="query-camera-by-city">
+<h2>Query Camera by City<a class="headerlink" href="#query-camera-by-city" title="Permalink to this headline">¶</a></h2>
+<p>We can query the CAM2 API by using the <a class="reference internal" href="client.html#CAM2CameraDatabaseAPIClient.client.Client.search_camera" title="CAM2CameraDatabaseAPIClient.client.Client.search_camera"><code class="xref py py-meth docutils literal notranslate"><span class="pre">search_camera()</span></code></a> method. Please check the detailed method documentation for list of filters that can be applied on results returned.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cameras</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">search_camera</span><span class="p">(</span><span class="n">city</span><span class="o">=</span><span class="s2">&quot;West Lafayette&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This will return a list of 100 camera <a class="reference internal" href="camera.html#CAM2CameraDatabaseAPIClient.camera.Camera" title="CAM2CameraDatabaseAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> objects that match the search query. To extract one camera object from the query we can do:</p>
+<p>This will return a list of 100 camera <a class="reference internal" href="camera.html#CAM2CameraDatabaseAPIClient.camera.Camera" title="CAM2CameraDatabaseAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> objects that match the search query constraints. To get one camera object from the query we can index into the list as following:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cameras</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="go">{u&#39;utc_offset&#39;: -18000, u&#39;resolution_width&#39;: 640, u&#39;image_path&#39;: u&#39;/axis-cgi/jpg/image.cgi&#39;, u&#39;ip&#39;: u&#39;128.10.29.20&#39;, u&#39;brand&#39;: u&#39;Axis&#39;, u&#39;reference_logo&#39;: None, u&#39;cameraID&#39;: u&#39;5b0cfa7345bb0c0004277e29&#39;, u&#39;latitude&#39;: 40.4278, u&#39;longitude&#39;: -86.9169, u&#39;frame_rate&#39;: None, u&#39;port&#39;: u&#39;80&#39;, u&#39;city&#39;: u&#39;West Lafayette&#39;, u&#39;timezone_id&#39;: u&#39;Eastern Daylight Time&#39;, u&#39;legacy_cameraID&#39;: 14, u&#39;video_path&#39;: u&#39;/axis-cgi/mjpg/video.cgi&#39;, u&#39;is_active_video&#39;: False, u&#39;is_active_image&#39;: False, u&#39;source&#39;: u&#39;opentopia&#39;, u&#39;state&#39;: u&#39;IN&#39;, &#39;camera_type&#39;: u&#39;ip&#39;, u&#39;reference_url&#39;: u&#39;128.10.29.20/axis-cgi/mjpg/video.cgi&#39;, u&#39;resolution_height&#39;: 480, u&#39;timezone_name&#39;: u&#39;Eastern Standard Time&#39;, u&#39;model&#39;: None, u&#39;country&#39;: u&#39;USA&#39;}</span>
 </pre></div>
 </div>
 <p>The API will only return a limit of 100 cameras at a time. To access the next 100 cameras on the API we can change the offset parameter to 100.</p>
 </div>
-<div class="section" id="accessing-camera-attributes">
-<h3>Accessing Camera Attributes<a class="headerlink" href="#accessing-camera-attributes" title="Permalink to this headline">¶</a></h3>
-<p>To make accessing camera attributes simple, the <a class="reference internal" href="camera.html#CAM2CameraDatabaseAPIClient.camera.Camera" title="CAM2CameraDatabaseAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> object behaves like a dictionary class. For example:</p>
+<div class="section" id="access-camera-attributes">
+<h2>Access Camera Attributes<a class="headerlink" href="#access-camera-attributes" title="Permalink to this headline">¶</a></h2>
+<p>To make accessing camera attributes simple, the <a class="reference internal" href="camera.html#CAM2CameraDatabaseAPIClient.camera.Camera" title="CAM2CameraDatabaseAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> object behaves like a dictionary class.</p>
+<p>For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cameras</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;resolution_height&#39;</span><span class="p">]</span>
 <span class="go">480</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cameras</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;resolution_width&#39;</span><span class="p">]</span>
@@ -202,9 +201,8 @@
 </div>
 <p>A full list of camera object attributes and their descriptions can be found in <a class="reference internal" href="camera.html#CAM2CameraDatabaseAPIClient.camera.Camera" title="CAM2CameraDatabaseAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> class.</p>
 </div>
-</div>
-<div class="section" id="using-the-client-in-conjunction-with-the-cam2-image-archiver">
-<span id="image-archiver-ref"></span><h2>Using the Client In Conjunction With the CAM2 Image Archiver<a class="headerlink" href="#using-the-client-in-conjunction-with-the-cam2-image-archiver" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="use-client-with-cam2-image-archiver">
+<span id="image-archiver-ref"></span><h2>Use Client with CAM2 Image Archiver<a class="headerlink" href="#use-client-with-cam2-image-archiver" title="Permalink to this headline">¶</a></h2>
 <p>The CAM2 Image Archiver allows users to download network camera image data from camera objects and save them to the local machine.</p>
 </div>
 </div>
@@ -220,7 +218,7 @@
         <a href="CAM2CameraDatabaseAPIClient.html" class="btn btn-neutral float-right" title="Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="CAM2 Database API Client Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="INSTALL.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
