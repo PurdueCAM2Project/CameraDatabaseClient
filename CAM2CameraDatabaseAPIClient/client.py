@@ -448,7 +448,7 @@ class Client(object):
         --------
             * Adding a camera of type 'IP' into the database:
 
-            **Each type of camera has its unique fields. 
+            **Each type of camera has its unique fields.
             Please check the** :ref:`Parameters <write-param-ref>` **of this function or**
             :class:`~CAM2CameraDatabaseAPIClient.camera.Camera` **for eligible fields
             of the type of camera you are working on.**
@@ -459,9 +459,9 @@ class Client(object):
             >>> kwargs = {'camera_type': 'ip', 'is_active_image': True,
                           'is_active_video': False, 'ip': '127.0.0.1', 'snapshot_url': None,
                           'm3u8_url': None, 'cameraID': None, ...}
-            
+
             Pass the keyword arguments dictionary to the write_camera function:
-            
+
             >>> client.write_camera(**kwargs)
 
             Or, you can directly call the method with all parameters:
@@ -473,7 +473,7 @@ class Client(object):
 
             One subtle difference of updating an existing camera from adding a new camera
             is that only ``cameraID``, ``camera_type``, and fields to be updated need to
-            be included as a parameter with non-None value to update the camera. 
+            be included as a parameter with non-None value to update the camera.
 
             Create a keyword arguments dictionary which contains all the parameters
             needed to update the camera; in this example, user will update the ip
@@ -483,7 +483,7 @@ class Client(object):
                           'cameraID': '5ae0ecbd336359291be74c12'}
 
             Pass the keyword arguments dictionary to the write_camera function:
-            
+
             >>> client.write_camera(**kwargs)
 
             Or, you can directly call the method with all parameters:
@@ -494,7 +494,7 @@ class Client(object):
             * Adding or updating a camera of type 'non_ip':
 
             Following the above example of adding and updating IP camera, the only difference
-            lies in the required fields. 
+            lies in the required fields.
 
             Example of adding a non-ip camera into database:
 
@@ -511,7 +511,7 @@ class Client(object):
             * Adding or updating a camera of type 'stream':
 
             Following the above example of adding and updating IP camera, the only difference
-            lies in the required fields. 
+            lies in the required fields.
 
             Example of adding a stream camera into database:
 
