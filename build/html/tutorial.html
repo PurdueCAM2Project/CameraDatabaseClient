@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tutorial &mdash; CAM2 Database API Client  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Documentation" href="CAM2CameraDatabaseAPIClient.html" />
+    <link rel="prev" title="CAM2 Database API Client Documentation" href="index.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> CAM2 Database API Client
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-simple-example">A simple example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#importing-the-cam2-camera-api-client-packages">Importing the CAM2 Camera API Client Packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-client-instance">Creating Client Instance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#querying-the-cam2-camera-api-by-city">Querying the CAM2 Camera API by City</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#accessing-camera-attributes">Accessing Camera Attributes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-client-in-conjunction-with-the-cam2-image-archiver">Using the Client In Conjunction With the CAM2 Image Archiver</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CAM2CameraDatabaseAPIClient.html">Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CAM2 Database API Client</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Tutorial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tutorial.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="a-simple-example">
+<h2>A simple example<a class="headerlink" href="#a-simple-example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="importing-the-cam2-camera-api-client-packages">
+<h3>Importing the CAM2 Camera API Client Packages<a class="headerlink" href="#importing-the-cam2-camera-api-client-packages" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">CAM2CameraDatabaseAPIClient.client</span> <span class="k">import</span> <span class="n">Client</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-client-instance">
+<h3>Creating Client Instance<a class="headerlink" href="#creating-client-instance" title="Permalink to this headline">¶</a></h3>
+<p>You can request a Client ID and Client Secret from your user account on the <a class="reference external" href="https://www.cam2project.net/">CAM2 Website</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clientID</span> <span class="o">=</span> <span class="o">&lt;</span><span class="mi">96</span> <span class="n">Character</span> <span class="n">Client</span> <span class="n">ID</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clientSecret</span> <span class="o">=</span> <span class="o">&lt;</span><span class="mi">71</span> <span class="n">Character</span> <span class="n">Client</span> <span class="n">Secret</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">clientID</span><span class="p">,</span> <span class="n">clientSecret</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="querying-the-cam2-camera-api-by-city">
+<h3>Querying the CAM2 Camera API by City<a class="headerlink" href="#querying-the-cam2-camera-api-by-city" title="Permalink to this headline">¶</a></h3>
+<p>We can query the CAM2 API by using the <code class="xref py py-meth docutils literal notranslate"><span class="pre">search_camera()</span></code> method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cameras</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">search_camera</span><span class="p">(</span><span class="n">city</span><span class="o">=</span><span class="s2">&quot;West Lafayette&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will return a list of 100 camera <code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code> objects that match the search query. To extract one camera object from the query we can do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cameras</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">{u&#39;utc_offset&#39;: -18000, u&#39;resolution_width&#39;: 640, u&#39;image_path&#39;: u&#39;/axis-cgi/jpg/image.cgi&#39;, u&#39;ip&#39;: u&#39;128.10.29.20&#39;, u&#39;brand&#39;: u&#39;Axis&#39;, u&#39;reference_logo&#39;: None, u&#39;cameraID&#39;: u&#39;5b0cfa7345bb0c0004277e29&#39;, u&#39;latitude&#39;: 40.4278, u&#39;longitude&#39;: -86.9169, u&#39;frame_rate&#39;: None, u&#39;port&#39;: u&#39;80&#39;, u&#39;city&#39;: u&#39;West Lafayette&#39;, u&#39;timezone_id&#39;: u&#39;Eastern Daylight Time&#39;, u&#39;legacy_cameraID&#39;: 14, u&#39;video_path&#39;: u&#39;/axis-cgi/mjpg/video.cgi&#39;, u&#39;is_active_video&#39;: False, u&#39;is_active_image&#39;: False, u&#39;source&#39;: u&#39;opentopia&#39;, u&#39;state&#39;: u&#39;IN&#39;, &#39;camera_type&#39;: u&#39;ip&#39;, u&#39;reference_url&#39;: u&#39;128.10.29.20/axis-cgi/mjpg/video.cgi&#39;, u&#39;resolution_height&#39;: 480, u&#39;timezone_name&#39;: u&#39;Eastern Standard Time&#39;, u&#39;model&#39;: None, u&#39;country&#39;: u&#39;USA&#39;}</span>
+</pre></div>
+</div>
+<p>The API will only return a limit of 100 cameras at a time. To access the next 100 cameras on the API we can change the offset parameter to 100.</p>
+</div>
+<div class="section" id="accessing-camera-attributes">
+<h3>Accessing Camera Attributes<a class="headerlink" href="#accessing-camera-attributes" title="Permalink to this headline">¶</a></h3>
+<p>To make accessing camera attributes simple, the <code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code> object behaves like a dictionary class. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cameras</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;resolution_height&#39;</span><span class="p">]</span>
+<span class="go">480</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cameras</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;resolution_width&#39;</span><span class="p">]</span>
+<span class="go">640</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cameras</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;image_path&#39;</span><span class="p">]</span>
+<span class="go">u&#39;/axis-cgi/jpg/image.cgi&#39;</span>
+</pre></div>
+</div>
+<p>A full list of camera object attributes and their descriptions can be found in <code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code> class.</p>
+</div>
+</div>
+<div class="section" id="using-the-client-in-conjunction-with-the-cam2-image-archiver">
+<h2>Using the Client In Conjunction With the CAM2 Image Archiver<a class="headerlink" href="#using-the-client-in-conjunction-with-the-cam2-image-archiver" title="Permalink to this headline">¶</a></h2>
+<p>The CAM2 Image Archiver allows users to download network camera image data from camera objects and save them to the local machine.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="CAM2CameraDatabaseAPIClient.html" class="btn btn-neutral float-right" title="Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="CAM2 Database API Client Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Purdue CAM2.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

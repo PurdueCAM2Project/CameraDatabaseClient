@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Error Module &mdash; CAM2 Database API Client  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Client Module" href="client.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> CAM2 Database API Client
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="CAM2CameraDatabaseAPIClient.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="camera.html">Camera Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html">Client Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Error Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CAM2 Database API Client</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="CAM2CameraDatabaseAPIClient.html">Documentation</a> &raquo;</li>
+        
+      <li>Error Module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/error.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-CAM2CameraDatabaseAPIClient.error">
+<span id="error-module"></span><h1>Error Module<a class="headerlink" href="#module-CAM2CameraDatabaseAPIClient.error" title="Permalink to this headline">¶</a></h1>
+<p>This file defines all the custom errors.</p>
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.Error">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">Error</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent a generic error.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.FormatError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">FormatError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#FormatError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.FormatError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing format error.</p>
+<p>Detailed error message of the error can be shown by printing the error object.</p>
+<p>This corresponends to 422 RequestFormatError in CAM2 Database API.</p>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.error.FormatError.message">
+<code class="descname">message</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.FormatError.message" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Detailed error message</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.ResourceNotFoundError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">ResourceNotFoundError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#ResourceNotFoundError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.ResourceNotFoundError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 404 ResourceNotFoundError in API.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.AuthenticationError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">AuthenticationError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#AuthenticationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.AuthenticationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 401 AuthenticationError in API.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.InternalError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">InternalError</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#InternalError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.InternalError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 500 InternalError in API.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.ResourceConflictError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">ResourceConflictError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#ResourceConflictError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.ResourceConflictError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 409 ResourceConflictError in API.
+It is used in POST /cameras/create and PUT /cameras/{:camerID} route
+signaling ‘legacyCameraIDAlreadyExist’</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.AuthorizationError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">AuthorizationError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#AuthorizationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.AuthorizationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 403 AuthorizationError in API.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.InvalidClientIdError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">InvalidClientIdError</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#InvalidClientIdError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.InvalidClientIdError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponends to 403 AuthorizationError in API.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="CAM2CameraDatabaseAPIClient.error.InvalidClientSecretError">
+<em class="property">exception </em><code class="descclassname">CAM2CameraDatabaseAPIClient.error.</code><code class="descname">InvalidClientSecretError</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/error.html#InvalidClientSecretError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.InvalidClientSecretError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing invalid clientSecret format error.</p>
+<p>A valid client secret should have a length of at least 71 characters.</p>
+<p>This corresponends to 422 RequestFormatError in CAM2 Database API.</p>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.error.InvalidClientSecretError.message">
+<code class="descname">message</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.error.InvalidClientSecretError.message" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Detailed error message</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not throwing this error does not mean the client secret is correct.
+The actual authentication happens when you call client functions.</p>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="client.html" class="btn btn-neutral" title="Client Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Purdue CAM2.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

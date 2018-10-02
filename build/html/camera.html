@@ -1,0 +1,416 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Camera Module &mdash; CAM2 Database API Client  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Client Module" href="client.html" />
+    <link rel="prev" title="Documentation" href="CAM2CameraDatabaseAPIClient.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> CAM2 Database API Client
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="CAM2CameraDatabaseAPIClient.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Camera Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html">Client Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.html">Error Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CAM2 Database API Client</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="CAM2CameraDatabaseAPIClient.html">Documentation</a> &raquo;</li>
+        
+      <li>Camera Module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/camera.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-CAM2CameraDatabaseAPIClient.camera">
+<span id="camera-module"></span><h1>Camera Module<a class="headerlink" href="#module-CAM2CameraDatabaseAPIClient.camera" title="Permalink to this headline">¶</a></h1>
+<p>Represents a camera.</p>
+<dl class="class">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera">
+<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">Camera</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a general camera.</p>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.cameraID">
+<code class="descname">cameraID</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.cameraID" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Id of the camera.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.legacy_cameraID">
+<code class="descname">legacy_cameraID</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.legacy_cameraID" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int, optional</em> – Id of the camera in previous CAM2 camera database.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.camera_type">
+<code class="descname">camera_type</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.camera_type" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Type of the camera.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.source">
+<code class="descname">source</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.source" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.frame_rate">
+<code class="descname">frame_rate</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.frame_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.country">
+<code class="descname">country</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.country" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.state">
+<code class="descname">state</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.state" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.city">
+<code class="descname">city</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.city" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.longitude">
+<code class="descname">longitude</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.longitude" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.latitude">
+<code class="descname">latitude</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.latitude" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.is_active_image">
+<code class="descname">is_active_image</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.is_active_image" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.is_active_video">
+<code class="descname">is_active_video</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.is_active_video" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.resolution_width">
+<code class="descname">resolution_width</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.resolution_width" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.resolution_height">
+<code class="descname">resolution_height</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.resolution_height" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.utc_offset">
+<code class="descname">utc_offset</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.utc_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.timezone_id">
+<code class="descname">timezone_id</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.timezone_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.timezone_name">
+<code class="descname">timezone_name</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.timezone_name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.reference_logo">
+<code class="descname">reference_logo</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.reference_logo" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.Camera.reference_url">
+<code class="descname">reference_url</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.Camera.reference_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="CAM2CameraDatabaseAPIClient.camera.IPCamera">
+<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">IPCamera</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#IPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.IPCamera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent a single ip camera.
+This is a subclass of Camera.</p>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.IPCamera.ip">
+<code class="descname">ip</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.IPCamera.ip" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.IPCamera.port">
+<code class="descname">port</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.IPCamera.port" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.IPCamera.brand">
+<code class="descname">brand</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.IPCamera.brand" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.IPCamera.model">
+<code class="descname">model</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.IPCamera.model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.IPCamera.image_path">
+<code class="descname">image_path</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.IPCamera.image_path" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.IPCamera.video_path">
+<code class="descname">video_path</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.IPCamera.video_path" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str, optional</em></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="CAM2CameraDatabaseAPIClient.camera.NonIPCamera">
+<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">NonIPCamera</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#NonIPCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.NonIPCamera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent a single non-ip camera.
+This is a subclass of Camera.</p>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.NonIPCamera.snapshot_url">
+<code class="descname">snapshot_url</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.NonIPCamera.snapshot_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="CAM2CameraDatabaseAPIClient.camera.StreamCamera">
+<em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.camera.</code><code class="descname">StreamCamera</code><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/camera.html#StreamCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.StreamCamera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent a single stream camera.
+This is a subclass of Camera.</p>
+<dl class="attribute">
+<dt id="CAM2CameraDatabaseAPIClient.camera.StreamCamera.m3u8_url">
+<code class="descname">m3u8_url</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.camera.StreamCamera.m3u8_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="client.html" class="btn btn-neutral float-right" title="Client Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="CAM2CameraDatabaseAPIClient.html" class="btn btn-neutral" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Purdue CAM2.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
