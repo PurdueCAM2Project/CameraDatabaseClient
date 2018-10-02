@@ -148,7 +148,7 @@
 <span class="sd">Represents a camera.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Camera"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.camera.Camera">[docs]</a><span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+<div class="viewcode-block" id="Camera"><a class="viewcode-back" href="../../camera.html#CAM2CameraDatabaseAPIClient.camera.Camera">[docs]</a><span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Class representing a general camera.</span>
 
@@ -193,7 +193,7 @@
             <span class="k">return</span> <span class="n">StreamCamera</span><span class="p">(</span><span class="o">**</span><span class="n">dict_entries</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="IPCamera"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.camera.IPCamera">[docs]</a><span class="k">class</span> <span class="nc">IPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
+<div class="viewcode-block" id="IPCamera"><a class="viewcode-back" href="../../camera.html#CAM2CameraDatabaseAPIClient.camera.IPCamera">[docs]</a><span class="k">class</span> <span class="nc">IPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represent a single ip camera.</span>
 <span class="sd">    This is a subclass of Camera.</span>
 
@@ -207,7 +207,7 @@
 <span class="sd">    video_path : str, optional</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
-<div class="viewcode-block" id="NonIPCamera"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.camera.NonIPCamera">[docs]</a><span class="k">class</span> <span class="nc">NonIPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
+<div class="viewcode-block" id="NonIPCamera"><a class="viewcode-back" href="../../camera.html#CAM2CameraDatabaseAPIClient.camera.NonIPCamera">[docs]</a><span class="k">class</span> <span class="nc">NonIPCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represent a single non-ip camera.</span>
 <span class="sd">    This is a subclass of Camera.</span>
 
@@ -216,7 +216,7 @@
 <span class="sd">    snapshot_url : str</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
-<div class="viewcode-block" id="StreamCamera"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.camera.StreamCamera">[docs]</a><span class="k">class</span> <span class="nc">StreamCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamCamera"><a class="viewcode-back" href="../../camera.html#CAM2CameraDatabaseAPIClient.camera.StreamCamera">[docs]</a><span class="k">class</span> <span class="nc">StreamCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represent a single stream camera.</span>
 <span class="sd">    This is a subclass of Camera.</span>
 

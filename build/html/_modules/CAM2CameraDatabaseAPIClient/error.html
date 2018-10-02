@@ -149,13 +149,13 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="k">import</span> <span class="n">SECRET_LENGTH</span><span class="p">,</span> <span class="n">CLIENTID_LENGTH</span>
 
-<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.error.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../error.html#CAM2CameraDatabaseAPIClient.error.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represent a generic error.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="FormatError"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.error.FormatError">[docs]</a><span class="k">class</span> <span class="nc">FormatError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+<div class="viewcode-block" id="FormatError"><a class="viewcode-back" href="../../error.html#CAM2CameraDatabaseAPIClient.error.FormatError">[docs]</a><span class="k">class</span> <span class="nc">FormatError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class representing format error.</span>
 
 <span class="sd">    Detailed error message of the error can be shown by printing the error object.</span>
@@ -177,7 +177,7 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ResourceNotFoundError"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.error.ResourceNotFoundError">[docs]</a><span class="k">class</span> <span class="nc">ResourceNotFoundError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+<div class="viewcode-block" id="ResourceNotFoundError"><a class="viewcode-back" href="../../error.html#CAM2CameraDatabaseAPIClient.error.ResourceNotFoundError">[docs]</a><span class="k">class</span> <span class="nc">ResourceNotFoundError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Corresponends to 404 ResourceNotFoundError in API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -190,7 +190,7 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="AuthenticationError"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.error.AuthenticationError">[docs]</a><span class="k">class</span> <span class="nc">AuthenticationError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthenticationError"><a class="viewcode-back" href="../../error.html#CAM2CameraDatabaseAPIClient.error.AuthenticationError">[docs]</a><span class="k">class</span> <span class="nc">AuthenticationError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Corresponends to 401 AuthenticationError in API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -203,7 +203,7 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="InternalError"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.error.InternalError">[docs]</a><span class="k">class</span> <span class="nc">InternalError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+<div class="viewcode-block" id="InternalError"><a class="viewcode-back" href="../../error.html#CAM2CameraDatabaseAPIClient.error.InternalError">[docs]</a><span class="k">class</span> <span class="nc">InternalError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Corresponends to 500 InternalError in API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -216,7 +216,7 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ResourceConflictError"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.error.ResourceConflictError">[docs]</a><span class="k">class</span> <span class="nc">ResourceConflictError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+<div class="viewcode-block" id="ResourceConflictError"><a class="viewcode-back" href="../../error.html#CAM2CameraDatabaseAPIClient.error.ResourceConflictError">[docs]</a><span class="k">class</span> <span class="nc">ResourceConflictError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Corresponends to 409 ResourceConflictError in API.</span>
 <span class="sd">    It is used in POST /cameras/create and PUT /cameras/{:camerID} route</span>
@@ -231,7 +231,7 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="AuthorizationError"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.error.AuthorizationError">[docs]</a><span class="k">class</span> <span class="nc">AuthorizationError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthorizationError"><a class="viewcode-back" href="../../error.html#CAM2CameraDatabaseAPIClient.error.AuthorizationError">[docs]</a><span class="k">class</span> <span class="nc">AuthorizationError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Corresponends to 403 AuthorizationError in API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -244,7 +244,7 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="InvalidClientIdError"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.error.InvalidClientIdError">[docs]</a><span class="k">class</span> <span class="nc">InvalidClientIdError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+<div class="viewcode-block" id="InvalidClientIdError"><a class="viewcode-back" href="../../error.html#CAM2CameraDatabaseAPIClient.error.InvalidClientIdError">[docs]</a><span class="k">class</span> <span class="nc">InvalidClientIdError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Corresponends to 403 AuthorizationError in API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -257,7 +257,7 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="InvalidClientSecretError"><a class="viewcode-back" href="../../CAM2CameraDatabaseAPIClient.html#CAM2CameraDatabaseAPIClient.error.InvalidClientSecretError">[docs]</a><span class="k">class</span> <span class="nc">InvalidClientSecretError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+<div class="viewcode-block" id="InvalidClientSecretError"><a class="viewcode-back" href="../../error.html#CAM2CameraDatabaseAPIClient.error.InvalidClientSecretError">[docs]</a><span class="k">class</span> <span class="nc">InvalidClientSecretError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Class representing invalid clientSecret format error.</span>
 
