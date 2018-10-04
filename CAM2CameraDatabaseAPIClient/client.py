@@ -446,59 +446,84 @@ class Client(object):
 
         Examples
         --------
-            - Adding a camera of type 'IP' into the database:
+            * Adding a camera of type 'IP' into the database:
+
+            **Each type of camera has its unique fields.
+            Please check the** :ref:`Parameters <write-param-ref>` **of this function or**
+            :class:`~CAM2CameraDatabaseAPIClient.camera.Camera` **for eligible fields
+            of the type of camera you are working on.**
+
             Create a keyword arguments dictionary which contains all the parameters
-            needed to create the camera:
-                kwargs = {'camera_type': 'ip', 'is_active_image': True,
+            needed to create the camera (fields with value ``None`` can be omitted):
+
+            >>> kwargs = {'camera_type': 'ip', 'is_active_image': True,
                           'is_active_video': False, 'ip': '127.0.0.1', 'snapshot_url': None,
                           'm3u8_url': None, 'cameraID': None, ...}
-            Pass the keyword arguments dictionary to the write_camera function:
-                write_camera(**kwargs)
 
-            - Updating a camera of type 'IP' in the database:
-            Create a keyword arguments dictionary which contains all the parameters
-            needed to update the camera (Must provide cameraID):
-                kwargs = {'camera_type': 'ip', 'is_active_image': True,
-                          'is_active_video': False, 'ip': '127.0.0.2', 'snapshot_url': None,
-                          'm3u8_url': None, 'cameraID': 5ae0ecbd336359291be74c12, ...}
             Pass the keyword arguments dictionary to the write_camera function:
-                write_camera(**kwargs)
-            -------------------------------------------------------------------------------------
-            - Adding a camera of type 'NON_IP' into the database:
+
+            >>> client.write_camera(**kwargs)
+
+            Or, you can directly call the method with all parameters:
+
+            >>> client.write_camera(camera_type='ip', is_active_image=True,
+                          is_active_video=False, ip='127.0.0.1', snapshot_url=None, ...)
+
+            * Updating a camera of type 'IP' in the database:
+
+            One subtle difference of updating an existing camera from adding a new camera
+            is that only ``cameraID``, ``camera_type``, and fields to be updated need to
+            be included as a parameter with non-None value to update the camera.
+
             Create a keyword arguments dictionary which contains all the parameters
-            needed to create the camera:
-                kwargs = {'camera_type': 'non_ip', 'is_active_image': True,
+            needed to update the camera; in this example, user will update the ip
+            address of this ip camera:
+
+            >>> kwargs = {'ip': '127.0.0.2', 'camera_type': 'ip',
+                          'cameraID': '5ae0ecbd336359291be74c12'}
+
+            Pass the keyword arguments dictionary to the write_camera function:
+
+            >>> client.write_camera(**kwargs)
+
+            Or, you can directly call the method with all parameters:
+
+            >>> client.write_camera(camera_type='ip', ip='127.0.0.2',
+                          cameraID='5ae0ecbd336359291be74c12')
+
+            * Adding or updating a camera of type 'non_ip':
+
+            Following the above example of adding and updating IP camera, the only difference
+            lies in the required fields.
+
+            Example of adding a non-ip camera into database:
+
+            >>> kwargs = {'camera_type': 'non_ip', 'is_active_image': True,
                           'is_active_video': False, 'ip': None, 'snapshot_url': test_url,
                           'm3u8_url': None, 'cameraID': None, ...}
-            Pass the keyword arguments dictionary to the write_camera function:
-                write_camera(**kwargs)
+            >>> client.write_camera(**kwargs)
 
-            - Updating a camera of type 'NON_IP' in the database:
-            Create a keyword arguments dictionary which contains all the parameters
-            needed to update the camera (Must provide cameraID):
-                kwargs = {'camera_type': 'non_ip', 'is_active_image': True,
-                          'is_active_video': False, 'ip': None, 'snapshot_url': updated_test_url,
-                          'm3u8_url': None, 'cameraID': 5ae0ecbd336359291be74c12, ...}
-            Pass the keyword arguments dictionary to the write_camera function:
-                write_camera(**kwargs)
-            -------------------------------------------------------------------------------------
-            - Adding a camera of type 'STREAM' into the database:
-            Create a keyword arguments dictionary which contains all the parameters
-            needed to create the camera:
-                kwargs = {'camera_type': 'stream', 'is_active_image': True,
-                          'is_active_video': False, 'ip': None, 'snapshot_url': None,
-                          'm3u8_url': test_url, 'cameraID': None, ...}
-            Pass the keyword arguments dictionary to the write_camera function:
-                write_camera(**kwargs)
+            Example of updating the snapshot url and country of a camera of type 'non_ip':
 
-            - Updating a camera of type 'STREAM' in the database:
-            Create a keyword arguments dictionary which contains all the parameters
-            needed to update the camera (Must provide cameraID):
-                kwargs = {'camera_type': 'stream', 'is_active_image': True,
-                          'is_active_video': False, 'ip': None, 'snapshot_url': None,
-                          'm3u8_url': updated_test_url, 'cameraID': 5ae0ecbd336359291be74c12, ...}
-            Pass the keyword arguments dictionary to the write_camera function:
-                write_camera(**kwargs)
+            >>> client.write_camera(camera_type='non_ip', snapshot_url='updated_test_url',
+                          country='JP', cameraID': '5ae0ecbd336359291be74c12'}
+
+            * Adding or updating a camera of type 'stream':
+
+            Following the above example of adding and updating IP camera, the only difference
+            lies in the required fields.
+
+            Example of adding a stream camera into database:
+
+            >>> client.write_camera(camera_type='stream', is_active_image=True,
+                          is_active_video=False, m3u8_url='test_url', cameraID=None, ...)
+
+            Example of updating the m3u8_url of a camera of type 'stream':
+
+            >>> write_camera(camera_type='stream', m3u8_url='test_url',
+                          cameraID='5ae0ecbd336359291be74c12')
+
+        .. _write-param-ref:
 
         Parameters
         ----------
