@@ -725,6 +725,67 @@ class Client(object):
                 raise InternalError()
         return Camera.process_json(**response.json())
 
+    def camera_by_legacy_id(self, legacy_cameraID):
+        """
+        A method to get a camera object by using camera's legacy ID
+
+        Parameters
+        ----------
+        legacy_cameraID : str
+            legacy_cameraID of the camera in the database.
+
+        Returns
+        -------
+        :obj:`Camera`
+            A camera object.
+
+        """
+        if self.token is None:
+            self._request_token()
+        url = Client.base_URL + "cameras/legacy/" + legacy_cameraID
+        header = self.header_builder()
+        response = self._check_token(response=requests.get(url, headers=header),
+                                     flag='GET', url=url)
+
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise AuthenticationError(response.json()['message'])
+            elif response.status_code == 404:
+                raise ResourceNotFoundError(response.json()['message'])
+            elif response.status_code == 403:
+                raise AuthorizationError(response.json()['message'])
+            elif response.status_code == 422:
+                raise FormatError(response.json()['message'])
+            else:
+                raise InternalError()
+        return Camera.process_json(**response.json())
+
+    def camera_by_list_id(self, cameraID_list=None, legacy_cameraID_list=None):
+        """
+        A method to get a list of camera object by using a list of camera's legacy ID or ID.
+
+        Parameters
+        ----------
+        legacy_cameraID_list : List
+            legacy_cameraIDs of the cameras in the database.
+
+        cameraID_list : List
+            cameraIDs of the cameras in the database.
+
+        Returns
+        -------
+        :obj:`list` of :obj:`Camera`
+            List of cameras that satisfy the search criteria.
+
+        """
+        camera_processed = []
+        for ID in cameraID_list:
+            camera_processed.append(self.camera_by_id(ID))
+        for legacy_ID in legacy_cameraID_list:
+            camera_processed.append(self.camera_by_legacy_id(legacy_ID))
+
+        return camera_processed
+
     def search_camera(self, **kwargs):
 
         """A method to search camera by attributes and location.
