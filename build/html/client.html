@@ -423,100 +423,81 @@ webUI_client.usage_by_client(‘2123’, ‘Bob’)</div></blockquote>
 <ul class="simple">
 <li>Adding a camera of type ‘IP’ into the database:</li>
 </ul>
+<p><strong>Each type of camera has its unique fields.
+Please check the</strong> <a class="reference internal" href="#write-param-ref"><span class="std std-ref">Parameters</span></a> <strong>of this function or</strong>
+<a class="reference internal" href="camera.html#CAM2CameraDatabaseAPIClient.camera.Camera" title="CAM2CameraDatabaseAPIClient.camera.Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> <strong>for eligible fields
+of the type of camera you are working on.</strong></p>
 <p>Create a keyword arguments dictionary which contains all the parameters
-needed to create the camera:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>kwargs = {‘camera_type’: ‘ip’, ‘is_active_image’: True,</dt>
-<dd>‘is_active_video’: False, ‘ip’: ‘127.0.0.1’, ‘snapshot_url’: None,
-‘m3u8_url’: None, ‘cameraID’: None, …}</dd>
-</dl>
-</div></blockquote>
-<dl class="docutils">
-<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
-<dd>write_camera(<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs)</dd>
-</dl>
+needed to create the camera (fields with value <code class="docutils literal notranslate"><span class="pre">None</span></code> can be omitted):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;camera_type&#39;</span><span class="p">:</span> <span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active_image&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="go">              &#39;is_active_video&#39;: False, &#39;ip&#39;: &#39;127.0.0.1&#39;, &#39;snapshot_url&#39;: None,</span>
+<span class="go">              &#39;m3u8_url&#39;: None, &#39;cameraID&#39;: None, ...}</span>
+</pre></div>
+</div>
+<p>Pass the keyword arguments dictionary to the write_camera function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">write_camera</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or, you can directly call the method with all parameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">write_camera</span><span class="p">(</span><span class="n">camera_type</span><span class="o">=</span><span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="n">is_active_image</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="go">              is_active_video=False, ip=&#39;127.0.0.1&#39;, snapshot_url=None, ...)</span>
+</pre></div>
+</div>
 <ul class="simple">
 <li>Updating a camera of type ‘IP’ in the database:</li>
 </ul>
+<p>One subtle difference of updating an existing camera from adding a new camera
+is that only <code class="docutils literal notranslate"><span class="pre">cameraID</span></code>, <code class="docutils literal notranslate"><span class="pre">camera_type</span></code>, and fields to be updated need to
+be included as a parameter with non-None value to update the camera.</p>
 <p>Create a keyword arguments dictionary which contains all the parameters
-needed to update the camera (Must provide cameraID):</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>kwargs = {‘camera_type’: ‘ip’, ‘is_active_image’: True,</dt>
-<dd>‘is_active_video’: False, ‘ip’: ‘127.0.0.2’, ‘snapshot_url’: None,
-‘m3u8_url’: None, ‘cameraID’: 5ae0ecbd336359291be74c12, …}</dd>
-</dl>
-</div></blockquote>
-<dl class="docutils">
-<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
-<dd>write_camera(<a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs)</dd>
-</dl>
+needed to update the camera; in this example, user will update the ip
+address of this ip camera:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ip&#39;</span><span class="p">:</span> <span class="s1">&#39;127.0.0.2&#39;</span><span class="p">,</span> <span class="s1">&#39;camera_type&#39;</span><span class="p">:</span> <span class="s1">&#39;ip&#39;</span><span class="p">,</span>
+<span class="go">              &#39;cameraID&#39;: &#39;5ae0ecbd336359291be74c12&#39;}</span>
+</pre></div>
+</div>
+<p>Pass the keyword arguments dictionary to the write_camera function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">write_camera</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or, you can directly call the method with all parameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">write_camera</span><span class="p">(</span><span class="n">camera_type</span><span class="o">=</span><span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="s1">&#39;127.0.0.2&#39;</span><span class="p">,</span>
+<span class="go">              cameraID=&#39;5ae0ecbd336359291be74c12&#39;)</span>
+</pre></div>
+</div>
 <ul class="simple">
-<li>Adding a camera of type ‘NON_IP’ into the database:</li>
+<li>Adding or updating a camera of type ‘non_ip’:</li>
 </ul>
-<p>Create a keyword arguments dictionary which contains all the parameters
-needed to create the camera:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>kwargs = {‘camera_type’: ‘non_ip’, ‘is_active_image’: True,</dt>
-<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: test_url,
-‘m3u8_url’: None, ‘cameraID’: None, …}</dd>
-</dl>
-</div></blockquote>
-<dl class="docutils">
-<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
-<dd>write_camera(<a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs)</dd>
-</dl>
+<p>Following the above example of adding and updating IP camera, the only difference
+lies in the required fields.</p>
+<p>Example of adding a non-ip camera into database:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;camera_type&#39;</span><span class="p">:</span> <span class="s1">&#39;non_ip&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active_image&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="go">              &#39;is_active_video&#39;: False, &#39;ip&#39;: None, &#39;snapshot_url&#39;: test_url,</span>
+<span class="go">              &#39;m3u8_url&#39;: None, &#39;cameraID&#39;: None, ...}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">write_camera</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Example of updating the snapshot url and country of a camera of type ‘non_ip’:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">write_camera</span><span class="p">(</span><span class="n">camera_type</span><span class="o">=</span><span class="s1">&#39;non_ip&#39;</span><span class="p">,</span> <span class="n">snapshot_url</span><span class="o">=</span><span class="s1">&#39;updated_test_url&#39;</span><span class="p">,</span>
+<span class="go">              country=&#39;JP&#39;, cameraID&#39;: &#39;5ae0ecbd336359291be74c12&#39;}</span>
+</pre></div>
+</div>
 <ul class="simple">
-<li>Updating a camera of type ‘NON_IP’ in the database:</li>
+<li>Adding or updating a camera of type ‘stream’:</li>
 </ul>
-<p>Create a keyword arguments dictionary which contains all the parameters
-needed to update the camera (Must provide cameraID):</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>kwargs = {‘camera_type’: ‘non_ip’, ‘is_active_image’: True,</dt>
-<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: updated_test_url,
-‘m3u8_url’: None, ‘cameraID’: 5ae0ecbd336359291be74c12, …}</dd>
-</dl>
-</div></blockquote>
-<dl class="docutils">
-<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
-<dd>write_camera(<a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs)</dd>
-</dl>
-<ul class="simple">
-<li>Adding a camera of type ‘STREAM’ into the database:</li>
-</ul>
-<p>Create a keyword arguments dictionary which contains all the parameters
-needed to create the camera:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>kwargs = {‘camera_type’: ‘stream’, ‘is_active_image’: True,</dt>
-<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: None,
-‘m3u8_url’: test_url, ‘cameraID’: None, …}</dd>
-</dl>
-</div></blockquote>
-<dl class="docutils">
-<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
-<dd>write_camera(<a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs)</dd>
-</dl>
-<ul class="simple">
-<li>Updating a camera of type ‘STREAM’ in the database:</li>
-</ul>
-<p>Create a keyword arguments dictionary which contains all the parameters
-needed to update the camera (Must provide cameraID):</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>kwargs = {‘camera_type’: ‘stream’, ‘is_active_image’: True,</dt>
-<dd>‘is_active_video’: False, ‘ip’: None, ‘snapshot_url’: None,
-‘m3u8_url’: updated_test_url, ‘cameraID’: 5ae0ecbd336359291be74c12, …}</dd>
-</dl>
-</div></blockquote>
-<dl class="docutils">
-<dt>Pass the keyword arguments dictionary to the write_camera function:</dt>
-<dd>write_camera(<a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs)</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
+<p>Following the above example of adding and updating IP camera, the only difference
+lies in the required fields.</p>
+<p>Example of adding a stream camera into database:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">write_camera</span><span class="p">(</span><span class="n">camera_type</span><span class="o">=</span><span class="s1">&#39;stream&#39;</span><span class="p">,</span> <span class="n">is_active_image</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="go">              is_active_video=False, m3u8_url=&#39;test_url&#39;, cameraID=None, ...)</span>
+</pre></div>
+</div>
+<p>Example of updating the m3u8_url of a camera of type ‘stream’:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">write_camera</span><span class="p">(</span><span class="n">camera_type</span><span class="o">=</span><span class="s1">&#39;stream&#39;</span><span class="p">,</span> <span class="n">m3u8_url</span><span class="o">=</span><span class="s1">&#39;test_url&#39;</span><span class="p">,</span>
+<span class="go">              cameraID=&#39;5ae0ecbd336359291be74c12&#39;)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" id="write-param-ref" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -712,7 +693,7 @@ needed to search the camera:</p>
 <dl class="docutils">
 <dt>Pass the keyword arguments dictionary to the search_camera function:</dt>
 <dd>a_client = Client(‘id’, ‘pass’)
-a_client.search_camera(<a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs)</dd>
+a_client.search_camera(<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs)</dd>
 </dl>
 <ul class="simple">
 <li>Another way to search for cameras with the same parameters can be done by</li>

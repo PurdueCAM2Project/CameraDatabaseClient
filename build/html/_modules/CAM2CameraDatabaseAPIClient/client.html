@@ -598,59 +598,84 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
-<span class="sd">            - Adding a camera of type &#39;IP&#39; into the database:</span>
+<span class="sd">            * Adding a camera of type &#39;IP&#39; into the database:</span>
+
+<span class="sd">            **Each type of camera has its unique fields.</span>
+<span class="sd">            Please check the** :ref:`Parameters &lt;write-param-ref&gt;` **of this function or**</span>
+<span class="sd">            :class:`~CAM2CameraDatabaseAPIClient.camera.Camera` **for eligible fields</span>
+<span class="sd">            of the type of camera you are working on.**</span>
+
 <span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
-<span class="sd">            needed to create the camera:</span>
-<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;ip&#39;, &#39;is_active_image&#39;: True,</span>
+<span class="sd">            needed to create the camera (fields with value ``None`` can be omitted):</span>
+
+<span class="sd">            &gt;&gt;&gt; kwargs = {&#39;camera_type&#39;: &#39;ip&#39;, &#39;is_active_image&#39;: True,</span>
 <span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: &#39;127.0.0.1&#39;, &#39;snapshot_url&#39;: None,</span>
 <span class="sd">                          &#39;m3u8_url&#39;: None, &#39;cameraID&#39;: None, ...}</span>
-<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
-<span class="sd">                write_camera(**kwargs)</span>
 
-<span class="sd">            - Updating a camera of type &#39;IP&#39; in the database:</span>
-<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
-<span class="sd">            needed to update the camera (Must provide cameraID):</span>
-<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;ip&#39;, &#39;is_active_image&#39;: True,</span>
-<span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: &#39;127.0.0.2&#39;, &#39;snapshot_url&#39;: None,</span>
-<span class="sd">                          &#39;m3u8_url&#39;: None, &#39;cameraID&#39;: 5ae0ecbd336359291be74c12, ...}</span>
 <span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
-<span class="sd">                write_camera(**kwargs)</span>
-<span class="sd">            -------------------------------------------------------------------------------------</span>
-<span class="sd">            - Adding a camera of type &#39;NON_IP&#39; into the database:</span>
+
+<span class="sd">            &gt;&gt;&gt; client.write_camera(**kwargs)</span>
+
+<span class="sd">            Or, you can directly call the method with all parameters:</span>
+
+<span class="sd">            &gt;&gt;&gt; client.write_camera(camera_type=&#39;ip&#39;, is_active_image=True,</span>
+<span class="sd">                          is_active_video=False, ip=&#39;127.0.0.1&#39;, snapshot_url=None, ...)</span>
+
+<span class="sd">            * Updating a camera of type &#39;IP&#39; in the database:</span>
+
+<span class="sd">            One subtle difference of updating an existing camera from adding a new camera</span>
+<span class="sd">            is that only ``cameraID``, ``camera_type``, and fields to be updated need to</span>
+<span class="sd">            be included as a parameter with non-None value to update the camera.</span>
+
 <span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
-<span class="sd">            needed to create the camera:</span>
-<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;non_ip&#39;, &#39;is_active_image&#39;: True,</span>
+<span class="sd">            needed to update the camera; in this example, user will update the ip</span>
+<span class="sd">            address of this ip camera:</span>
+
+<span class="sd">            &gt;&gt;&gt; kwargs = {&#39;ip&#39;: &#39;127.0.0.2&#39;, &#39;camera_type&#39;: &#39;ip&#39;,</span>
+<span class="sd">                          &#39;cameraID&#39;: &#39;5ae0ecbd336359291be74c12&#39;}</span>
+
+<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
+
+<span class="sd">            &gt;&gt;&gt; client.write_camera(**kwargs)</span>
+
+<span class="sd">            Or, you can directly call the method with all parameters:</span>
+
+<span class="sd">            &gt;&gt;&gt; client.write_camera(camera_type=&#39;ip&#39;, ip=&#39;127.0.0.2&#39;,</span>
+<span class="sd">                          cameraID=&#39;5ae0ecbd336359291be74c12&#39;)</span>
+
+<span class="sd">            * Adding or updating a camera of type &#39;non_ip&#39;:</span>
+
+<span class="sd">            Following the above example of adding and updating IP camera, the only difference</span>
+<span class="sd">            lies in the required fields.</span>
+
+<span class="sd">            Example of adding a non-ip camera into database:</span>
+
+<span class="sd">            &gt;&gt;&gt; kwargs = {&#39;camera_type&#39;: &#39;non_ip&#39;, &#39;is_active_image&#39;: True,</span>
 <span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: None, &#39;snapshot_url&#39;: test_url,</span>
 <span class="sd">                          &#39;m3u8_url&#39;: None, &#39;cameraID&#39;: None, ...}</span>
-<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
-<span class="sd">                write_camera(**kwargs)</span>
+<span class="sd">            &gt;&gt;&gt; client.write_camera(**kwargs)</span>
 
-<span class="sd">            - Updating a camera of type &#39;NON_IP&#39; in the database:</span>
-<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
-<span class="sd">            needed to update the camera (Must provide cameraID):</span>
-<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;non_ip&#39;, &#39;is_active_image&#39;: True,</span>
-<span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: None, &#39;snapshot_url&#39;: updated_test_url,</span>
-<span class="sd">                          &#39;m3u8_url&#39;: None, &#39;cameraID&#39;: 5ae0ecbd336359291be74c12, ...}</span>
-<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
-<span class="sd">                write_camera(**kwargs)</span>
-<span class="sd">            -------------------------------------------------------------------------------------</span>
-<span class="sd">            - Adding a camera of type &#39;STREAM&#39; into the database:</span>
-<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
-<span class="sd">            needed to create the camera:</span>
-<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;stream&#39;, &#39;is_active_image&#39;: True,</span>
-<span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: None, &#39;snapshot_url&#39;: None,</span>
-<span class="sd">                          &#39;m3u8_url&#39;: test_url, &#39;cameraID&#39;: None, ...}</span>
-<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
-<span class="sd">                write_camera(**kwargs)</span>
+<span class="sd">            Example of updating the snapshot url and country of a camera of type &#39;non_ip&#39;:</span>
 
-<span class="sd">            - Updating a camera of type &#39;STREAM&#39; in the database:</span>
-<span class="sd">            Create a keyword arguments dictionary which contains all the parameters</span>
-<span class="sd">            needed to update the camera (Must provide cameraID):</span>
-<span class="sd">                kwargs = {&#39;camera_type&#39;: &#39;stream&#39;, &#39;is_active_image&#39;: True,</span>
-<span class="sd">                          &#39;is_active_video&#39;: False, &#39;ip&#39;: None, &#39;snapshot_url&#39;: None,</span>
-<span class="sd">                          &#39;m3u8_url&#39;: updated_test_url, &#39;cameraID&#39;: 5ae0ecbd336359291be74c12, ...}</span>
-<span class="sd">            Pass the keyword arguments dictionary to the write_camera function:</span>
-<span class="sd">                write_camera(**kwargs)</span>
+<span class="sd">            &gt;&gt;&gt; client.write_camera(camera_type=&#39;non_ip&#39;, snapshot_url=&#39;updated_test_url&#39;,</span>
+<span class="sd">                          country=&#39;JP&#39;, cameraID&#39;: &#39;5ae0ecbd336359291be74c12&#39;}</span>
+
+<span class="sd">            * Adding or updating a camera of type &#39;stream&#39;:</span>
+
+<span class="sd">            Following the above example of adding and updating IP camera, the only difference</span>
+<span class="sd">            lies in the required fields.</span>
+
+<span class="sd">            Example of adding a stream camera into database:</span>
+
+<span class="sd">            &gt;&gt;&gt; client.write_camera(camera_type=&#39;stream&#39;, is_active_image=True,</span>
+<span class="sd">                          is_active_video=False, m3u8_url=&#39;test_url&#39;, cameraID=None, ...)</span>
+
+<span class="sd">            Example of updating the m3u8_url of a camera of type &#39;stream&#39;:</span>
+
+<span class="sd">            &gt;&gt;&gt; write_camera(camera_type=&#39;stream&#39;, m3u8_url=&#39;test_url&#39;,</span>
+<span class="sd">                          cameraID=&#39;5ae0ecbd336359291be74c12&#39;)</span>
+
+<span class="sd">        .. _write-param-ref:</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
