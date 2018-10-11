@@ -5,9 +5,9 @@ import unittest
 import sys
 from os import path
 import mock
-from CAM2CameraDatabaseAPIClient.config import SECRET_LENGTH, CLIENTID_LENGTH
-from CAM2CameraDatabaseAPIClient.client import Client
+import CAM2CameraDatabaseAPIClient as cam2
 from CAM2CameraDatabaseAPIClient.camera import NonIPCamera
+from CAM2CameraDatabaseAPIClient.config import SECRET_LENGTH, CLIENTID_LENGTH
 from CAM2CameraDatabaseAPIClient.error import AuthenticationError, InternalError,\
      InvalidClientIdError, InvalidClientSecretError, ResourceNotFoundError,\
      FormatError, AuthorizationError
@@ -28,22 +28,22 @@ class BaseClientTest(unittest.TestCase):
 
 class InitClientTest(BaseClientTest):
 
-    def test_client_init_wrong_ClientId_Length(self):
+    def test_client_init_wrong_CLIENTID_LENGTH(self):
         with self.assertRaises(InvalidClientIdError):
-            client = Client('dummyID', '0' * SECRET_LENGTH)
+            client = cam2.Client('dummyID', '0' * SECRET_LENGTH)
             return client
 
-    def test_client_init_wrong_Client_Secret_Length(self):
+    def test_client_init_wrong_Client_SECRET_LENGTH(self):
         # client secret shorter than SECRET_LENGTH
         with self.assertRaises(InvalidClientSecretError):
-            client = Client('0' * CLIENTID_LENGTH, 'dummySecret')
+            client = cam2.Client('0' * CLIENTID_LENGTH, 'dummySecret')
             return client
 
     def test_client_init(self):
         clientID = '0' * CLIENTID_LENGTH
         clientSecret = '0' * SECRET_LENGTH
-        client = Client(clientID, clientSecret)
-        self.assertTrue(isinstance(client, Client))
+        client = cam2.Client(clientID, clientSecret)
+        self.assertTrue(isinstance(client, cam2.Client))
         self.assertEqual(client.clientID, clientID, 'ID not stored in the client object.')
         self.assertEqual(client.clientSecret, clientSecret,
                          'Secret not stored in the client object.')
@@ -51,8 +51,8 @@ class InitClientTest(BaseClientTest):
 
         # client secret longer than SECRET_LENGTH
         clientSecret2 = '0' * 80
-        client2 = Client(clientID, clientSecret2)
-        self.assertTrue(isinstance(client2, Client))
+        client2 = cam2.Client(clientID, clientSecret2)
+        self.assertTrue(isinstance(client2, cam2.Client))
         self.assertEqual(client2.clientID, clientID, 'ID not stored in the client object.')
         self.assertEqual(client2.clientSecret, clientSecret2,
                          'Secret not stored in the client object.')
@@ -61,7 +61,7 @@ class InitClientTest(BaseClientTest):
     def test_build_header(self):
         clientID = '0' * CLIENTID_LENGTH
         clientSecret = '0' * SECRET_LENGTH
-        client = Client(clientID, clientSecret)
+        client = cam2.Client(clientID, clientSecret)
         client.token = 'dummy'
         head_example = {'Authorization': 'Bearer ' + 'dummy'}
         self.assertEqual(client.header_builder(), head_example)
@@ -71,7 +71,7 @@ class RequestTokenTest(BaseClientTest):
     def setUp(self):
         super(RequestTokenTest, self).setUp()
         self.params = {'clientID': '0' * CLIENTID_LENGTH, 'clientSecret': '0' * SECRET_LENGTH}
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
 
     @mock.patch('CAM2CameraDatabaseAPIClient.error.AuthenticationError')
     @mock.patch('CAM2CameraDatabaseAPIClient.client.requests.get')
@@ -139,7 +139,7 @@ class RegisterTest(BaseClientTest):
 
     def setUp(self):
         super(RegisterTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.data = {'owner': 'testowner', 'permissionLevel': 'user'}
         self.url = self.base_URL + 'apps/register'
@@ -296,7 +296,7 @@ class GetClientIDTest(BaseClientTest):
 
     def setUp(self):
         super(GetClientIDTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.param = {'owner': 'testowner'}
         self.url = self.base_URL + 'apps/by-owner'
@@ -412,7 +412,7 @@ class GetUsageTest(BaseClientTest):
 
     def setUp(self):
         super(GetUsageTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.param = {'owner': 'testowner'}
         self.url = self.base_URL + 'apps/1/usage'
@@ -529,7 +529,7 @@ class UpdateOwnerTest(BaseClientTest):
 
     def setUp(self):
         super(UpdateOwnerTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.data = {'owner': 'testowner'}
         self.url = self.base_URL + 'apps/1'
@@ -621,7 +621,7 @@ class UpdatePermissionTest(BaseClientTest):
 
     def setUp(self):
         super(UpdatePermissionTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.data = {'permissionLevel': 'user'}
         self.url = self.base_URL + 'apps/1'
@@ -698,7 +698,7 @@ class ResetSecretTest(BaseClientTest):
 
     def setUp(self):
         super(ResetSecretTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.url = self.base_URL + 'apps/1/secret'
 
@@ -787,7 +787,7 @@ class GetCamIDTest(BaseClientTest):
 
     def setUp(self):
         super(GetCamIDTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.url = self.base_URL + 'cameras/12345'
 
@@ -1087,7 +1087,7 @@ class SearchCamTest(BaseClientTest):
 
     def setUp(self):
         super(SearchCamTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.url = self.base_URL + 'cameras/search'
 
@@ -1368,7 +1368,7 @@ class CamExistTest(BaseClientTest):
 
     def setUp(self):
         super(CamExistTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.url = self.base_URL + 'cameras/exist'
 
@@ -1605,7 +1605,7 @@ class ChangeLogTest(BaseClientTest):
 
     def setUp(self):
         super(ChangeLogTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.url = self.base_URL + 'apps/db-change'
 
@@ -1756,7 +1756,7 @@ class WriteCamTest(BaseClientTest):
 
     def setUp(self):
         super(WriteCamTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.expected_cameraID = '5ae0ecbd336359291be74c12'
         self.update_url = self.base_URL + 'cameras/' + self.expected_cameraID
