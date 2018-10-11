@@ -167,7 +167,6 @@
 <dt id="CAM2CameraDatabaseAPIClient.client.Client">
 <em class="property">class </em><code class="descclassname">CAM2CameraDatabaseAPIClient.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>clientID</em>, <em>clientSecret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class representing a CAM2 client application.</p>
-<p>[More detailed description of what client object do.]</p>
 <dl class="attribute">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.clientID">
 <code class="descname">clientID</code><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.clientID" title="Permalink to this definition">¶</a></dt>
@@ -225,6 +224,10 @@ Client secret should have a length of at least 71 characters.</li>
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.register">
 <code class="descname">register</code><span class="sig-paren">(</span><em>owner</em>, <em>permissionLevel='user'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a client to use CamraDatabaseAPI</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You can only use this function if your client has webUI permission.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -261,7 +264,11 @@ webUI_client.register(‘Bob’, ‘user’)</div></blockquote>
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.update_owner">
 <code class="descname">update_owner</code><span class="sig-paren">(</span><em>clientID</em>, <em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.update_owner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.update_owner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update owner’s username for the given clientID</p>
+<dd><p>Update owner’s username for the given clientID.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You can only use this function if your client has webUI permission.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -295,7 +302,11 @@ webUI_client.update_owner(‘2123’, ‘Ken’)</div></blockquote>
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.update_permission">
 <code class="descname">update_permission</code><span class="sig-paren">(</span><em>clientID</em>, <em>permissionLevel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.update_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.update_permission" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update owner’s permissionLevel for the given clientID</p>
+<dd><p>Update owner’s permissionLevel for the given clientID.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You can only use this function if your client has webUI permission.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -329,7 +340,11 @@ webUI_client.update_permission(‘2123’, ‘webUI’)</div></blockquote>
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.reset_secret">
 <code class="descname">reset_secret</code><span class="sig-paren">(</span><em>clientID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.reset_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.reset_secret" title="Permalink to this definition">¶</a></dt>
-<dd><p>A method to reset client secret</p>
+<dd><p>A method to reset client secret.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You can only use this function if your client has webUI permission.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -356,7 +371,11 @@ webUI_client.reset_secret(‘2123’‘)</div></blockquote>
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.client_ids_by_owner">
 <code class="descname">client_ids_by_owner</code><span class="sig-paren">(</span><em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.client_ids_by_owner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.client_ids_by_owner" title="Permalink to this definition">¶</a></dt>
-<dd><p>A method to get all client ids for a specific owner</p>
+<dd><p>A method to get all client ids for a specific owner.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You can only use this function if your client has webUI permission.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -384,7 +403,11 @@ webUI_client.client_ids_by_owner(‘Bob’)</div></blockquote>
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.usage_by_client">
 <code class="descname">usage_by_client</code><span class="sig-paren">(</span><em>clientID</em>, <em>owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.usage_by_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.usage_by_client" title="Permalink to this definition">¶</a></dt>
-<dd><p>A method to get number of API requests made by a given clientID</p>
+<dd><p>A method to get number of API requests made by a given clientID.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You can only use this function if your client has webUI permission.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -418,7 +441,11 @@ webUI_client.usage_by_client(‘2123’, ‘Bob’)</div></blockquote>
 <dl class="method">
 <dt id="CAM2CameraDatabaseAPIClient.client.Client.write_camera">
 <code class="descname">write_camera</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CAM2CameraDatabaseAPIClient/client.html#Client.write_camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAM2CameraDatabaseAPIClient.client.Client.write_camera" title="Permalink to this definition">¶</a></dt>
-<dd><p>add or update camera in the database.</p>
+<dd><p>Add or update camera in the database.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You can only use this function if your client has admin permission.</p>
+</div>
 <p class="rubric">Examples</p>
 <ul class="simple">
 <li>Adding a camera of type ‘IP’ into the database:</li>
@@ -881,7 +908,7 @@ webUI_client.get_change_log(‘2018-08-27T15:53:00’, ‘2018-08-27T16:53:00’
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Purdue CAM2.
+        &copy; Copyright 2018, Purdue CAM2
 
     </p>
   </div>
@@ -900,20 +927,23 @@ webUI_client.get_change_log(‘2018-08-27T15:53:00’, ‘2018-08-27T16:53:00’
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
 
   
 

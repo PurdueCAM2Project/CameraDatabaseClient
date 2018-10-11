@@ -165,8 +165,6 @@
 <div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../client.html#CAM2CameraDatabaseAPIClient.client.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class representing a CAM2 client application.</span>
 
-<span class="sd">    [More detailed description of what client object do.]</span>
-
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -308,6 +306,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a client to use CamraDatabaseAPI</span>
 
+<span class="sd">        Warning</span>
+<span class="sd">        ---------</span>
+<span class="sd">        You can only use this function if your client has webUI permission.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        owner : str</span>
@@ -358,7 +360,11 @@
 
 <div class="viewcode-block" id="Client.update_owner"><a class="viewcode-back" href="../../client.html#CAM2CameraDatabaseAPIClient.client.Client.update_owner">[docs]</a>    <span class="k">def</span> <span class="nf">update_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update owner&#39;s username for the given clientID</span>
+<span class="sd">        Update owner&#39;s username for the given clientID.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        ---------</span>
+<span class="sd">        You can only use this function if your client has webUI permission.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -404,7 +410,11 @@
 
 <div class="viewcode-block" id="Client.update_permission"><a class="viewcode-back" href="../../client.html#CAM2CameraDatabaseAPIClient.client.Client.update_permission">[docs]</a>    <span class="k">def</span> <span class="nf">update_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">permissionLevel</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update owner&#39;s permissionLevel for the given clientID</span>
+<span class="sd">        Update owner&#39;s permissionLevel for the given clientID.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        ---------</span>
+<span class="sd">        You can only use this function if your client has webUI permission.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -451,7 +461,11 @@
 
 <div class="viewcode-block" id="Client.reset_secret"><a class="viewcode-back" href="../../client.html#CAM2CameraDatabaseAPIClient.client.Client.reset_secret">[docs]</a>    <span class="k">def</span> <span class="nf">reset_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A method to reset client secret</span>
+<span class="sd">        A method to reset client secret.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        ---------</span>
+<span class="sd">        You can only use this function if your client has webUI permission.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -498,7 +512,11 @@
 
 <div class="viewcode-block" id="Client.client_ids_by_owner"><a class="viewcode-back" href="../../client.html#CAM2CameraDatabaseAPIClient.client.Client.client_ids_by_owner">[docs]</a>    <span class="k">def</span> <span class="nf">client_ids_by_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A method to get all client ids for a specific owner</span>
+<span class="sd">        A method to get all client ids for a specific owner.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        ---------</span>
+<span class="sd">        You can only use this function if your client has webUI permission.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -544,7 +562,11 @@
 
 <div class="viewcode-block" id="Client.usage_by_client"><a class="viewcode-back" href="../../client.html#CAM2CameraDatabaseAPIClient.client.Client.usage_by_client">[docs]</a>    <span class="k">def</span> <span class="nf">usage_by_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A method to get number of API requests made by a given clientID</span>
+<span class="sd">        A method to get number of API requests made by a given clientID.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        ---------</span>
+<span class="sd">        You can only use this function if your client has webUI permission.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -594,7 +616,11 @@
 <div class="viewcode-block" id="Client.write_camera"><a class="viewcode-back" href="../../client.html#CAM2CameraDatabaseAPIClient.client.Client.write_camera">[docs]</a>    <span class="k">def</span> <span class="nf">write_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        add or update camera in the database.</span>
+<span class="sd">        Add or update camera in the database.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        ---------</span>
+<span class="sd">        You can only use this function if your client has admin permission.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -1236,7 +1262,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Purdue CAM2.
+        &copy; Copyright 2018, Purdue CAM2
 
     </p>
   </div>
@@ -1255,20 +1281,23 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
 
   
 
