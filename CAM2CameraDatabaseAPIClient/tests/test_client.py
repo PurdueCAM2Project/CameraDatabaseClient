@@ -910,7 +910,7 @@ class GetLegacyCamIDTest(BaseClientTest):
 
     def setUp(self):
         super(GetLegacyCamIDTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.url = self.base_URL + 'cameras/legacy/12345'
 
@@ -1033,7 +1033,7 @@ class GetCameraByListIDTest(BaseClientTest):
 
     def setUp(self):
         super(GetCameraByListIDTest, self).setUp()
-        self.client = Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
+        self.client = cam2.Client('0' * CLIENTID_LENGTH, '0' * SECRET_LENGTH)
         self.header = {'Authorization': 'Bearer correctToken'}
         self.legacy_url = self.base_URL + 'cameras/legacy/12345'
         self.url = self.base_URL + 'cameras/12345'
