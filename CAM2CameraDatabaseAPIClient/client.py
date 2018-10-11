@@ -13,8 +13,6 @@ from .camera import Camera
 class Client(object):
     """Class representing a CAM2 client application.
 
-    [More detailed description of what client object do.]
-
 
     Attributes
     ----------
@@ -156,6 +154,10 @@ class Client(object):
         """
         Create a client to use CamraDatabaseAPI
 
+        Important
+        ---------
+        You can only use this function if your client has webUI permission.
+
         Parameters
         ----------
         owner : str
@@ -206,7 +208,11 @@ class Client(object):
 
     def update_owner(self, clientID, owner):
         """
-        Update owner's username for the given clientID
+        Update owner's username for the given clientID.
+
+        Important
+        ---------
+        You can only use this function if your client has webUI permission.
 
         Parameters
         ----------
@@ -252,7 +258,11 @@ class Client(object):
 
     def update_permission(self, clientID, permissionLevel):
         """
-        Update owner's permissionLevel for the given clientID
+        Update owner's permissionLevel for the given clientID.
+
+        Important
+        ---------
+        You can only use this function if your client has webUI permission.
 
         Parameters
         ----------
@@ -299,7 +309,11 @@ class Client(object):
 
     def reset_secret(self, clientID):
         """
-        A method to reset client secret
+        A method to reset client secret.
+
+        Important
+        ---------
+        You can only use this function if your client has webUI permission.
 
         Parameters
         ----------
@@ -346,7 +360,11 @@ class Client(object):
 
     def client_ids_by_owner(self, owner):
         """
-        A method to get all client ids for a specific owner
+        A method to get all client ids for a specific owner.
+
+        Important
+        ---------
+        You can only use this function if your client has webUI permission.
 
         Parameters
         ----------
@@ -392,7 +410,11 @@ class Client(object):
 
     def usage_by_client(self, clientID, owner):
         """
-        A method to get number of API requests made by a given clientID
+        A method to get number of API requests made by a given clientID.
+
+        Important
+        ---------
+        You can only use this function if your client has webUI permission.
 
         Parameters
         ----------
@@ -442,7 +464,11 @@ class Client(object):
     def write_camera(self, **kwargs):
 
         """
-        add or update camera in the database.
+        Add or update camera in the database.
+
+        Important
+        ---------
+        You can only use this function if your client has admin permission.
 
         Examples
         --------
