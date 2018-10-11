@@ -154,7 +154,7 @@ class Client(object):
         """
         Create a client to use CamraDatabaseAPI
 
-        Important
+        Warning
         ---------
         You can only use this function if your client has webUI permission.
 
@@ -210,7 +210,7 @@ class Client(object):
         """
         Update owner's username for the given clientID.
 
-        Important
+        Warning
         ---------
         You can only use this function if your client has webUI permission.
 
@@ -260,7 +260,7 @@ class Client(object):
         """
         Update owner's permissionLevel for the given clientID.
 
-        Important
+        Warning
         ---------
         You can only use this function if your client has webUI permission.
 
@@ -311,7 +311,7 @@ class Client(object):
         """
         A method to reset client secret.
 
-        Important
+        Warning
         ---------
         You can only use this function if your client has webUI permission.
 
@@ -362,7 +362,7 @@ class Client(object):
         """
         A method to get all client ids for a specific owner.
 
-        Important
+        Warning
         ---------
         You can only use this function if your client has webUI permission.
 
@@ -412,7 +412,7 @@ class Client(object):
         """
         A method to get number of API requests made by a given clientID.
 
-        Important
+        Warning
         ---------
         You can only use this function if your client has webUI permission.
 
@@ -466,7 +466,7 @@ class Client(object):
         """
         Add or update camera in the database.
 
-        Important
+        Warning
         ---------
         You can only use this function if your client has admin permission.
 
