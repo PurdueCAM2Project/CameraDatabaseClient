@@ -29,10 +29,20 @@ The CAM2 client is available for pip install in https://pypi.org/
 In order to access the API, you must make an account through the CAM2 project website, and register a new application. The website can be found here: https://www.cam2project.net/.
 
 ## Usage
-Step 1) Please use the following command to install the package: 'pip install CAM2CameraDatabaseAPIClient'.
+Step 1) Register for a CAM2 API account on [CAM2 Project Website](https://www.cam2project.net/register/)
 
-Step 2) On the Class import the CAM2CameraDatabaseAPIClient's  client and camera classes. 
+Step 2) Please use the following command to install the package: 
 
-Step 3) Create an object of client and pass the  clientID  and clientSecret as parameters.
+```pip install CAM2CameraDatabaseClient```
+
+Step 3) Import the CAM2CameraDatabaseAPIClient and initialize a new client object with your CAM2 API account ClientID and ClientSecret:
+db = cam2.Client(clientID, clientSecret)
+```
+import CAM2CameraDatabaseAPIClient as cam2
+cam2.Client(<ClientID>, <ClientSecret>)
+```
 
 Step 4) Use the routes of the API, for description of all the methods please view the documentation (https://purduecam2project.github.io/CameraDatabaseClient)
+```
+cameraObjects = db.search_camera(<Search Parameters>)
+```
