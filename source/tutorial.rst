@@ -14,13 +14,13 @@ Create Client Instance
 
 Begin be import CAM2 Camera Database API Client package.
 
->>> from CAM2CameraDatabaseAPIClient.client import Client
+>>> import CAM2CameraDatabaseAPIClient as cam2
 
 Then, create a Client object using client ID and secret to access the Camera Database API. Creating a valid Client object is the prerequsite of calling any functions for getting camera data or managing user clients. 
 
 >>> clientID = <96 Character Client ID>
 >>> clientSecret = <71 Character Client Secret>
->>> db = Client(clientID, clientSecret)
+>>> db = cam2.Client(clientID, clientSecret)
 
 .. _camera-by-city-ref:
 
@@ -82,4 +82,6 @@ Use Client with CAM2 Image Archiver
 ------------------------------------------------------------
 
 The CAM2 Image Archiver allows users to download network camera image data from camera objects and save them to the local machine. 
+See more at:
 
+https://github.com/PurdueCAM2Project/CAM2ImageArchiver
