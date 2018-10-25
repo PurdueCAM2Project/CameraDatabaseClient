@@ -85,6 +85,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation-from-pip-package">Installation from PIP Package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation-from-python-source">Installation from Python Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#insallation-for-developers">Insallation for Developers</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +183,20 @@
 <p class="first admonition-title">Warning</p>
 <p class="last">We are continuously developing the Python client and updating the code. Downloading or cloning the source code will not guarantee you will a stable software to use.</p>
 </div>
+</div>
+<div class="section" id="insallation-for-developers">
+<h2>Insallation for Developers<a class="headerlink" href="#insallation-for-developers" title="Permalink to this headline">¶</a></h2>
+<p>The CameraDatabaseAPIClient uses <a class="reference external" href="https://www.docker.com/">Docker</a> which proivdes developers a sandbox enviroment using containers to easily create, deploy, and run projects on any operating system. You can follow the steps on the <a class="reference external" href="https://www.docker.com/install">Docker</a> website to download and install Docker on your machine.</p>
+<p>Setting up a project using Docker requires two main files, the docker-compose.yml and the Dockerfile.
+The docker-compose.yml file contains the initilizations of the containers. In our case, we use two contatiners, one for running the test cases and one for running the pylint error checking.
+The Dockerfile contains all the images needed to run the testing commands.
+For example, we retrieve the Python 3.6 and 2.7 images to run the tests in both versions of Python that we support.
+Then, we run the commands needed to install the requirements and dependencies of the project, and lastly run the test cases.</p>
+<p>After setting up Docker, you can run Docker on your project by running the Setup bash file which contains all the Docker commands needed to run Docker:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ sh Setup.sh
+</pre></div>
+</div>
+<p>Docker will now run and retrieve the images needed from the web to run the test cases.</p>
 </div>
 </div>
 
