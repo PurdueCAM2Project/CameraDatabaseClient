@@ -44,7 +44,7 @@ You can add the downloaded source code in your own python package and use CAM2 C
 Insallation for Developers
 ---------------------------------
 
-The CameraDatabaseAPIClient uses Docker which proivdes developers a sandbox enviroemnt using containers to easily create, deploy, and run projects on any operating system. You can follow the steps on the *Docker* website to download and install Docker on your machine.
+The CameraDatabaseAPIClient uses `Docker <https://www.docker.com/>` which proivdes developers a sandbox enviroemnt using containers to easily create, deploy, and run projects on any operating system. You can follow the steps on the `Docker <https://docs.docker.com/install/>` website to download and install Docker on your machine.
 
 After running Docker, you can build your project by running the Setup bash file which contains all the Docker commands needed to run Docker:
 
