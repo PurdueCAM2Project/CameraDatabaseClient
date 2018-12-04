@@ -14,5 +14,4 @@ FROM python:3.6-alpine
 WORKDIR /usr/src/pylint
 COPY . .
 RUN pip install -r requirements.txt
-COPY . .
 CMD  [ "pylint", "./CAM2CameraDatabaseAPIClient/client.py" ]
