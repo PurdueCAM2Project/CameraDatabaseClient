@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#query-camera-by-coordinates">Query Camera by Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#access-camera-attributes">Access Camera Attributes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#use-client-with-cam2-image-archiver">Use Client with CAM2 Image Archiver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#write-camera">Write Camera</a></li>
 </ul>
 </li>
 </ul>
@@ -227,6 +228,35 @@
 <p>The CAM2 Image Archiver allows users to download network camera image data from camera objects and save them to the local machine.
 See more at:</p>
 <p><a class="reference external" href="https://github.com/PurdueCAM2Project/CAM2ImageArchiver">https://github.com/PurdueCAM2Project/CAM2ImageArchiver</a></p>
+</div>
+<div class="section" id="write-camera">
+<h2>Write Camera<a class="headerlink" href="#write-camera" title="Permalink to this headline">¶</a></h2>
+<p>You can add a new camera into the database or update an existing camera on the database using the write_camera() function.
+If you refer to the documentation of the CameraDatabaseAPIClient, you can see that there are three camera types: IP, NON_IP, and STREAM cameras.</p>
+<p>In order to add a camera:
+You first need to define a keyword arguemnts dictionary to pass into the write_camera() function with all the required parameters. You can refer to the CameraDatabaseAPIClient Documentation to check which arguments are required for adding each type of camera.</p>
+<p>The following is an example of adding a camera of type IP:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;camera_type&#39;</span><span class="p">:</span> <span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active_image&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="go">&#39;is_active_video&#39;: False, &#39;ip&#39;: &#39;127.0.0.1&#39;, &#39;snapshot_url&#39;: None,</span>
+<span class="go">&#39;m3u8_url&#39;: None, &#39;cameraID&#39;: None, ...}</span>
+</pre></div>
+</div>
+<p>You can then pass the keyword arguments dictionary into the write_camera() function as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">write_camera</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In order to update a camera:
+Updating a camera is similar to adding a camera, however, it requires an exisiting camera ID to reference the camera you wish to update.</p>
+<p>The following is an example of updating a camera of type IP:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;camera_type&#39;</span><span class="p">:</span> <span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active_image&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="go">&#39;is_active_video&#39;: False, &#39;ip&#39;: &#39;127.0.0.2&#39;, &#39;snapshot_url&#39;: None,</span>
+<span class="go">&#39;m3u8_url&#39;: None, &#39;cameraID&#39;: 5ae0ecbd336359291be74c12, ...}</span>
+</pre></div>
+</div>
+<p>You can then pass the keyword arguments dictionary into the write_camera() function as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">write_camera</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 

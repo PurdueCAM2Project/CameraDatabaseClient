@@ -85,3 +85,34 @@ The CAM2 Image Archiver allows users to download network camera image data from 
 See more at:
 
 https://github.com/PurdueCAM2Project/CAM2ImageArchiver
+
+Write Camera 
+------------------------------------------------------------
+You can add a new camera into the database or update an existing camera on the database using the write_camera() function.
+If you refer to the documentation of the CameraDatabaseAPIClient, you can see that there are three camera types: IP, NON_IP, and STREAM cameras. 
+
+In order to add a camera:
+You first need to define a keyword arguemnts dictionary to pass into the write_camera() function with all the required parameters. You can refer to the CameraDatabaseAPIClient Documentation to check which arguments are required for adding each type of camera.
+
+The following is an example of adding a camera of type IP:
+
+>>> kwargs = {'camera_type': 'ip', 'is_active_image': True,
+'is_active_video': False, 'ip': '127.0.0.1', 'snapshot_url': None,
+'m3u8_url': None, 'cameraID': None, ...}
+
+You can then pass the keyword arguments dictionary into the write_camera() function as follows:
+
+>>> write_camera(**kwargs)
+
+In order to update a camera:
+Updating a camera is similar to adding a camera, however, it requires an exisiting camera ID to reference the camera you wish to update.
+
+The following is an example of updating a camera of type IP:
+
+>>> kwargs = {'camera_type': 'ip', 'is_active_image': True,
+'is_active_video': False, 'ip': '127.0.0.2', 'snapshot_url': None,
+'m3u8_url': None, 'cameraID': 5ae0ecbd336359291be74c12, ...}
+
+You can then pass the keyword arguments dictionary into the write_camera() function as follows:
+
+>>> write_camera(**kwargs)
