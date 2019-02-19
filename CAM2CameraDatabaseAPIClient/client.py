@@ -670,7 +670,7 @@ class Client(object):
 
         """
 
-        self._check_args(kwargs=kwargs, legal_args=self._camera_fields)
+        # self._check_args(kwargs=kwargs, legal_args=self._camera_fields)
 
         if self.token is None:
             self._request_token()
